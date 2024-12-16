@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Backend\AppointmentController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\FrontendController;
@@ -37,4 +39,15 @@ Route::controller(FrontendController::class)->group(function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/admin', 'admin')->name('admin');
+});
+
+Route::controller(AppointmentController ::class)->group(function () {
+    Route::get('/appointment', 'index')->name('appointment');
+    Route::get('/appointment/create', 'create')->name('appointment.create');
+    Route::post('/appointment', 'store')->name('appointment.store');
+    Route::get('/appointment/{id}/edit', 'edit')->name('appointment.edit');
+    Route::put('/appointment/{id}', 'update')->name('appointment.update');
+    Route::delete('/appointment/{id}', 'destroy')->name('appointment.destroy');
+});

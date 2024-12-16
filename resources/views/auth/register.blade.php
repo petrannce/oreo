@@ -1,77 +1,81 @@
-@extends('layouts.app')
+@extends('layouts.backend.auth')
 
 @section('content')
+
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+    <div class="col-md-12 content-center">
+        <div class="card-plain">
+            <form class="form" method="POST" action="{{ route('register') }}">
+                @csrf
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                <div class="header">
+                    <div class="logo-container">
+                        <img src="{{asset('assets/images/logo.svg')}}" alt="">
+                    </div>
+                    <h5>Sign Up</h5>
+                    <span>Register a new membership</span>
                 </div>
-            </div>
+                <div class="content">
+                    <div class="input-group">
+                        <input type="text" name="name" value="{{ old('name') }}"
+                            class="form-control @error('name') is-invalid @enderror" placeholder="Enter Your Full Name"
+                            required>
+                        @error('name')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <span class="input-group-addon">
+                            <i class="zmdi zmdi-account-circle"></i>
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control @error('email') is-invalid @enderror"
+                            placeholder="Enter Email" name="email" value="{{ old('email') }}" required>
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <span class="input-group-addon">
+                            <i class="zmdi zmdi-email"></i>
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" name="password" placeholder="Password"
+                            class="form-control @error('password') is-invalid @enderror" required autocomplete="new-password"/>
+                        @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <span class="input-group-addon">
+                            <i class="zmdi zmdi-lock"></i>
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" name="password_confirmation" placeholder="Confirm Password"
+                            class="form-control" required autocomplete="new-password"/>
+                        <span class="input-group-addon">
+                            <i class="zmdi zmdi-lock"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="checkbox">
+                    <input id="terms" type="checkbox">
+                    <label for="terms">
+                        I read and agree to the <a href="javascript:void(0);">terms of usage</a>
+                    </label>
+                </div>
+                <div class="footer text-center">
+                    <a href="{{route(name: 'register')}}"
+                        class="btn btn-primary btn-round btn-block  waves-effect waves-light">SIGN
+                        UP</a>
+                    <h5><a class="link" href="{{route(name: 'login')}}">You already have a membership?</a></h5>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
 @endsection

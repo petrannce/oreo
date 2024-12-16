@@ -16,7 +16,7 @@
                         <div class="col-lg-6 col-md-5">
                             <div class="text-right d-none d-md-block">
                                 <ul class="list-unstyled m-b-0">
-                                    <li><a href="javascript:void(0);" class="btn btn-link">Sign in</a> <a href="javascript:void(0);" class="btn btn-link">sign
+                                    <li><a href="{{route('login')}}" class="btn btn-link">Sign in</a> <a href="{{route('register')}}" class="btn btn-link">sign
                                         up</a></li>
                                 </ul>
                             </div>
