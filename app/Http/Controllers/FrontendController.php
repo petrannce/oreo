@@ -43,12 +43,12 @@ class FrontendController extends Controller
 
     public function department()
     {
-        return view('frontend.department.index');
+        return view('frontend.departments.index');
     }
 
     public function departmentDetails()
     {
-        return view('frontend.department.departmentDetails');
+        return view('frontend.departments.departmentDetails');
     }
 
     public function doctors()

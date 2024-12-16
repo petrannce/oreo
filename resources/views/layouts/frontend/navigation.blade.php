@@ -55,8 +55,8 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarMenu">
                         <ul class="navbar-nav mr-auto">
-                            <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
-                            <li class="nav-item"><a class="nav-link" href="departments.html">Departments</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{route('services')}}">Services</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{route('department')}}">Departments</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{route('doctors')}}">Doctors</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{route('blog')}}">Blog</a></li>
                             <li class="nav-item dropdown">
@@ -67,7 +67,6 @@
                                     <a class="dropdown-item" href="{{route('about')}}">About Us</a>
                                     <a class="dropdown-item" href="{{route('faqs')}}">FAQs</a>
                                     <a class="dropdown-item" href="{{route('gallery')}}">Galary</a>
-                                    <a class="dropdown-item" href="price-list.html">Price list</a>
                                 </div>
                             </li>
                             <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Contact Us</a></li>
