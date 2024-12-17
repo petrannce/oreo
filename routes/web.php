@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Backend\AppointmentController;
+use App\Http\Controllers\Backend\BlogController;
+use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\DoctorController;
 use App\Http\Controllers\Backend\PatientController;
 use App\Http\Controllers\HomeController;
@@ -70,4 +72,22 @@ Route::controller(PatientController ::class)->group(function () {
     Route::get('/patients/{id}/edit', 'edit')->name('patients.edit');
     Route::put('/patients/{id}', 'update')->name('patients.update');
     Route::delete('/patients/{id}', 'destroy')->name('patients.destroy');
+});
+
+Route::controller(DepartmentController ::class)->group(function () {
+    Route::get('/departments', 'index')->name('departments');
+    Route::get('/departments/create', 'create')->name('departments.create');
+    Route::post('/departments', 'store')->name('departments.store');
+    Route::get('/departments/{id}/edit', 'edit')->name('departments.edit');
+    Route::put('/departments/{id}', 'update')->name('departments.update');
+    Route::delete('/departments/{id}', 'destroy')->name('departments.destroy');
+});
+
+Route::controller(BlogController ::class)->group(function () {
+    Route::get('/blogs', 'index')->name('blogs');
+    Route::get('/blogs/create', 'create')->name('blogs.create');
+    Route::post('/blogs', 'store')->name('blogs.store');
+    Route::get('/blogs/{id}/edit', 'edit')->name('blogs.edit');
+    Route::put('/blogs/{id}', 'update')->name('blogs.update');
+    Route::delete('/blogs/{id}', 'destroy')->name('blogs.destroy');
 });

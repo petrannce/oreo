@@ -7,5 +7,13 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
-    //
+    public function index()
+    {
+        return view('backend.departments.index');
+    }
+
+    public function create()
+    {
+        return view('backend.departments.create');
+    }
 }
