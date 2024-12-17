@@ -27,16 +27,16 @@
                     </li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-add"></i><span>Doctors</span> </a>
                         <ul class="ml-menu">
-                            <li><a href="doctors.html">All Doctors</a></li>
-                            <li><a href="add-doctor.html">Add Doctor</a></li>                       
+                            <li><a href="{{route('doctors')}}">All Doctors</a></li>
+                            <li><a href="{{route('doctors.create')}}">Add Doctor</a></li>                       
                             <li><a href="profile.html">Doctor Profile</a></li>
                             <li><a href="events.html">Doctor Schedule</a></li>
                         </ul>
                     </li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-o"></i><span>Patients</span> </a>
                         <ul class="ml-menu">
-                            <li><a href="patients.html">All Patients</a></li>
-                            <li><a href="add-patient.html">Add Patient</a></li>                       
+                            <li><a href="{{route('patients')}}">All Patients</a></li>
+                            <li><a href="{{route('patients.create')}}">Add Patient</a></li>                       
                             <li><a href="patient-profile.html">Patient Profile</a></li>
                             <li><a href="patient-invoice.html">Invoice</a></li>
                         </ul>

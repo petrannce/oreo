@@ -7,5 +7,13 @@ use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
-    //
+    public function index()
+    {
+        return view('backend.patients.index');
+    }
+
+    public function create()
+    {
+        return view('backend.patients.create');
+    }
 }

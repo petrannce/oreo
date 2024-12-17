@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Backend\AppointmentController;
+use App\Http\Controllers\Backend\DoctorController;
+use App\Http\Controllers\Backend\PatientController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,4 +52,22 @@ Route::controller(AppointmentController ::class)->group(function () {
     Route::get('/appointment/{id}/edit', 'edit')->name('appointment.edit');
     Route::put('/appointment/{id}', 'update')->name('appointment.update');
     Route::delete('/appointment/{id}', 'destroy')->name('appointment.destroy');
+});
+
+Route::controller(DoctorController ::class)->group(function () {
+    Route::get('/doctors', 'index')->name('doctors');
+    Route::get('/doctors/create', 'create')->name('doctors.create');
+    Route::post('/doctors', 'store')->name('doctors.store');
+    Route::get('/doctors/{id}/edit', 'edit')->name('doctors.edit');
+    Route::put('/doctors/{id}', 'update')->name('doctors.update');
+    Route::delete('/doctors/{id}', 'destroy')->name('doctors.destroy');
+});
+
+Route::controller(PatientController ::class)->group(function () {
+    Route::get('/patients', 'index')->name('patients');
+    Route::get('/patients/create', 'create')->name('patients.create');
+    Route::post('/patients', 'store')->name('patients.store');
+    Route::get('/patients/{id}/edit', 'edit')->name('patients.edit');
+    Route::put('/patients/{id}', 'update')->name('patients.update');
+    Route::delete('/patients/{id}', 'destroy')->name('patients.destroy');
 });
