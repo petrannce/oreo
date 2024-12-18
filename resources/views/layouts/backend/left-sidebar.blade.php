@@ -58,10 +58,9 @@
                     <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-blogger"></i><span>Blog</span></a>
                         <ul class="ml-menu">
                             <li><a href="blog-dashboard.html">Blog Dashboard</a></li>
+                            <li><a href="{{route('blogs')}}">All Blogs</a></li>
                             <li><a href="{{route('blogs.create')}}">New Post</a></li>
                             <li><a href="blog-list.html">Tags</a></li>
-                            <li><a href="blog-grid.html">Blog Grid</a></li>
-                            <li><a href="blog-details.html">Blog Single</a></li>
                         </ul>
                     </li>
                     <li><a href="index.html"><i class="zmdi zmdi-home"></i><span>FAQ</span></a></li>
