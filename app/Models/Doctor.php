@@ -18,4 +18,9 @@ class Doctor extends Model
         'employment_type',
         'description',
     ];
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
 }
