@@ -1,14 +1,17 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\HomeController;
+
 use App\Http\Controllers\Backend\AppointmentController;
 use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\DoctorController;
 use App\Http\Controllers\Backend\PatientController;
-use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\FaqController;
 
-use App\Http\Controllers\FrontendController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +48,18 @@ Auth::routes();
 
 Route::controller(HomeController::class)->group(function () {
     Route::get('/admin', 'admin')->name('admin');
+    Route::get('/subscribers', 'subscribers')->name('subscribers');
+    Route::delete('/subscribers/{id}', 'subscribersDestroy')->name('subscribers.destroy');
+});
+
+//FAQs
+Route::controller(FaqController::class)->group(function () {
+    Route::get('/faqs', 'index')->name('faqs');
+    Route::get('/faqs/create', 'create')->name('faqs.create');
+    Route::post('/faqs', 'store')->name('faqs.store');
+    Route::get('/faqs/{id}/edit', 'edit')->name('faqs.edit');
+    Route::put('/faqs/{id}', 'update')->name('faqs.update');
+    Route::delete('/faqs/{id}', 'destroy')->name('faqs.destroy');
 });
 
 Route::controller(AppointmentController ::class)->group(function () {
@@ -74,7 +89,7 @@ Route::controller(PatientController ::class)->group(function () {
     Route::delete('/patients/{id}', 'destroy')->name('patients.destroy');
 });
 
-Route::controller(DepartmentController ::class)->prefix('admin')->group(function () {
+Route::controller(DepartmentController ::class)->group(function () {
     Route::get('/departments', 'index')->name('departments');
     Route::get('/departments/create', 'create')->name('departments.create');
     Route::post('/departments', 'store')->name('departments.store');
@@ -90,4 +105,13 @@ Route::controller(BlogController ::class)->group(function () {
     Route::get('/blogs/{id}/edit', 'edit')->name('blogs.edit');
     Route::put('/blogs/{id}', 'update')->name('blogs.update');
     Route::delete('/blogs/{id}', 'destroy')->name('blogs.destroy');
+});
+
+Route::controller(UserController::class)->group(function () {
+    Route::get('/users', 'index')->name('users');
+    Route::get('/users/create', 'create')->name('users.create');
+    Route::post('/users', 'store')->name('users.store');
+    Route::get('/users/{id}/edit', 'edit')->name('users.edit');
+    Route::put('/users/{id}', 'update')->name('users.update');
+    Route::delete('/users/{id}', 'destroy')->name('users.destroy');
 });

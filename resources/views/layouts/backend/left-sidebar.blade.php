@@ -64,8 +64,8 @@
                         </ul>
                     </li>
                     <li><a href="index.html"><i class="zmdi zmdi-home"></i><span>FAQ</span></a></li>
-                    <li><a href="index.html"><i class="zmdi zmdi-home"></i><span>Subscribers</span></a></li>
-                    <li><a href="index.html"><i class="zmdi zmdi-home"></i><span>Users</span></a></li>
+                    <li><a href="{{route('subscribers')}}"><i class="zmdi zmdi-home"></i><span>Subscribers</span></a></li>
+                    <li><a href="{{route('users')}}"><i class="zmdi zmdi-home"></i><span>Users</span></a></li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-folder"></i><span>File Manager</span> </a>
                         <ul class="ml-menu">
                             <li><a href="file-dashboard.html">All File</a></li>
