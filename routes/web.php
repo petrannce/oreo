@@ -89,7 +89,7 @@ Route::controller(PatientController ::class)->group(function () {
     Route::delete('/patients/{id}', 'destroy')->name('patients.destroy');
 });
 
-Route::controller(DepartmentController ::class)->group(function () {
+Route::controller(DepartmentController ::class)->prefix('admin')->group(function () {
     Route::get('/departments', 'index')->name('departments');
     Route::get('/departments/create', 'create')->name('departments.create');
     Route::post('/departments', 'store')->name('departments.store');
@@ -115,3 +115,5 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/users/{id}', 'update')->name('users.update');
     Route::delete('/users/{id}', 'destroy')->name('users.destroy');
 });
+
+

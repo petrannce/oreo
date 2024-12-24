@@ -23,10 +23,10 @@ class PatientController extends Controller
     public function store(Request $request)
     {
         $request -> validate([
-            'patient_id' => 'required',
             'fname' => 'required',
             'lname' => 'required',
             'email' => 'required|email|unique:patients,email',
+            'DOB' => 'required',
             'phone' => 'required',
             'gender' => 'required',
             'age' => 'required',
@@ -37,10 +37,10 @@ class PatientController extends Controller
 
         try {
             $patient = new Patient();
-            $patient->patient_id = $request->patient_id;
             $patient->fname = $request->fname;
             $patient->lname = $request->lname;
             $patient->email = $request->email;
+            $patient->DOB = $request->DOB;
             $patient->phone = $request->phone;
             $patient->gender = $request->gender;
             $patient->age = $request->age;
@@ -63,10 +63,10 @@ class PatientController extends Controller
     public function update(Request $request, $id)
     {
         $request -> validate([
-            'patient_id' => 'required',
             'fname' => 'required',
             'lname' => 'required',
             'email' => 'required|email|unique:patients,email,'.$id,
+            'DOB' => 'required',
             'phone' => 'required',
             'gender' => 'required',
             'age' => 'required',
@@ -77,10 +77,10 @@ class PatientController extends Controller
 
         try {
             $patient = Patient::find($id);
-            $patient->patient_id = $request->patient_id;
             $patient->fname = $request->fname;
             $patient->lname = $request->lname;
             $patient->email = $request->email;
+            $patient->DOB = $request->DOB;
             $patient->phone = $request->phone;
             $patient->gender = $request->gender;
             $patient->age = $request->age;

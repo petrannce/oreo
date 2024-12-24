@@ -36,23 +36,23 @@
                             <div class="mb-3">
                                 <label for="blog tag" class="form-label">Tag</label>
                                 <select class="form-control show-tick" name="tag">
-                                    <option>Select Tag --</option>
-                                    <option>Web Design</option>
-                                    <option>Photography</option>
-                                    <option>Technology</option>
-                                    <option>Lifestyle</option>
-                                    <option>Sports</option>
+                                    <option value="">Select Tag --</option>
+                                    @foreach ($tags as $tag)
+
+                                        <option value="{{$tag->id}}">{{$tag->name}}</option>
+                                    @endforeach
+
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="blog_desc" class="form-label">Description</label>
-                                <textarea rows="3" class="form-control no-resize"name="description"
+                                <textarea rows="3" class="form-control no-resize" name="description"
                                     placeholder="Please type your description..."></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="blog_image" class="form-label">Image</label>
                                 <div class="fallback">
-                                    <input name="image" type="file"/>
+                                    <input name="image" type="file" />
                                 </div>
                             </div>
                         </div>

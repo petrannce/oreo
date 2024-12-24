@@ -13,17 +13,12 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->string('fname');
-            $table->string('lname');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('gender');
-            $table->string('service');
-            $table->dateTime('date');
-            $table->string('department');
-            $table->string('doctor');
-            $table->string('message');
-            $table->string('status')->default('pending');
+            $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
+            $table->foreignId('doctor_id')->constrained('doctors')->onDelete('cascade');
+            $table->date('date');
+            $table->time('time');
+            $table->string('reason');
+            $table->enum('status', ['pending', 'approved', 'rejected','cancelled'])->default('pending');
             $table->timestamps();
         });
     }

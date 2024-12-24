@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Blog;
+use App\Models\Tag;
 use DB;
 
 class BlogController extends Controller
@@ -16,7 +17,8 @@ class BlogController extends Controller
 
     public function create()
     {
-        return view('backend.blogs.create');
+        $tags = Tag::all();
+        return view('backend.blogs.create', compact('tags'));
     }
     
     public function store(Request $request)
