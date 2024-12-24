@@ -56,35 +56,41 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="phone" placeholder="Phone No.">
+                                        <input type="text" class="form-control" name="email" placeholder="Email">
                                     </div>
                                 </div>
                             </div>
                             <div class="row clearfix">
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <div class="input-group">
                                         <span class="input-group-addon">
                                             <i class="zmdi zmdi-calendar"></i>
                                         </span>
-                                        <input type="text" class="form-control" name="DOB" placeholder="Enter date">
+                                        <input type="date" class="form-control" name="DOB" placeholder="Enter date of birth">
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="age" placeholder="Age">
+                                        <input type="text" class="form-control" name="phone" placeholder="Phone Number" min="10">
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <select class="form-control show-tick" name="gender">
                                         <option value="">- Gender -</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-3">
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="email"
-                                            placeholder="Enter Your Email">
+                                        <input type="text" class="form-control" name="age" placeholder="Age" >
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="address" placeholder="Address">
                                     </div>
                                 </div>
                             </div>

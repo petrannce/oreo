@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use DB;
-use function Laravel\Prompts\table;
 
 class PatientController extends Controller
 {
@@ -17,12 +16,16 @@ class PatientController extends Controller
 
     public function create()
     {
+
         return view('backend.patients.create');
     }
 
     public function store(Request $request)
     {
-        $request -> validate([
+
+        //dd($request);
+
+        $request->validate([
             'fname' => 'required',
             'lname' => 'required',
             'email' => 'required|email|unique:patients,email',
@@ -32,6 +35,8 @@ class PatientController extends Controller
             'age' => 'required',
             'address' => 'required|nullable',
         ]);
+
+        //dd($request);
 
         DB::beginTransaction();
 
@@ -46,6 +51,7 @@ class PatientController extends Controller
             $patient->age = $request->age;
             $patient->address = $request->address;
             $patient->save();
+
             DB::commit();
             return redirect()->route('patients')->with('success', 'Patient created successfully');
         } catch (\Exception $e) {
@@ -62,10 +68,10 @@ class PatientController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request -> validate([
+        $request->validate([
             'fname' => 'required',
             'lname' => 'required',
-            'email' => 'required|email|unique:patients,email,'.$id,
+            'email' => 'required|email|unique:patients,email,' . $id,
             'DOB' => 'required',
             'phone' => 'required',
             'gender' => 'required',
@@ -86,6 +92,7 @@ class PatientController extends Controller
             $patient->age = $request->age;
             $patient->address = $request->address;
             $patient->save();
+            
             DB::commit();
             return redirect()->route('patients.index')->with('success', 'Patient updated successfully');
         } catch (\Exception $e) {
@@ -96,7 +103,9 @@ class PatientController extends Controller
 
     public function destroy($id)
     {
-       DB::table('patients')->where('id', $id)->delete();
-       return redirect()->route('patients')->with('success', 'Patient deleted successfully');
+        DB::table('patients')->where('id', $id)->delete();
+        return redirect()->route('patients')->with('success', 'Patient deleted successfully');
     }
+
+
 }
