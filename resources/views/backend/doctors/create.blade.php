@@ -38,46 +38,46 @@
                         <div class="row clearfix">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="First Name">
+                                    <input type="text" name="fname" class="form-control" placeholder="First Name">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Last Name">
+                                    <input type="text" name="lname" class="form-control" placeholder="Last Name">
                                 </div>
                             </div>
                         </div>
                         <div class="row clearfix">
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Date of Birth">
+                                    <input type="text" name="DOB" class="form-control" placeholder="Date of Birth">
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <select class="form-control show-tick">
                                     <option value="">- Gender -</option>
-                                    <option value="10">Male</option>
-                                    <option value="20">Female</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
                                 </select>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Speciality">
+                                    <input type="text" name="speciality" class="form-control" placeholder="Speciality">
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Phone">
+                                    <input type="text" name="phone" class="form-control" placeholder="Phone">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Enter Your Email">
+                                    <input type="text" name="email" class="form-control" placeholder="Enter Your Email">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Website URL">
+                                    <input type="text" name="website" class="form-control" placeholder="Website URL">
                                 </div>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -87,13 +87,13 @@
                                         <h3>Drop files here or click to upload.</h3>
                                         <em>(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</em> </div>
                                     <div class="fallback">
-                                        <input name="file" type="file" multiple />
+                                        <input name="image" type="file" multiple />
                                     </div>
                                 </form>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <textarea rows="4" class="form-control no-resize" placeholder="Please type what you want..."></textarea>
+                                    <textarea rows="4" name="description" class="form-control no-resize" placeholder="Please type what you want..."></textarea>
                                 </div>
                             </div>
                             <div class="col-sm-12">
