@@ -23,8 +23,6 @@ class PatientController extends Controller
     public function store(Request $request)
     {
 
-        //dd($request);
-
         $request->validate([
             'fname' => 'required',
             'lname' => 'required',
@@ -35,8 +33,6 @@ class PatientController extends Controller
             'age' => 'required',
             'address' => 'required|nullable',
         ]);
-
-        //dd($request);
 
         DB::beginTransaction();
 
