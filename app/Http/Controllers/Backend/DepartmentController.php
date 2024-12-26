@@ -11,7 +11,8 @@ class DepartmentController extends Controller
 {
     public function index()
     {
-        return view('backend.departments.index');
+        $departments = Department::all();
+        return view('backend.departments.index', compact('departments'));
     }
 
     public function create()

@@ -6,15 +6,15 @@
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-5 col-sm-12">
-                <h2>Departments
+                <h2>Users
                     <small class="text-muted">Welcome to Oreo</small>
                 </h2>
             </div>
             <div class="col-lg-5 col-md-7 col-sm-12">
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a></li>
-                    <li class="breadcrumb-item"><a href="{{route('departments')}}">Departments</a></li>
-                    <li class="breadcrumb-item active">Departments</li>
+                    <li class="breadcrumb-item"><a href="{{route('users')}}">Users</a></li>
+                    <li class="breadcrumb-item active">Users</li>
                 </ul>
             </div>
         </div>
@@ -25,10 +25,10 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="header">
-                        <h2><strong>All Departments</strong> </h2>
+                        <h2><strong>All Users</strong> </h2>
                         <ul class="header-dropdown">
                             <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('departments.create')}}" role="button">Create Department</a>
+                                <a class="btn btn-primary btn-lg" href="{{route('users.create')}}" role="button">Create User</a>
                             </li>
                         </ul>
                     </div>
@@ -38,32 +38,36 @@
                                 <thead>
                                     <tr>
                                         <th>*</th>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Image</th>
+                                        <th>Full Name</th>
+                                        <th>Email</th>
+                                        <th>Profile Type</th>
+                                        <th>Phone Number</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
-                                @foreach($departments as $department)
+                                    @foreach($users as $user)
 
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$department->name}}</td>
-                                        <td>{{str_limit($department->description, 50)}}</td>
-                                        <td>{{$department->image}}</td>
+                                        <td>{{$user->fname}} {{$user->lname}}</td>
+                                        <td>{{$user->email}}</td>
+                                        <td>{{$user->profile->profile_type}}</td>
+                                        <td>{{$user->profile->phone_number}}</td>
+                                        <td>{{$user->profile->status}}</td>
                                         <td>
                                             <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
                                                     class="zmdi zmdi-edit"></i></button> -->
-                                                    <a href="{{route('departments.edit', $department->id)}}"></a>
+                                                    <a href="{{route('users.edit', $user->id)}}"></a>
                                             <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
                                                     class="zmdi zmdi-delete"></i></button> -->
-                                                    <a href="{{route('departments.destroy', $department->id)}}"></a>
+                                                    <a href="{{route('users.destroy', $user->id)}}"></a>
                                         </td>
                                     </tr>
 
-                                @endforeach
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
