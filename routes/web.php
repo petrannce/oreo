@@ -11,6 +11,7 @@ use App\Http\Controllers\Backend\DoctorController;
 use App\Http\Controllers\Backend\PatientController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\FaqController;
+use App\Http\Controllers\Backend\TagController;
 
 
 /*
@@ -96,6 +97,16 @@ Route::controller(DepartmentController ::class)->prefix('admin')->group(function
     Route::get('/departments/{id}/edit', 'edit')->name('departments.edit');
     Route::put('/departments/{id}', 'update')->name('departments.update');
     Route::delete('/departments/{id}', 'destroy')->name('departments.destroy');
+});
+
+//Tags
+Route::controller(TagController::class)->group(function () {
+    Route::get('/tags', 'index')->name('tags');
+    Route::get('/tags/create', 'create')->name('tags.create');
+    Route::post('/tags', 'store')->name('tags.store');
+    Route::get('/tags/{id}/edit', 'edit')->name('tags.edit');
+    Route::put('/tags/{id}', 'update')->name('tags.update');
+    Route::delete('/tags/{id}', 'destroy')->name('tags.destroy');
 });
 
 Route::controller(BlogController ::class)->group(function () {

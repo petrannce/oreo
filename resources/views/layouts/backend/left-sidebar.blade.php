@@ -63,6 +63,12 @@
                             <li><a href="blog-list.html">Tags</a></li>
                         </ul>
                     </li>
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-blogger"></i><span>Tag</span></a>
+                        <ul class="ml-menu">
+                            <li><a href="{{route('tags')}}">All Tags</a></li>
+                            <li><a href="{{route('tags.create')}}">New Tag</a></li>
+                        </ul>
+                    </li>
                     <li><a href="index.html"><i class="zmdi zmdi-home"></i><span>FAQ</span></a></li>
                     <li><a href="{{route('subscribers')}}"><i class="zmdi zmdi-home"></i><span>Subscribers</span></a></li>
                     <li><a href="{{route('users')}}"><i class="zmdi zmdi-home"></i><span>Users</span></a></li>
