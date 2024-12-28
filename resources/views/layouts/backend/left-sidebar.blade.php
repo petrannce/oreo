@@ -60,7 +60,6 @@
                             <li><a href="blog-dashboard.html">Blog Dashboard</a></li>
                             <li><a href="{{route('blogs')}}">All Blogs</a></li>
                             <li><a href="{{route('blogs.create')}}">New Post</a></li>
-                            <li><a href="blog-list.html">Tags</a></li>
                         </ul>
                     </li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-blogger"></i><span>Tag</span></a>
