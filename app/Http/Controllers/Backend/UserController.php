@@ -23,23 +23,24 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'fname' => 'required',
             'lname' => 'required',
             'username' => 'required',
             'email' => 'required|email|unique:users,email', // Ensure unique email for users
-            'role' => 'required',
-            'password' => 'required',
+            'password' => 'required', 'string', 'min:8', 'confirmed',
         ]);
-
+        
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
             'username' => $request->username,
             'email' => $request->email,
-            'role' => 'user',
             'password' => Hash::make($request->password),
         ]);
+
+        //dd($user);
 
         $user->profile()->create([
             'profile_type' => 'user',
@@ -51,7 +52,7 @@ class UserController extends Controller
             'status' => 'active',
             'image' => $request->image,
         ]);
-
+dd($user);
         return redirect()->route('users')->with('success', 'User created successfully');
     }
 

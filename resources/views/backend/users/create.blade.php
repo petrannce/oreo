@@ -61,20 +61,20 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Enter Your Email">
+                                            <input type="text" name="email" class="form-control" placeholder="Enter Your Email">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
-                                        <h6>The default password is 12345678</h6>
+                                        <span>The default password is 12345678</span>
                                         <div class="form-group">
                                             <input type="password" name="password" class="form-control"
-                                                placeholder="Password" minlength="8">
+                                                placeholder="Password" minlength="8" value="12345678">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input type="text" name="confirm_password" class="form-control"
-                                                placeholder="Confirm Password" minlength="8">
+                                            <input type="password" name="confirm_password" class="form-control"
+                                                placeholder="Confirm Password" minlength="8" value="12345678">
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
