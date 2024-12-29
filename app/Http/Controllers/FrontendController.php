@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Subscriber;
+use App\Models\Contact;
 
 class FrontendController extends Controller
 {
@@ -20,6 +21,27 @@ class FrontendController extends Controller
     public function contact()
     {
         return view('frontend.home.contact');
+    }
+
+    public function contactStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'required',
+            'subject' => 'required',
+            'message' => 'required',
+        ]);
+
+        $contact = new Contact();
+        $contact->name = $request->name;
+        $contact->email = $request->email;
+        $contact->phone_number = $request->phone_number;
+        $contact->subject = $request->subject;
+        $contact->message = $request->message;
+        $contact->save();
+
+        return redirect()->route('contact')->with('success', 'Message sent successfully');
     }
 
     public function faqs()

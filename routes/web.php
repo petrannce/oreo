@@ -33,6 +33,7 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/about', 'about')->name('about');
     Route::get('/contact', 'contact')->name('contact');
+    Route::post ('/contact', 'contactStore')->name('contact.store');
     Route::get('/gallery', 'gallery')->name('gallery');
     Route::get('/faqs', 'faqs')->name('faqs');
     Route::get('/services', 'services')->name('services');

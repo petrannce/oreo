@@ -79,7 +79,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <ul class="list-unstyled">
-                                        <li><a href="about.html">About Us</a></li>
+                                        <li><a href="{{route('about')}}">About Us</a></li>
                                         <li><a href="javascript:void(0);">Consultants</a></li>
                                         <li><a href="javascript:void(0);">Working Hours</a></li>
                                         <li><a href="javascript:void(0);">Procedures</a></li>
@@ -88,9 +88,8 @@
                                 </div>
                                 <div class="col-6">
                                     <ul class="list-unstyled">
-                                        <li><a href="javascript:void(0);">Services</a></li>
+                                        <li><a href="{{route('services')}}">Services</a></li>
                                         <li><a href="javascript:void(0);">Healthy Foods</a></li>
-                                        <li><a href="javascript:void(0);">Appointments</a></li>
                                         <li><a href="javascript:void(0);">Latest News</a></li>
                                         <li><a href="javascript:void(0);">Certificates</a></li>
                                     </ul>
@@ -116,7 +115,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-6 col-md-6">
-                            <small>Copyright &copy; 2018 Oreo Theme by <a href="http://thememakker.com/"
+                            <small>Copyright &copy; {{date('Y')}} Oreo Theme by <a href="http://thememakker.com/"
                                     target="_blank">ThemeMakker</a>
                             </small>
                         </div>
