@@ -43,6 +43,8 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/doctors-details', 'doctorsDetails')->name('doctorsDetails');
     Route::get('/blog', 'blog')->name('blog');
     Route::get('/blog-details', 'blogDetails')->name('blogDetails');
+    Route::get('/subscribers', 'subscriber')->name('subscriber');
+    Route::post('/subscribers', 'subscriberStore')->name('subscriber.store');
 });
 
 Auth::routes();

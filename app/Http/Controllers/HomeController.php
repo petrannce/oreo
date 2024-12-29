@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Subscriber;
 
 class HomeController extends Controller
 {
@@ -29,7 +30,8 @@ class HomeController extends Controller
 
     public function subscribers()
     {
-        return view('backend.subscribers.index');
+        $subscribers = Subscriber::all();
+        return view('backend.subscribers.index', compact('subscribers'));
     }
 
     public function subscribersDestroy($id)

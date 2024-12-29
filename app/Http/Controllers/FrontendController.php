@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Subscriber;
 
 class FrontendController extends Controller
 {
@@ -69,5 +70,25 @@ class FrontendController extends Controller
     public function blogDetails()
     {
         return view('frontend.blogs.blogDetails');
+    }
+
+    public function subscriber()
+    {
+        return view('frontend.subscribers.index');
+    }
+
+    public function subscriberStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:subscribers',
+        ]);
+
+        $subscriber = new Subscriber();
+        $subscriber->name = $request->name;
+        $subscriber->email = $request->email;
+        $subscriber->save();
+
+        return redirect()->route('home')->with('success', 'Subscribed successfully');
     }
 }

@@ -12,7 +12,8 @@ class BlogController extends Controller
 {
     public function index()
     {
-        return view('backend.blogs.index');
+        $blogs = Blog::all();
+        return view('backend.blogs.index', compact('blogs'));
     }
 
     public function create()
@@ -20,10 +21,9 @@ class BlogController extends Controller
         $tags = Tag::all();
         return view('backend.blogs.create', compact('tags'));
     }
-    
+
     public function store(Request $request)
     {
-
         $request->validate([
             'title' => 'required',
             'tag' => 'required',
@@ -32,6 +32,7 @@ class BlogController extends Controller
         ]);
 
         DB::beginTransaction();
+
         try {
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
@@ -45,10 +46,10 @@ class BlogController extends Controller
             $blog->image = $image_name;
             $blog->save();
             DB::commit();
-            return redirect()->back()->with('success', 'Blog created successfully');
+            return redirect()->route('blogs')->with('success', 'Blog created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Blog creation failed');
+            return redirect()->route('blogs.create')->with('error', 'Blog creation failed');
         }
     }
 

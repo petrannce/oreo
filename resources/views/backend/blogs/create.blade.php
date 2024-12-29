@@ -38,8 +38,7 @@
                                 <select class="form-control show-tick" name="tag">
                                     <option value="">Select Tag --</option>
                                     @foreach ($tags as $tag)
-
-                                        <option value="{{$tag->id}}">{{$tag->name}}</option>
+                                        <option value="{{$tag->name}}">{{$tag->name}}</option>
                                     @endforeach
 
                                 </select>
@@ -56,12 +55,12 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
-                    <div class="mb-3" align="center">
-                        <button type="submit" class="btn btn-primary btn-round">Submit</button>
-                        <button type="submit" class="btn btn-default btn-round btn-simple">Cancel</button>
-                    </div>utt
 
+                        <div class="mb-3" align="center">
+                            <button type="submit" class="btn btn-primary btn-round">Submit</button>
+                            <button type="submit" class="btn btn-default btn-round btn-simple">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
