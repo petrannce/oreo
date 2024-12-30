@@ -68,8 +68,8 @@ Route::controller(FaqController::class)->prefix('admin')->group(function () {
 });
 
 //gallery
-Route::controller(GalleryController::class)->group(function () {
-    Route::get('/gallery', 'index')->name('gallery');
+Route::controller(GalleryController::class)->prefix('admin')->group(function () {
+    Route::get('/gallery', 'index')->name('galleries');
     Route::get('/gallery/create', 'create')->name('gallery.create');
     Route::post('/gallery', 'store')->name('gallery.store');
     Route::get('/gallery/{id}/edit', 'edit')->name('gallery.edit');
