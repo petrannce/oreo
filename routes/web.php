@@ -12,6 +12,7 @@ use App\Http\Controllers\Backend\PatientController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\FaqController;
 use App\Http\Controllers\Backend\TagController;
+use App\Http\Controllers\Backend\GalleryController;
 
 
 /*
@@ -35,7 +36,7 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/contact', 'contact')->name('contact');
     Route::post ('/contact', 'contactStore')->name('contact.store');
     Route::get('/gallery', 'gallery')->name('gallery');
-    Route::get('/faqs', 'faqs')->name('faqs');
+    Route::get('/faqs', 'faqs')->name('faq');
     Route::get('/services', 'services')->name('services');
     Route::get('/service-details', 'serviceDetails')->name('serviceDetails');
     Route::get('/departments', 'department')->name('department');
@@ -57,13 +58,23 @@ Route::controller(HomeController::class)->group(function () {
 });
 
 //FAQs
-Route::controller(FaqController::class)->group(function () {
+Route::controller(FaqController::class)->prefix('admin')->group(function () {
     Route::get('/faqs', 'index')->name('faqs');
     Route::get('/faqs/create', 'create')->name('faqs.create');
     Route::post('/faqs', 'store')->name('faqs.store');
     Route::get('/faqs/{id}/edit', 'edit')->name('faqs.edit');
     Route::put('/faqs/{id}', 'update')->name('faqs.update');
     Route::delete('/faqs/{id}', 'destroy')->name('faqs.destroy');
+});
+
+//gallery
+Route::controller(GalleryController::class)->group(function () {
+    Route::get('/gallery', 'index')->name('gallery');
+    Route::get('/gallery/create', 'create')->name('gallery.create');
+    Route::post('/gallery', 'store')->name('gallery.store');
+    Route::get('/gallery/{id}/edit', 'edit')->name('gallery.edit');
+    Route::put('/gallery/{id}', 'update')->name('gallery.update');
+    Route::delete('/gallery/{id}', 'destroy')->name('gallery.destroy');
 });
 
 Route::controller(AppointmentController ::class)->group(function () {

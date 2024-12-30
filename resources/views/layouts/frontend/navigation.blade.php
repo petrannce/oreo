@@ -65,7 +65,7 @@
                                    aria-expanded="false">Pages</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="{{route('about')}}">About Us</a>
-                                    <a class="dropdown-item" href="{{route('faqs')}}">FAQs</a>
+                                    <a class="dropdown-item" href="{{route('faq')}}">FAQs</a>
                                     <a class="dropdown-item" href="{{route('gallery')}}">Galary</a>
                                 </div>
                             </li>
