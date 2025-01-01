@@ -82,7 +82,7 @@
                     <li><a href="{{route('galleries')}}"><i class="zmdi zmdi-home"></i><span>Galleries</span></a></li>
                     <li><a href="{{route('subscribers')}}"><i class="zmdi zmdi-home"></i><span>Subscribers</span></a>
                     </li>
-                    <li><a href="{{route('users')}}"><i class="zmdi zmdi-home"></i><span>Users</span></a></li>
+                    <li><a href="{{route('users.index')}}"><i class="zmdi zmdi-home"></i><span>Users</span></a></li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-folder"></i><span>File
                                 Manager</span> </a>
                         <ul class="ml-menu">

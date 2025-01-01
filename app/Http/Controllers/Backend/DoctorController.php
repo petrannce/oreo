@@ -16,11 +16,13 @@ class DoctorController extends Controller
 
     public function create()
     {
-        return view('backend.doctors.create');
+        $departments = DB::table('departments')->get();
+        return view('backend.doctors.create', compact('departments'));
     }
 
     public function store(Request $request)
     {
+
         // Validate incoming request data
         $request->validate([
             'fname' => 'required',
@@ -29,17 +31,9 @@ class DoctorController extends Controller
             'speciality' => 'required',
             'department' => 'required',
             'employment_type' => 'required',
-            'description' => 'required',
-            'profile_type' => 'nullable|in:doctor',
-            'country' => 'nullable',
-            'city' => 'nullable',
-            'address' => 'required',
-            'phone_number' => 'nullable',
-            'gender' => 'nullable',
-            'status' => 'nullable|in:active,inactive', // Ensure only 'active' or 'inactive'
-            'image' => 'nullable|image|max:2048',
+            'description' => 'required'
         ]);
-
+dd($request->all());
         DB::beginTransaction();
         try {
 
@@ -61,6 +55,7 @@ class DoctorController extends Controller
             $doctor->save();
 
             $doctor->profile()->create([ // Using the relationship to create the profile
+                'doctor_id' => $doctor->id,
                 'profile_type' => 'doctor',
                 'country' => $request->country,
                 'city' => $request->city,

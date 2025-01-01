@@ -61,14 +61,14 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <input type="text" name="speciality" class="form-control"
                                             placeholder="Speciality">
                                     </div>
                                 </div>
 
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <select class="form-control show-tick" name="department">
                                         <option value="">- Department -</option>
                                         @foreach ($departments as $department)
@@ -77,7 +77,7 @@
                                         
                                     </select>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <select class="form-control show-tick" name="employee_type">
                                         <option value="">- Employee Type -</option>
                                         <option value="permanent">Permanent</option>
@@ -88,6 +88,34 @@
                                     </select>
                                 </div>
 
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <input type="text" name="DOB" class="form-control" placeholder="Date of Birth">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <select class="form-control show-tick">
+                                        <option value="">- Gender -</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <input type="text" name="phone" class="form-control" placeholder="Phone">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input type="text" name="website" class="form-control"
+                                            placeholder="Website URL">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <div class="fallback">
+                                        <input name="image" type="file" multiple />
+                                    </div>
+                                </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <textarea rows="4" name="description" class="form-control no-resize"

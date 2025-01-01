@@ -13,7 +13,7 @@
             <div class="col-lg-5 col-md-7 col-sm-12">
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a></li>
-                    <li class="breadcrumb-item"><a href="{{route('users')}}">Users</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('users.index')}}">Users</a></li>
                     <li class="breadcrumb-item active">Users</li>
                 </ul>
             </div>
@@ -54,16 +54,16 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$user->fname}} {{$user->lname}}</td>
                                         <td>{{$user->email}}</td>
-                                        <td>{{$user->profile->profile_type}}</td>
-                                        <td>{{$user->profile->phone_number}}</td>
-                                        <td>{{$user->profile->status}}</td>
+                                        <td>$user->profile->profile_type</td>
+                                        <td>$user->profile->phone_number</td>
+                                        <td>$user->profile->status</td>
                                         <td>
-                                            <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-edit"></i></button> -->
-                                                    <a href="{{route('users.edit', $user->id)}}"></a>
-                                            <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-delete"></i></button> -->
-                                                    <a href="{{route('users.destroy', $user->id)}}"></a>
+                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
+                                                    class="zmdi zmdi-edit"></i></button>
+                                                    <!-- <a href="{{route('users.edit', $user->id)}}"></a> -->
+                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
+                                                    class="zmdi zmdi-delete"></i></button>
+                                                    <!-- <a href="{{route('users.destroy', $user->id)}}"></a> -->
                                         </td>
                                     </tr>
 

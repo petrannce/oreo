@@ -75,6 +75,7 @@ class RegisterController extends Controller
         ]);
 
         $user->profile()->create([
+            'user_id' => $user->id,
             'profile_type' => 'user',
             'country' => $data['country'],
             'city' => $data['city'],

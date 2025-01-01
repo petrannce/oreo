@@ -43,6 +43,7 @@ class UserController extends Controller
         //dd($user);
 
         $user->profile()->create([
+            'user_id' => $user->id,
             'profile_type' => 'user',
             'country' => $request->country,
             'city' => $request->city,
@@ -52,8 +53,7 @@ class UserController extends Controller
             'status' => 'active',
             'image' => $request->image,
         ]);
-dd($user);
-        return redirect()->route('users')->with('success', 'User created successfully');
+        return redirect()->route('users.index')->with('success', 'User created successfully');
     }
 
     public function edit($id)
