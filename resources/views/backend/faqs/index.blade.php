@@ -51,19 +51,13 @@
 
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
-                                            <td>{{$faq->question}}</td>
-                                            <td>{{$faq->answer}}</td>
+                                            <td>{{str_limit($faq->question, 30)}}</td>
+                                            <td>{{str_limit($faq->answer, 50)}}</td>
                                             <td>
-                                                <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-edit"></i></button> -->
-                                                <a href="{{route('faqs.edit', $faq->id)}}"
-                                                    class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-edit"></i></a>
-                                                <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-delete"></i></button> -->
-                                                <a href="{{route('faqs.destroy', $faq->id)}}"
-                                                    class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-delete"></i></a>
+                                                <button onclick="" class="btn btn-icon btn-neutral btn-icon-mini"><i
+                                                        class="zmdi zmdi-edit"></i></button>
+                                                <button onclick="" class="btn btn-icon btn-neutral btn-icon-mini"><i
+                                                        class="zmdi zmdi-delete"></i></button>
                                             </td>
                                         </tr>
 
@@ -77,5 +71,9 @@
         </div>
     </div>
 </section>
+
+<script>
+
+</script>
 
 @endsection

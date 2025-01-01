@@ -51,17 +51,17 @@
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$department->name}}</td>
-                                        <td>{{$department->description}}</td>
+                                        <td>{{str_limit($department->description, 50)}}</td>
                                         <td>{{$department->image}}</td>
                                         <td>
-                                            <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-edit"></i></button> -->
-                                                    <a href="{{route('departments.edit', $department->id)}}" class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-edit"></i></a>
-                                            <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-delete"></i></button> -->
-                                                    <a href="{{route('departments.destroy', $department->id)}}" class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-delete"></i></a>
+                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
+                                                    class="zmdi zmdi-edit"></i></button>
+                                                    <!-- <a href="{{route('departments.edit', $department->id)}}" class="btn btn-icon btn-neutral btn-icon-mini"><i
+                                                    class="zmdi zmdi-edit"></i></a> -->
+                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
+                                                    class="zmdi zmdi-delete"></i></button>
+                                                    <!-- <a href="{{route('departments.destroy', $department->id)}}" class="btn btn-icon btn-neutral btn-icon-mini"><i
+                                                    class="zmdi zmdi-delete"></i></a> -->
                                         </td>
                                     </tr>
 
