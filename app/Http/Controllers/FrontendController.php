@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Subscriber;
 use App\Models\Contact;
+use App\Models\Department;
+use App\Models\Blog;
 
 class FrontendController extends Controller
 {
@@ -66,7 +68,8 @@ class FrontendController extends Controller
 
     public function department()
     {
-        return view('frontend.departments.index');
+        $departments = Department::all();
+        return view('frontend.departments.index', compact('departments'));
     }
 
     public function departmentDetails()
@@ -86,7 +89,8 @@ class FrontendController extends Controller
 
     public function blog()
     {
-        return view('frontend.blogs.index');
+        $blogs = Blog::all();
+        return view('frontend.blogs.index', compact('blogs'));
     }
 
     public function blogDetails()
