@@ -20,7 +20,6 @@
                 <div class="row">
                     <div class="section-title col-12" data-aos="fade-right">
                         <h2><span>FAQs </span></h2>
-                        <p>Description text here...</p>
                     </div>
                 </div>
                 <div class="row clearfix">

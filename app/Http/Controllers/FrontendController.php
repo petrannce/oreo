@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Subscriber;
 use App\Models\Contact;
 use App\Models\Department;
 use App\Models\Blog;
 use App\Models\Doctor;
+use App\Models\Service;
+use App\Models\Gallery;
+use App\Models\Faq;
 
 class FrontendController extends Controller
 {
@@ -49,22 +53,26 @@ class FrontendController extends Controller
 
     public function faqs()
     {
-        return view('frontend.home.faqs');
+        $faq = Faq::all();
+        return view('frontend.home.faqs', compact('faq'));
     }
 
     public function gallery()
     {
-        return view('frontend.home.gallery');
+        $gallery = Gallery::all();
+        return view('frontend.home.gallery', compact('gallery'));
     }
 
     public function services()
     {
-        return view('frontend.services.index');
+        $services = Service::all();
+        return view('frontend.services.index', compact('services'));
     }
 
-    public function serviceDetails()
+    public function serviceDetails($id)
     {
-        return view('frontend.services.serviceDetails');
+        $service = Service::firstOrFail($id);
+        return view('frontend.services.serviceDetails', compact('service'));
     }
 
     public function department()
@@ -73,9 +81,10 @@ class FrontendController extends Controller
         return view('frontend.departments.index', compact('departments'));
     }
 
-    public function departmentDetails()
+    public function departmentDetails($id)
     {
-        return view('frontend.departments.departmentDetails');
+        $department = Department::firstOrFail($id);
+        return view('frontend.departments.departmentDetails', compact('department'));
     }
 
     public function doctors()
@@ -84,7 +93,7 @@ class FrontendController extends Controller
         return view('frontend.doctors.index', compact('doctors'));
     }
 
-    public function doctorsDetails()
+    public function doctorsDetails($id)
     {
         $doctor = Doctor::firstOrFail($id);
         return view('frontend.doctors.doctorsDetails', compact('doctor'));
@@ -114,11 +123,20 @@ class FrontendController extends Controller
             'email' => 'required|email|unique:subscribers',
         ]);
 
-        $subscriber = new Subscriber();
-        $subscriber->name = $request->name;
-        $subscriber->email = $request->email;
-        $subscriber->save();
+       DB::beginTransaction();
 
-        return redirect()->route('home')->with('success', 'Subscribed successfully');
+        try {
+            $subscriber = new Subscriber();
+            $subscriber->name = $request->name;
+            $subscriber->email = $request->email;
+            $subscriber->save();
+
+            DB::commit();
+            return redirect()->route('home')->with('success', 'Subscribed successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
+
     }
 }
