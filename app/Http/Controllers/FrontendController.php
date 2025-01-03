@@ -7,6 +7,7 @@ use App\Models\Subscriber;
 use App\Models\Contact;
 use App\Models\Department;
 use App\Models\Blog;
+use App\Models\Doctor;
 
 class FrontendController extends Controller
 {
@@ -79,12 +80,14 @@ class FrontendController extends Controller
 
     public function doctors()
     {
-        return view('frontend.doctors.index');
+        $doctors = Doctor::all();
+        return view('frontend.doctors.index', compact('doctors'));
     }
 
     public function doctorsDetails()
     {
-        return view('frontend.doctors.doctorsDetails');
+        $doctor = Doctor::firstOrFail($id);
+        return view('frontend.doctors.doctorsDetails', compact('doctor'));
     }
 
     public function blog()
@@ -93,9 +96,10 @@ class FrontendController extends Controller
         return view('frontend.blogs.index', compact('blogs'));
     }
 
-    public function blogDetails()
+    public function blogDetails($id)
     {
-        return view('frontend.blogs.blogDetails');
+        $blog = Blog::firstOrFail($id);
+        return view('frontend.blogs.blogDetails', compact('blog'));
     }
 
     public function subscriber()
