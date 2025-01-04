@@ -45,7 +45,6 @@
             <div class="row">
                 <div class="section-title col-12" data-aos="fade-right">
                     <h2><span>Why </span>Choose Us</h2>
-                    <p>Description text here...</p>
                 </div>
             </div>
             <div class="row justify-content-between">
@@ -81,61 +80,30 @@
             <div class="row">
                 <div class="section-title col-12" data-aos="fade-right">
                     <h2><span>Latest </span>From Blog</h2>
-                    <p>Description text here...</p>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="blog-box">
-                        <div class="blog-img">
-                            <img src="assets/images/blog-1.png" alt="">
-                        </div>
-                        <div class="blog-cnt">
-                            <h5><a href="javascript:void(0);">How to handle your kids’ from Lorem ipsum dolor sit
-                                    amet</a></h5>
-                            <p>The great explorer of the truth, master builder of human happiness one rejects,
-                                dislikes[...]</p>
-                        </div>
-                        <div class="blog-info">
-                            <span class="blog-date"><i class="zmdi zmdi-calendar"></i> 02 Feb 2018</span>
-                            <span class="blog-comment"><i class="zmdi zmdi-comments"></i> Comment ( 25 )</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="blog-box">
-                        <div class="blog-img">
-                            <img src="assets/images/blog-2.png" alt="">
-                        </div>
-                        <div class="blog-cnt">
-                            <h5><a href="javascript:void(0);">How to handle your kids’ from Lorem ipsum dolor sit
-                                    amet</a></h5>
-                            <p>The great explorer of the truth, master builder of human happiness one rejects,
-                                dislikes[...]</p>
-                        </div>
-                        <div class="blog-info">
-                            <span class="blog-date"><i class="zmdi zmdi-calendar"></i> 02 Feb 2018</span>
-                            <span class="blog-comment"><i class="zmdi zmdi-comments"></i> Comment ( 25 )</span>
+                
+                @foreach ($blogs as $blog)
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog-box">
+                            <div class="blog-img">
+                                <img src="assets/images/blog-1.png" alt="">
+                            </div>
+                            <div class="blog-cnt">
+                                <h5><a href="javascript:void(0);">{{$blog->title}}</a></h5>
+                                <p>{!!str_limit($blog->description, 100, '...')!!}</p>
+                            </div>
+                            <div class="blog-info">
+                                <span class="blog-date"><i class="zmdi zmdi-calendar"></i> 02 Feb 2018</span>
+                                <span class="blog-comment"><i class="zmdi zmdi-comments"></i> Comment ( 25 )</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="blog-box">
-                        <div class="blog-img">
-                            <img src="assets/images/blog-3.png" alt="">
-                        </div>
-                        <div class="blog-cnt">
-                            <h5><a href="javascript:void(0);">How to handle your kids’ from Lorem ipsum dolor sit
-                                    amet</a></h5>
-                            <p>The great explorer of the truth, master builder of human happiness one rejects,
-                                dislikes[...]</p>
-                        </div>
-                        <div class="blog-info">
-                            <span class="blog-date"><i class="zmdi zmdi-calendar"></i> 02 Feb 2018</span>
-                            <span class="blog-comment"><i class="zmdi zmdi-comments"></i> Comment ( 25 )</span>
-                        </div>
-                    </div>
-                </div>
+
+                @endforeach
+
             </div>
         </div>
     </div>

@@ -78,7 +78,8 @@ class FrontendController extends Controller
     public function department()
     {
         $departments = Department::all();
-        return view('frontend.departments.index', compact('departments'));
+        $blogs = Db::table('blogs')->orderBy('id', 'desc')->limit(3)->get();
+        return view('frontend.departments.index', compact('departments', 'blogs'));
     }
 
     public function departmentDetails($id)

@@ -86,8 +86,8 @@ Route::controller(AppointmentController ::class)->group(function () {
     Route::delete('/appointment/{id}', 'destroy')->name('appointment.destroy');
 });
 
-Route::controller(DoctorController ::class)->group(function () {
-    Route::get('/doctors', 'index')->name('doctors');
+Route::controller(DoctorController ::class)->prefix('admin')->group(function () {
+    Route::get('/doctors', 'index')->name('doctors.index');
     Route::get('/doctors/create', 'create')->name('doctors.create');
     Route::post('/doctors', 'store')->name('doctors.store');
     Route::get('/doctors/{id}/edit', 'edit')->name('doctors.edit');
