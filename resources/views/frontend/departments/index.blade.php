@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="row">
-                
+
                 @foreach ($blogs as $blog)
 
                     <div class="col-lg-4 col-md-6">
@@ -96,7 +96,7 @@
                                 <p>{!!str_limit($blog->description, 100, '...')!!}</p>
                             </div>
                             <div class="blog-info">
-                                <span class="blog-date"><i class="zmdi zmdi-calendar"></i> 02 Feb 2018</span>
+                                <span class="blog-date"><i class="zmdi zmdi-calendar"></i> {{$blog->created_at}}</span>
                                 <span class="blog-comment"><i class="zmdi zmdi-comments"></i> Comment ( 25 )</span>
                             </div>
                         </div>

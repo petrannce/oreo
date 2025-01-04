@@ -32,7 +32,7 @@ use App\Http\Controllers\Backend\GalleryController;
 
 Route::controller(FrontendController::class)->group(function () {
     Route::get('/', 'index')->name('home');
-    Route::get('/about', 'about')->name('about');
+    Route::get('/about-us', 'about')->name('about');
     Route::get('/contact', 'contact')->name('contact');
     Route::post ('/contact', 'contactStore')->name('contact.store');
     Route::get('/gallery', 'gallery')->name('gallery');

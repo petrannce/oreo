@@ -70,7 +70,7 @@
                                             class="zmdi zmdi-instagram"></i></button>
                                 </div>
                             </div>
-                            <p>{{str_limit($blog->description, 100, '...')}}</p>
+                            <p>{{str_limit($blog->description, 200, '...')}}</p>
                             <a href="blog-detail.html" title="read more" class="btn btn-round btn-info">Read More</a>
                         </div>
                     </div>
@@ -127,11 +127,14 @@
                     </div>
                     <div class="body widget tag-clouds">
                         <ul class="list-unstyled m-b-0">
-                            <li><a href="javascript:void(0);" class="tag badge badge-default">Cardio Monitoring</a></li>
-                            <li><a href="javascript:void(0);" class="tag badge badge-success">Traumatology</a></li>
-                            <li><a href="javascript:void(0);" class="tag badge badge-info">Creative UX</a></li>
-                            <li><a href="javascript:void(0);" class="tag badge badge-success">Pulmonary</a></li>
-                            <li><a href="javascript:void(0);" class="tag badge badge-warning">Cardiology</a></li>
+
+                            @foreach ($tags as $tag)
+                                <li>
+                                    <a href="javascript:void(0);" class="tag badge badge-default">{{$tag->name}}</a>
+                                </li>
+
+                            @endforeach
+
                         </ul>
                     </div>
                 </div>
@@ -141,39 +144,16 @@
                     </div>
                     <div class="body widget">
                         <ul class="list-unstyled instagram-plugin m-b-0">
-                            <li><a href="javascript:void(0);"><img src="assets/images/blog/05-img.jpg"
-                                        alt="image description"></a></li>
-                            <li><a href="javascript:void(0);"><img src="assets/images/blog/06-img.jpg"
-                                        alt="image description"></a></li>
-                            <li><a href="javascript:void(0);"><img src="assets/images/blog/07-img.jpg"
-                                        alt="image description"></a></li>
-                            <li><a href="javascript:void(0);"><img src="assets/images/blog/08-img.jpg"
-                                        alt="image description"></a></li>
-                            <li><a href="javascript:void(0);"><img src="assets/images/blog/09-img.jpg"
-                                        alt="image description"></a></li>
-                            <li><a href="javascript:void(0);"><img src="assets/images/blog/10-img.jpg"
-                                        alt="image description"></a></li>
-                            <li><a href="javascript:void(0);"><img src="assets/images/blog/11-img.jpg"
-                                        alt="image description"></a></li>
-                            <li><a href="javascript:void(0);"><img src="assets/images/blog/12-img.jpg"
-                                        alt="image description"></a></li>
-                            <li><a href="javascript:void(0);"><img src="assets/images/blog/13-img.jpg"
-                                        alt="image description"></a></li>
+
+                        @foreach ($galleries as $gallery)
+
+                        <li><a href="javascript:void(0);"><img src="{{asset('images/gallery/'.$gallery->image)}}"
+                                        alt="image description"></a>
+                            </li>
+                        
+                        @endforeach
+                            
                         </ul>
-                    </div>
-                </div>
-                <div class="card" data-aos="fade-left" data-aos-offset="200" data-aos-duration="2000">
-                    <div class="header">
-                        <h2><strong>Email</strong> Newsletter <small>Get our products/news earlier than others, let’s
-                                get in touch.</small></h2>
-                    </div>
-                    <div class="body widget newsletter">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Enter Email">
-                            <span class="input-group-addon">
-                                <i class="zmdi zmdi-mail-send"></i>
-                            </span>
-                        </div>
                     </div>
                 </div>
             </div>

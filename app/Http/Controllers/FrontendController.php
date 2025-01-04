@@ -17,7 +17,8 @@ class FrontendController extends Controller
 {
     public function index()
     {
-        return view('frontend.home.index');
+        $blogs = Blog::all();
+        return view('frontend.home.index', compact('blogs'));
     }
 
     public function about()
@@ -103,7 +104,9 @@ class FrontendController extends Controller
     public function blog()
     {
         $blogs = Blog::all();
-        return view('frontend.blogs.index', compact('blogs'));
+        $tags = DB::table('tags')->get();
+        $galleries = Gallery::all();
+        return view('frontend.blogs.index', compact('blogs', 'tags', 'galleries'));
     }
 
     public function blogDetails($id)
