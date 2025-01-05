@@ -11,8 +11,8 @@ class GalleryController extends Controller
 {
     public function index()
     {
-        
-        return view('backend.galleries.index');
+        $galleries = Gallery::all();
+        return view('backend.galleries.index', compact('galleries'));
     }
 
     public function create()
@@ -45,7 +45,7 @@ class GalleryController extends Controller
 
     public function edit($id)
     {
-        $gallery = Gallery::find($id);
+        $gallery = Gallery::findOrFail($id);
         return view('backend.galleries.edit', compact('gallery'));
     }
 
@@ -59,7 +59,7 @@ class GalleryController extends Controller
         DB::beginTransaction();
 
         try {
-            $gallery = Gallery::find($id);
+            $gallery = Gallery::findOrFail($id);
             $gallery->title = $request->title;
             $gallery->image = $request->image;
             $gallery->save();

@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\DB;
 class TagController extends Controller
 {
     public function index(){
-        return view('backend.tags.index');
+
+        $tags = Tag::all();
+        return view('backend.tags.index', compact('tags'));
     }
 
     public function create(){
@@ -37,11 +39,13 @@ class TagController extends Controller
     }
 
     public function edit($id){
-        $tag = Tag::find($id);
+
+        $tag = Tag::findOrFail($id);
         return view('backend.tags.edit', compact('tag'));
     }
 
     public function update(Request $request, $id){
+
         $request->validate([
             'name' => 'required'
         ]);
@@ -52,6 +56,7 @@ class TagController extends Controller
             $tag->name = $request->name;
             $tag->save();
             DB::commit();
+            
             return redirect()->route('tags')->with('success', 'Tag updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();

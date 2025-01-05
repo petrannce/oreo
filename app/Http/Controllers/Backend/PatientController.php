@@ -11,12 +11,12 @@ class PatientController extends Controller
 {
     public function index()
     {
-        return view('backend.patients.index');
+        $patients = Patient::all();
+        return view('backend.patients.index', compact('patients'));
     }
 
     public function create()
     {
-
         return view('backend.patients.create');
     }
 
@@ -58,7 +58,7 @@ class PatientController extends Controller
 
     public function edit($id)
     {
-        $patient = Patient::find($id);
+        $patient = Patient::findOrFail($id);
         return view('backend.patients.edit', compact('patient'));
     }
 
@@ -78,7 +78,7 @@ class PatientController extends Controller
         DB::beginTransaction();
 
         try {
-            $patient = Patient::find($id);
+            $patient = Patient::findOrFail($id);
             $patient->fname = $request->fname;
             $patient->lname = $request->lname;
             $patient->email = $request->email;
