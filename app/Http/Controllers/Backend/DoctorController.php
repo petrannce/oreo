@@ -11,7 +11,8 @@ class DoctorController extends Controller
 {
     public function index()
     {
-        return view('backend.doctors.index');
+        $doctors = Doctor::all();
+        return view('backend.doctors.index', compact('doctors'));
     }
 
     public function create()

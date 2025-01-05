@@ -11,7 +11,8 @@ class AppointmentController extends Controller
 {
     public function index()
     {
-        return view('backend.appointments.index');
+        $appointments = Appointment::all();
+        return view('backend.appointments.index',compact('appointments'));
     }
 
     public function create()
@@ -60,7 +61,7 @@ class AppointmentController extends Controller
 
     public function edit($id)
     {
-        $appointment = Appointment::find($id);
+        $appointment = Appointment::findOrFail($id);
         return view('backend.appointments.edit', compact('appointment'));
     }
 
@@ -82,7 +83,7 @@ class AppointmentController extends Controller
 
         DB::beginTransaction();
         try {
-            $appointment = Appointment::find($id);
+            $appointment = Appointment::findOrFail($id);
             $appointment->fname = $request->fname;
             $appointment->lname = $request->lname;
             $appointment->email = $request->email;
