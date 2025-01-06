@@ -20,7 +20,7 @@
                 <div class="col-lg-8 col-md-12">
                     <div class="card single_post">
                         <div class="body">
-                            <h3 class="m-t-0 m-b-5"><a href="blog-details.html">All photographs are accurate. None of them is the truth</a></h3>
+                            <h3 class="m-t-0 m-b-5"><a href="blog-details.html">{{ $blog->title }}</a></h3>
                             <ul class="meta">
                                 <li><a href="javascript:void(0);"><i class="zmdi zmdi-account col-blue"></i>Posted By: John Smith</a></li>
                                 <li><a href="javascript:void(0);"><i class="zmdi zmdi-label col-red"></i>Photography</a></li>
@@ -36,7 +36,7 @@
                                     <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-instagram"></i></button>
                                 </div>
                             </div>
-                            <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal</p>
+                            <p>{{ $blog->description }}</p>
                             <a href="blog-details.html" title="read more" class="btn btn-round btn-info">Read More</a>                        
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                                         <h6>Gigi Hadid </h6>
                                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text</p>
                                         <ul class="list-inline">
-                                            <li><a href="javascript:void(0);">Jan 09 2018</a></li>
+                                            <li><a href="javascript:void(0);">{{$blog->created_at}}</a></li>
                                             <li><a href="javascript:void(0);">Reply</a></li>
                                         </ul>
                                     </div>

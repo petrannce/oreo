@@ -20,7 +20,6 @@
                 <div class="row">
                     <div class="section-title col-12" data-aos="fade-right">
                         <h2><span>Welcome </span>Oreo Hospital</h2>
-                        <p>Description text here...</p>
                     </div>
                 </div>
                 <div class="row justify-content-between">
@@ -58,7 +57,6 @@
                 <div class="row">
                     <div class="section-title col-12" data-aos="fade-right">
                         <h2><span>Why </span>Choose Us</h2>
-                        <p>Description text here...</p>
                     </div>
                 </div>
                 <div class="row">
@@ -136,7 +134,6 @@
                 <div class="row">
                     <div class="section-title col-12" data-aos="fade-right">
                         <h2><span>Most </span>Popular Services</h2>
-                        <p>Description text here...</p>
                     </div>
                 </div>
                 <div class="row" data-aos="flip-up">
