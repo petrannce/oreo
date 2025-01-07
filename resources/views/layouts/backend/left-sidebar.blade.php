@@ -32,7 +32,7 @@
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-add"></i><span>Doctors</span> </a>
                         <ul class="ml-menu">
-                            <li><a href="{{route('doctors')}}">All Doctors</a></li>
+                            <li><a href="{{route('doctors.index')}}">All Doctors</a></li>
                             <li><a href="{{route('doctors.create')}}">Add Doctor</a></li>
                             <li><a href="profile.html">Doctor Profile</a></li>
                             <li><a href="events.html">Doctor Schedule</a></li>

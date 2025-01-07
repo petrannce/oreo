@@ -32,28 +32,23 @@ class DoctorController extends Controller
             'speciality' => 'required',
             'department' => 'required',
             'employment_type' => 'required',
-            'description' => 'required'
+            'description' => 'required',
         ]);
-dd($request->all());
+dd($request);
         DB::beginTransaction();
         try {
 
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/doctors'), $imageName);
-            }
-
             // Create the doctor
-            $doctor = new Doctor();
-            $doctor->fname = $request->fname;
-            $doctor->lname = $request->lname;
-            $doctor->email = $request->email;
-            $doctor->speciality = $request->speciality;
-            $doctor->department = $request->department;
-            $doctor->employment_type = $request->employment_type;
-            $doctor->description = $request->description;
-            $doctor->save();
+            $doctor = Doctor::create([
+                'fname' => $request->fname,
+                'lname' => $request->lname,
+                'email' => $request->email,
+                'speciality' => $request->speciality,
+                'department' => $request->department,
+                'employment_type' => $request->employment_type,
+                'description' => $request->description,
+            ]);
+            dd($doctor);    
 
             $doctor->profile()->create([ // Using the relationship to create the profile
                 'doctor_id' => $doctor->id,
@@ -64,7 +59,6 @@ dd($request->all());
                 'phone_number' => $request->phone_number,
                 'gender' => $request->gender,
                 'status' => $request->status,
-                'image' => $imageName,
             ]);
 
             // Commit the transaction
