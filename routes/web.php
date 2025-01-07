@@ -78,7 +78,7 @@ Route::controller(GalleryController::class)->prefix('admin')->group(function () 
 });
 
 Route::controller(AppointmentController ::class)->group(function () {
-    Route::get('/appointment', 'index')->name('appointment');
+    Route::get('/appointment', 'index')->name('appointments.index');
     Route::get('/appointment/create', 'create')->name('appointment.create');
     Route::post('/appointment', 'store')->name('appointment.store');
     Route::get('/appointment/{id}/edit', 'edit')->name('appointment.edit');
@@ -96,8 +96,8 @@ Route::controller(DoctorController ::class)->prefix('admin')->group(function () 
 });
 
 Route::controller(PatientController ::class)->group(function () {
-    Route::get('/patients', 'index')->name('patients');
-    Route::get('/patients/create', 'create')->name('patients.create');
+    Route::get('/patients', 'index')->name('patients.index');
+    Route::get('/patients/create', 'create')->name('patient.create');
     Route::post('/patients', 'store')->name('patients.store');
     Route::get('/patients/{id}/edit', 'edit')->name('patients.edit');
     Route::put('/patients/{id}', 'update')->name('patients.update');

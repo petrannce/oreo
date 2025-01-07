@@ -25,7 +25,7 @@
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-calendar-check"></i><span>Appointment</span> </a>
                         <ul class="ml-menu">
-                            <li><a href="doctors.html">All Appointments</a></li>
+                            <li><a href="{{route('appointments.index')}}">All Appointments</a></li>
                             <li><a href="{{route('appointment.create')}}">Add Appointment</a></li>
                         </ul>
                     </li>
@@ -41,8 +41,8 @@
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-o"></i><span>Patients</span> </a>
                         <ul class="ml-menu">
-                            <li><a href="{{route('patients')}}">All Patients</a></li>
-                            <li><a href="{{route('patients.create')}}">Add Patient</a></li>
+                            <li><a href="{{route('patients.index')}}">All Patients</a></li>
+                            <li><a href="{{route('patient.create')}}">Add Patient</a></li>
                             <li><a href="patient-profile.html">Patient Profile</a></li>
                             <li><a href="patient-invoice.html">Invoice</a></li>
                         </ul>

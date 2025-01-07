@@ -43,12 +43,12 @@
                             <div class="row clearfix">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <input type="text" name="fname" class="form-control" placeholder="First Name">
+                                        <input type="text" name="fname" class="form-control" placeholder="First Name" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <input type="text" name="lname" class="form-control" placeholder="Last Name">
+                                        <input type="text" name="lname" class="form-control" placeholder="Last Name" required>
                                     </div>
                                 </div>
                             </div>
@@ -57,19 +57,19 @@
                             <div class="col-sm-6">
                                     <div class="form-group">
                                         <input type="text" name="email" class="form-control"
-                                            placeholder="Enter Your Email">
+                                            placeholder="Enter Your Email" required>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <input type="text" name="speciality" class="form-control"
-                                            placeholder="Speciality">
+                                            placeholder="Speciality" required>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-4">
-                                    <select class="form-control show-tick" name="department">
+                                    <select class="form-control show-tick" name="department" required>
                                         <option value="">- Department -</option>
                                         @foreach ($departments as $department)
                                         <option value="{{$department->name}}">{{$department->name}}</option>
@@ -78,7 +78,7 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
-                                    <select class="form-control show-tick" name="employee_type">
+                                    <select class="form-control show-tick" name="employee_type" required>
                                         <option value="">- Employee Type -</option>
                                         <option value="permanent">Permanent</option>
                                         <option value="contract">Contract</option>

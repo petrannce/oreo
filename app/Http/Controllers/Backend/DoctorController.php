@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Doctor;
 use DB;
+use Log;
 
 class DoctorController extends Controller
 {
@@ -34,9 +35,11 @@ class DoctorController extends Controller
             'employment_type' => 'required',
             'description' => 'required',
         ]);
-dd($request);
+// dd($request);
+
         DB::beginTransaction();
         try {
+            Log::info('Request data: ', $request->all());
 
             // Create the doctor
             $doctor = Doctor::create([
@@ -48,7 +51,7 @@ dd($request);
                 'employment_type' => $request->employment_type,
                 'description' => $request->description,
             ]);
-            dd($doctor);    
+            //dd($doctor);    
 
             $doctor->profile()->create([ // Using the relationship to create the profile
                 'doctor_id' => $doctor->id,
@@ -63,10 +66,11 @@ dd($request);
 
             // Commit the transaction
             DB::commit();
-            return redirect()->route('doctors')->with('success', 'Doctor and profile created successfully');
+            return redirect()->route('doctors.index')->with('success', 'Doctor and profile created successfully');
         } catch (\Exception $e) {
             // Rollback the transaction if anything fails
             DB::rollBack();
+            Log::error('Failed to create doctor and profile: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to create doctor and profile');
         }
     }
