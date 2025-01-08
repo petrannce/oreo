@@ -69,12 +69,12 @@ Route::controller(FaqController::class)->prefix('admin')->group(function () {
 
 //gallery
 Route::controller(GalleryController::class)->prefix('admin')->group(function () {
-    Route::get('/gallery', 'index')->name('galleries');
+    Route::get('/gallery', 'index')->name('galleries.index');
     Route::get('/gallery/create', 'create')->name('gallery.create');
-    Route::post('/gallery', 'store')->name('gallery.store');
-    Route::get('/gallery/{id}/edit', 'edit')->name('gallery.edit');
-    Route::put('/gallery/{id}', 'update')->name('gallery.update');
-    Route::delete('/gallery/{id}', 'destroy')->name('gallery.destroy');
+    Route::post('/gallery', 'store')->name('galleries.store');
+    Route::get('/gallery/{id}/edit', 'edit')->name('galleries.edit');
+    Route::put('/gallery/{id}', 'update')->name('galleries.update');
+    Route::delete('/gallery/{id}', 'destroy')->name('galleries.destroy');
 });
 
 Route::controller(AppointmentController ::class)->group(function () {

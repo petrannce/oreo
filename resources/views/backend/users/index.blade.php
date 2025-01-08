@@ -54,9 +54,9 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$user->fname}} {{$user->lname}}</td>
                                         <td>{{$user->email}}</td>
-                                        <td>$user->profile->profile_type</td>
-                                        <td>$user->profile->phone_number</td>
-                                        <td>$user->profile->status</td>
+                                        <td>{{$user->profile->profile_type ?? 'No Profile Type'}}</td>
+                                        <td>{{$user->profile->phone_number ?? 'No Phone Number'}}</td>
+                                        <td>{{$user->profile->status ?? 'No Status'}}</td>
                                         <td>
                                             <button class="btn btn-icon btn-neutral btn-icon-mini"><i
                                                     class="zmdi zmdi-edit"></i></button>

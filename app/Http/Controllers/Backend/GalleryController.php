@@ -27,6 +27,13 @@ class GalleryController extends Controller
             'image' => 'required',
         ]);
 
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $image_name = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads/gallery'), $image_name);
+            $request->image = $image_name;
+        }
+
         DB::beginTransaction();
 
         try {
@@ -36,7 +43,7 @@ class GalleryController extends Controller
             $gallery->save();
 
             DB::commit();
-            return redirect()->route('galleries')->with('success', 'Gallery created successfully');
+            return redirect()->route('galleries.index')->with('success', 'Gallery created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Something went wrong');
@@ -53,19 +60,28 @@ class GalleryController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'image' => 'required',
+            'image' => 'nullable',
         ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $image_name = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads/gallery'), $image_name);
+            $request->image = $image_name;
+        }
 
         DB::beginTransaction();
 
         try {
             $gallery = Gallery::findOrFail($id);
             $gallery->title = $request->title;
-            $gallery->image = $request->image;
+            if ($request->hasFile('image')) {
+                $gallery->image = $request->image;
+            }
             $gallery->save();
 
             DB::commit();
-            return redirect()->route('galleries')->with('success', 'Gallery updated successfully');
+            return redirect()->route('galleries.index')->with('success', 'Gallery updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Something went wrong');

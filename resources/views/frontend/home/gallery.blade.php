@@ -25,7 +25,7 @@
                     @foreach ($galleries as $gallery)
 
                     <div class="col-lg-4 col-md-12">
-                        <div class="popup-gallery"> <a class="popup2" href="{{asset('images/gallery/'.$gallery->image}}"> <img src="{{asset('images/gallery/{{.$gallery->image}}')}}" alt="pic"><span class="eye-wrapper"><i class="zmdi zmdi-eye"></i></span></a> </div>
+                        <div class="popup-gallery"> <a class="popup2" href="{{asset('uploads/gallery/'.$gallery->image)}}"> <img src="{{asset('upload/gallery/'.$gallery->image)}}" alt="pic"><span class="eye-wrapper"><i class="zmdi zmdi-eye"></i></span></a> </div>
                     </div>
                     
                     @endforeach

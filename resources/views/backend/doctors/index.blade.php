@@ -53,8 +53,8 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$doctor->fname}} {{$doctor->lname}}</td>
                                         <td>{{$doctor->email}}</td>
-                                        <td>$doctor->profile->phone_number</td>
-                                        <td>{{$doctor->profile->status}}</td>
+                                        <td>{{$doctor->profile->phone_number ?? 'No Phone Number'}}</td>
+                                        <td>{{$doctor->profile?->status ?? 'No Status'}}</td>
                                         <td>
                                             <button class="btn btn-icon btn-neutral btn-icon-mini"><i
                                                     class="zmdi zmdi-edit"></i></button>

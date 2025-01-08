@@ -79,7 +79,7 @@
                         </ul>
                     </li>
                     <li><a href="{{route('faqs')}}"><i class="zmdi zmdi-home"></i><span>FAQ</span></a></li>
-                    <li><a href="{{route('galleries')}}"><i class="zmdi zmdi-home"></i><span>Galleries</span></a></li>
+                    <li><a href="{{route('galleries.index')}}"><i class="zmdi zmdi-home"></i><span>Galleries</span></a></li>
                     <li><a href="{{route('subscribers')}}"><i class="zmdi zmdi-home"></i><span>Subscribers</span></a>
                     </li>
                     <li><a href="{{route('users.index')}}"><i class="zmdi zmdi-home"></i><span>Users</span></a></li>

@@ -14,7 +14,7 @@
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="{{route('galleries')}}">Galleries</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('galleries.index')}}">Galleries</a></li>
                     <li class="breadcrumb-item active">Galleries</li>
                 </ul>
             </div>
@@ -29,7 +29,7 @@
                         <h2><strong>All Galleries</strong> </h2>
                         <ul class="header-dropdown">
                             <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('faqs.create')}}" role="button">Create
+                                <a class="btn btn-primary btn-lg" href="{{route('gallery.create')}}" role="button">Create
                                 Gallery</a>
                             </li>
                         </ul>

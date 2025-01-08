@@ -60,8 +60,8 @@ class FrontendController extends Controller
 
     public function gallery()
     {
-        $gallery = Gallery::all();
-        return view('frontend.home.gallery', compact('gallery'));
+        $galleries = Gallery::all();
+        return view('frontend.home.gallery', compact('galleries'));
     }
 
     public function services()
