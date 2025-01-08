@@ -78,7 +78,7 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
-                                    <select class="form-control show-tick" name="employee_type" required>
+                                    <select class="form-control show-tick" name="employment_type" required>
                                         <option value="">- Employee Type -</option>
                                         <option value="permanent">Permanent</option>
                                         <option value="contract">Contract</option>

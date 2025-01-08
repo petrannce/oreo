@@ -40,7 +40,6 @@
                                         <th>*</th>
                                         <th>Full Name</th>
                                         <th>Email</th>
-                                        <th>Profile Type</th>
                                         <th>Phone Number</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -54,9 +53,8 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$doctor->fname}} {{$doctor->lname}}</td>
                                         <td>{{$doctor->email}}</td>
-                                        <td>$doctor->profile->profile_type</td>
                                         <td>$doctor->profile->phone_number</td>
-                                        <td>$doctor->profile->status</td>
+                                        <td>{{$doctor->profile->status}}</td>
                                         <td>
                                             <button class="btn btn-icon btn-neutral btn-icon-mini"><i
                                                     class="zmdi zmdi-edit"></i></button>

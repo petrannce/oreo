@@ -35,11 +35,9 @@ class DoctorController extends Controller
             'employment_type' => 'required',
             'description' => 'required',
         ]);
-// dd($request);
 
         DB::beginTransaction();
         try {
-            Log::info('Request data: ', $request->all());
 
             // Create the doctor
             $doctor = Doctor::create([
@@ -61,7 +59,7 @@ class DoctorController extends Controller
                 'address' => $request->address,
                 'phone_number' => $request->phone_number,
                 'gender' => $request->gender,
-                'status' => $request->status,
+                'status' => 'active',
             ]);
 
             // Commit the transaction
