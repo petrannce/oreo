@@ -86,6 +86,7 @@ Route::controller(AppointmentController ::class)->group(function () {
     Route::delete('/appointment/{id}', 'destroy')->name('appointment.destroy');
 });
 
+//Doctors
 Route::controller(DoctorController ::class)->prefix('admin')->group(function () {
     Route::get('/doctors', 'index')->name('doctors.index');
     Route::get('/doctors/create', 'create')->name('doctors.create');
@@ -93,6 +94,8 @@ Route::controller(DoctorController ::class)->prefix('admin')->group(function () 
     Route::get('/doctors/{id}/edit', 'edit')->name('doctors.edit');
     Route::put('/doctors/{id}', 'update')->name('doctors.update');
     Route::delete('/doctors/{id}', 'destroy')->name('doctors.destroy');
+    Route::get('/doctors/{id}/profile', 'profile')->name('doctors.profile');
+    Route::put('/doctors/{id}/profile', 'updateProfile')->name('updateProfile');
 });
 
 Route::controller(PatientController ::class)->group(function () {

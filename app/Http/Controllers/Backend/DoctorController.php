@@ -163,4 +163,64 @@ class DoctorController extends Controller
         return redirect()->route('doctors.index')->with('success', 'Doctor deleted successfully');
     }
 
+    public function updateProfile(Request $request, $id)
+    {
+        // Validate incoming request data
+        $request->validate([
+            'profile_type' => 'required|in:doctor',
+            'country' => 'nullable',
+            'city' => 'nullable',
+            'address' => 'required',
+            'phone_number' => 'nullable',
+            'gender' => 'nullable',
+            'status' => 'required|in:active,inactive', // Ensure only 'active' or 'inactive'
+            'image' => 'nullable|image|max:2048',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // Find the doctor by ID
+            $doctor = Doctor::findOrFail($id);
+
+            // Handle the image upload if a new one is provided
+            if ($request->hasFile('image')) {
+                // Delete the old image if it exists
+                if ($doctor->profile && $doctor->profile->image) {
+                    $oldImagePath = public_path('images/doctors/' . $doctor->profile->image);
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath); // Delete the old image
+                    }
+                }
+
+                // Store the new image
+                $image = $request->file('image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('images/doctors'), $imageName);
+
+                // Update the doctor's profile image
+                $doctor->profile->image = $imageName;
+            }
+
+            // Update the profile details
+            $doctor->profile()->update([
+                'profile_type' => 'doctor', // Set profile type to 'doctor' (fixed value)
+                'country' => $request->country,
+                'city' => $request->city,
+                'address' => $request->address,
+                'phone_number' => $request->phone_number,
+                'gender' => $request->gender,
+                'status' => $request->status ?? 'active', // Default to 'active' if no status is provided
+            ]);
+
+            // Commit the transaction
+            DB::commit();
+
+            return redirect()->route('doctors.index')->with('success', 'Profile updated successfully');
+        } catch (\Exception $e) {
+            // Rollback the transaction if anything fails
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to update profile');
+        }
+    }
+
 }

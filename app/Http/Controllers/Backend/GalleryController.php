@@ -24,32 +24,27 @@ class GalleryController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'image' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
-
+    
+        $gallery = new Gallery();
+        $gallery->title = $request->title;
+    
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $image_name = time() . '.' . $image->getClientOriginalExtension();
+            $image_name = time() . '_' . $image->getClientOriginalName();
+            
+            // Use consistent path handling
             $image->move(public_path('uploads/gallery'), $image_name);
-            $request->image = $image_name;
+            $gallery->image = $image_name;
         }
-
-        DB::beginTransaction();
-
-        try {
-            $gallery = new Gallery();
-            $gallery->title = $request->title;
-            $gallery->image = $request->image;
-            $gallery->save();
-
-            DB::commit();
-            return redirect()->route('galleries.index')->with('success', 'Gallery created successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'Something went wrong');
-        }
+    
+        $gallery->save();
+        
+        return redirect()
+            ->route('galleries.index')
+            ->with('success', 'Gallery created successfully');
     }
-
     public function edit($id)
     {
         $gallery = Gallery::findOrFail($id);

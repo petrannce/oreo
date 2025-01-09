@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Subscriber;
 
+
 class HomeController extends Controller
 {
     /**
