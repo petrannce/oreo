@@ -157,6 +157,12 @@ class DoctorController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $doctor = Doctor::findOrFail($id);
+        return view('backend.doctors.show', compact('doctor'));
+    }
+
     public function destroy($id)
     {
         DB::table('doctors')->where('id', $id)->delete();

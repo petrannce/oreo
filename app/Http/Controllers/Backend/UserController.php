@@ -97,6 +97,12 @@ class UserController extends Controller
         return redirect()->route('users')->with('success', 'User updated successfully');
     }
 
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return view('backend.users.show', compact('user'));
+    }
+
     public function destroy($id)
     {
         DB::table('users')->where('id', $id)->delete();

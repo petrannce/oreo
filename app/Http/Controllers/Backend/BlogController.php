@@ -89,6 +89,12 @@ class BlogController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $blog = Blog::find($id);
+        return view('backend.blogs.show', compact('blog'));
+    }
+
     public function destroy($id)
     {
         DB::table('blogs')->where('id', $id)->delete();

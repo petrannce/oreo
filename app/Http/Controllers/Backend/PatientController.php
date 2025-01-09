@@ -97,6 +97,12 @@ class PatientController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $patient = Patient::findOrFail($id);
+        return view('backend.patients.show', compact('patient'));
+    }
+
     public function destroy($id)
     {
         DB::table('patients')->where('id', $id)->delete();
