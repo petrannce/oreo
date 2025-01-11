@@ -77,7 +77,14 @@ Route::controller(GalleryController::class)->prefix('admin')->group(function () 
     Route::delete('/gallery/{id}', 'destroy')->name('galleries.destroy');
 });
 
-
+Route::controller(AppointmentController ::class)->group(function () {
+    Route::get('/appointment', 'index')->name('appointments.index');
+    Route::get('/appointment/create', 'create')->name('appointment.create');
+    Route::post('/appointment', 'store')->name('appointment.store');
+    Route::get('/appointment/{id}/edit', 'edit')->name('appointment.edit');
+    Route::put('/appointment/{id}', 'update')->name('appointment.update');
+    Route::delete('/appointment/{id}', 'destroy')->name('appointment.destroy');
+});
 
 //Doctors
 Route::controller(DoctorController ::class)->prefix('admin')->group(function () {
