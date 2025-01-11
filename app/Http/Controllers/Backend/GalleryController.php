@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Gallery;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class GalleryController extends Controller
 {
@@ -22,29 +23,31 @@ class GalleryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-    
-        $gallery = new Gallery();
-        $gallery->title = $request->title;
-    
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $image_name = time() . '_' . $image->getClientOriginalName();
-            
-            // Use consistent path handling
-            $image->move(public_path('uploads/gallery'), $image_name);
-            $gallery->image = $image_name;
+        DB::beginTransaction();
+
+        try {
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $image_name = time() . '_' . $image->getClientOriginalName();
+                $image->move('public/gallery', $image_name);
+
+                $gallery = new Gallery();
+                $gallery->image = $image_name;
+            } else {
+                $gallery = new gallery();
+            }
+
+            $gallery->title = $request->title;
+            $gallery->save();
+
+            DB::commit();
+            return redirect()->route('gallerys.index');
+        } catch (\Exception $e) {
+            DB::rollBack();            
+            return redirect()->back();
         }
-    
-        $gallery->save();
-        
-        return redirect()
-            ->route('galleries.index')
-            ->with('success', 'Gallery created successfully');
     }
+
     public function edit($id)
     {
         $gallery = Gallery::findOrFail($id);
