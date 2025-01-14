@@ -34,7 +34,7 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/about-us', 'about')->name('about');
     Route::get('/contact', 'contact')->name('contact');
-    Route::post ('/contact', 'contactStore')->name('contact.store');
+    Route::post('/contact', 'contactStore')->name('contact.store');
     Route::get('/gallery', 'gallery')->name('gallery');
     Route::get('/faqs', 'faqs')->name('faq');
     Route::get('/services', 'services')->name('services');
@@ -77,7 +77,7 @@ Route::controller(GalleryController::class)->prefix('admin')->group(function () 
     Route::delete('/gallery/{id}', 'destroy')->name('galleries.destroy');
 });
 
-Route::controller(AppointmentController ::class)->group(function () {
+Route::controller(AppointmentController::class)->group(function () {
     Route::get('/appointment', 'index')->name('appointments.index');
     Route::get('/appointment/create', 'create')->name('appointment.create');
     Route::post('/appointment', 'store')->name('appointment.store');
@@ -87,7 +87,7 @@ Route::controller(AppointmentController ::class)->group(function () {
 });
 
 //Doctors
-Route::controller(DoctorController ::class)->prefix('admin')->group(function () {
+Route::controller(DoctorController::class)->prefix('admin')->group(function () {
     Route::get('/doctors', 'index')->name('doctors.index');
     Route::get('/doctors/create', 'create')->name('doctors.create');
     Route::post('/doctors', 'store')->name('doctors.store');
@@ -98,7 +98,7 @@ Route::controller(DoctorController ::class)->prefix('admin')->group(function () 
     Route::put('/doctors/{id}/profile', 'updateProfile')->name('updateProfile');
 });
 
-Route::controller(PatientController ::class)->group(function () {
+Route::controller(PatientController::class)->group(function () {
     Route::get('/patients', 'index')->name('patients.index');
     Route::get('/patients/create', 'create')->name('patient.create');
     Route::post('/patients', 'store')->name('patients.store');
@@ -107,7 +107,7 @@ Route::controller(PatientController ::class)->group(function () {
     Route::delete('/patients/{id}', 'destroy')->name('patients.destroy');
 });
 
-Route::controller(DepartmentController ::class)->prefix('admin')->group(function () {
+Route::controller(DepartmentController::class)->prefix('admin')->group(function () {
     Route::get('/departments', 'index')->name('departments');
     Route::get('/departments/create', 'create')->name('departments.create');
     Route::post('/departments', 'store')->name('departments.store');
@@ -126,13 +126,23 @@ Route::controller(TagController::class)->group(function () {
     Route::delete('/tags/{id}', 'destroy')->name('tags.destroy');
 });
 
-Route::controller(BlogController ::class)->group(function () {
+Route::controller(BlogController::class)->group(function () {
     Route::get('/blogs', 'index')->name('blogs');
     Route::get('/blogs/create', 'create')->name('blogs.create');
     Route::post('/blogs', 'store')->name('blogs.store');
     Route::get('/blogs/{id}/edit', 'edit')->name('blogs.edit');
     Route::put('/blogs/{id}', 'update')->name('blogs.update');
     Route::delete('/blogs/{id}', 'destroy')->name('blogs.destroy');
+});
+
+Route::controller('ResourceController::class')->group(function () {
+    Route::get('/resources', 'index')->name('resources');
+    Route::get('/resources/create', 'create')->name('resources.create');
+    Route::post('/resources', 'store')->name('resources.store');
+    Route::get('/resources/{id}/edit', 'edit')->name('resources.edit');
+    Route::put('/resources/{id}', 'update')->name('resources.update');
+    Route::delete('/resources/{id}', 'destroy')->name('resources.destroy');
+
 });
 
 Route::controller(UserController::class)->group(function () {
