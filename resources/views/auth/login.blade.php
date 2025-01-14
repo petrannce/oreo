@@ -11,12 +11,12 @@
                 </div>
                 <h5>Log in</h5>
             </div>
-            <form class="form" method="POST" action="{{ route('login') }}">
+            <form id="login-form" class="form" method="POST" action="{{ route('login') }}">
                 @csrf
 
                 <div class="content">
                     <div class="input-group">
-                        <input type="text" name="email" value="{{ old('email') }}"
+                        <input id="email" type="text" name="email" value="{{ old('email') }}"
                             class="form-control @error('email') is-invalid @enderror" placeholder="Enter Email Address"
                             required>
                         @error('email')
@@ -29,7 +29,7 @@
                         </span>
                     </div>
                     <div class="input-group">
-                        <input type="password" name="password" placeholder="Password"
+                        <input id="password" type="password" name="password" placeholder="Password"
                             class="form-control @error('password') is-invalid @enderror" required />
                         @error('password')
                             <span class="invalid-feedback" role="alert">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="footer text-center">
-                    <a href="{{route(name: 'login')}}" class="btn btn-primary btn-round btn-block ">SIGN IN</a>
+                    <button type="submit" class="btn btn-primary btn-round btn-block ">SIGN IN</button>
                     <h5><a href="{{ route('password.request') }}" class="link">Forgot Password?</a></h5>
                 </div>
             </form>

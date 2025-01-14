@@ -34,8 +34,8 @@
             <div class="col-lg-4 col-md-6">
                 <div class="card">
                     <div class="body">
-                        <h3 class="number count-to m-b-0" data-from="0" data-to="1600" data-speed="2500" data-fresh-interval="700">1600 <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                        <p class="text-muted">New Feedbacks</p>
+                        <h3 class="number count-to m-b-0" data-from="0" data-to="{{ $appointments->count() }}" data-speed="2500" data-fresh-interval="700">{{ $appointments->count() }} <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                        <p class="text-muted">Appointments</p>
                         <div class="progress">
                             <div class="progress-bar l-blush" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
                         </div>
@@ -47,7 +47,7 @@
                 <div class="card">
                     <div class="body">
                         <h3 class="number count-to m-b-0" data-from="0" data-to="3218" data-speed="2500" data-fresh-interval="1000">3218 <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                        <p class="text-muted">Happy Clients</p>
+                        <p class="text-muted">Pending Appointments</p>
                         <div class="progress">
                             <div class="progress-bar l-green" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
                         </div>
@@ -58,12 +58,13 @@
             <div class="col-lg-4 col-md-12">
                 <div class="card">
                     <div class="body">
-                        <h3 class="number count-to m-b-0" data-from="0" data-to="284" data-speed="2500" data-fresh-interval="1000">284 <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                        <p class="text-muted">Well Smiley Faces <i class="zmdi zmdi-mood"></i></p>
+                        <h3 class="number count-to m-b-0" data-from="0" data-to="{{ $contacts->count() }}" data-speed="3000" data-fresh-interval="1000">{{ $contacts->count() }} 
+                            <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                        <p class="text-muted">Contacts <i class="zmdi zmdi-mood"></i></p>
                         <div class="progress">
                             <div class="progress-bar l-parpl" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
                         </div>
-                        <small>Change 50%</small>
+                        <small>Change 20%</small>
                     </div>
                 </div>
             </div>
@@ -348,7 +349,7 @@
                                 <div class="icon xl-slategray"><i class="zmdi zmdi-account"></i> </div>
                                 <div class="content">
                                     <div class="text">New Patient</div>
-                                    <h5 class="number">27</h5>
+                                    <h5 class="number">{{ $patients->count() }}</h5>
                                 </div>
                             </div>                    
                         </div>
@@ -358,8 +359,8 @@
                             <div class="body">
                                 <div class="icon xl-slategray"><i class="zmdi zmdi-account"></i> </div>
                                 <div class="content">
-                                    <div class="text">OPD Patient</div>
-                                    <h5 class="number">19</h5>
+                                    <div class="text">Doctors</div>
+                                    <h5 class="number">{{ $doctors->count() }}</h5>
                                 </div>
                             </div>
                         </div>
@@ -369,8 +370,8 @@
                             <div class="body">
                                 <div class="icon xl-slategray"><i class="zmdi zmdi-bug"></i> </div>
                                 <div class="content">
-                                    <div class="text">Operations</div>
-                                    <h5 class="number">08</h5>
+                                    <div class="text">Users</div>
+                                    <h5 class="number">{{ $users->count() }}</h5>
                                 </div>
                             </div>
                         </div>

@@ -68,9 +68,8 @@
                     </label>
                 </div>
                 <div class="footer text-center">
-                    <a href="{{route(name: 'register')}}"
-                        class="btn btn-primary btn-round btn-block  waves-effect waves-light">SIGN
-                        UP</a>
+                    <button type="submit" class="btn btn-primary btn-round btn-block  waves-effect waves-light">SIGN
+                        UP</button>
                     <h5><a class="link" href="{{route(name: 'login')}}">You already have a membership?</a></h5>
                 </div>
             </form>

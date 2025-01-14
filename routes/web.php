@@ -13,6 +13,7 @@ use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\FaqController;
 use App\Http\Controllers\Backend\TagController;
 use App\Http\Controllers\Backend\GalleryController;
+use App\Http\Controllers\Backend\ResourceController;
 
 
 /*
@@ -135,7 +136,7 @@ Route::controller(BlogController::class)->group(function () {
     Route::delete('/blogs/{id}', 'destroy')->name('blogs.destroy');
 });
 
-Route::controller('ResourceController::class')->group(function () {
+Route::controller(ResourceController::class)->group(function () {
     Route::get('/resources', 'index')->name('resources');
     Route::get('/resources/create', 'create')->name('resources.create');
     Route::post('/resources', 'store')->name('resources.store');

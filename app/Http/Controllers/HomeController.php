@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Subscriber;
-
+use App\Models\Patient;
+use App\Models\Doctor;
+use App\Models\User;
 
 class HomeController extends Controller
 {
@@ -16,7 +18,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+       // $this->middleware('auth');
     }
 
     /**
@@ -26,7 +28,12 @@ class HomeController extends Controller
      */
     public function admin()
     {
-        return view('backend.dashboard.admin');
+        $patients = Patient::all();
+        $doctors = Doctor::all();
+        $users = User::all();
+        $appointments = DB::table('appointments')->get();
+        $contacts = DB::table('contacts')->get();
+        return view('backend.dashboard.admin', compact('patients', 'doctors', 'users', 'appointments', 'contacts'));
     }
 
     public function subscribers()

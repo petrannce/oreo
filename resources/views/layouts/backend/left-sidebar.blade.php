@@ -34,7 +34,7 @@
                         <ul class="ml-menu">
                             <li><a href="{{route('doctors.index')}}">All Doctors</a></li>
                             <li><a href="{{route('doctors.create')}}">Add Doctor</a></li>
-                            <li><a href="{{route('doctors.profile', Auth::user()->id)}}">Doctor Profile</a></li>
+                            <li><a href="route('doctors.profile', Auth::user()->id)">Doctor Profile</a></li>
                             <li><a href="events.html">Doctor Schedule</a></li>
                         </ul>
                     </li>
@@ -60,6 +60,13 @@
                         <ul class="ml-menu">
                             <li><a href="{{route('departments')}}">All Departments</a></li>
                             <li><a href="{{route('departments.create')}}">Add Department</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i
+                                class="zmdi zmdi-label-alt"></i><span>Resources</span> </a>
+                        <ul class="ml-menu">
+                            <li><a href="{{route('resources')}}">All Resources</a></li>
+                            <li><a href="{{route('resources.create')}}">Add Resource</a></li>
                         </ul>
                     </li>
                     <li class="header">EXTRA COMPONENTS</li>
