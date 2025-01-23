@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeController;
@@ -14,7 +15,7 @@ use App\Http\Controllers\Backend\FaqController;
 use App\Http\Controllers\Backend\TagController;
 use App\Http\Controllers\Backend\GalleryController;
 use App\Http\Controllers\Backend\ResourceController;
-
+use App\Http\Controllers\Backend\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,11 +81,21 @@ Route::controller(GalleryController::class)->prefix('admin')->group(function () 
 
 Route::controller(AppointmentController::class)->group(function () {
     Route::get('/appointment', 'index')->name('appointments.index');
-    Route::get('/appointment/create', 'create')->name('appointment.create');
-    Route::post('/appointment', 'store')->name('appointment.store');
-    Route::get('/appointment/{id}/edit', 'edit')->name('appointment.edit');
-    Route::put('/appointment/{id}', 'update')->name('appointment.update');
-    Route::delete('/appointment/{id}', 'destroy')->name('appointment.destroy');
+    Route::get('/appointment/create', 'create')->name('appointments.create');
+    Route::post('/appointment', 'store')->name('appointments.store');
+    Route::get('/appointment/{id}/edit', 'edit')->name('appointments.edit');
+    Route::put('/appointment/{id}', 'update')->name('appointments.update');
+    Route::delete('/appointment/{id}', 'destroy')->name('appointments.destroy');
+});
+
+//services
+Route::controller(ServiceController::class)->prefix('admin')->group(function () {
+    Route::get('/services', 'index')->name('services.index');
+    Route::get('/services/create', 'create')->name('services.create');
+    Route::post('/services', 'store')->name('services.store');
+    Route::get('/services/{id}/edit', 'edit')->name('services.edit');
+    Route::put('/services/{id}', 'update')->name('services.update');
+    Route::delete('/services/{id}', 'destroy')->name('services.destroy');
 });
 
 //Doctors
@@ -100,7 +111,7 @@ Route::controller(DoctorController::class)->prefix('admin')->group(function () {
 });
 
 Route::controller(PatientController::class)->group(function () {
-    Route::get('/patients', 'index')->name('patients.index');
+    Route::get('/patients', 'index')->name('patients');
     Route::get('/patients/create', 'create')->name('patient.create');
     Route::post('/patients', 'store')->name('patients.store');
     Route::get('/patients/{id}/edit', 'edit')->name('patients.edit');
@@ -147,7 +158,7 @@ Route::controller(ResourceController::class)->group(function () {
 });
 
 Route::controller(UserController::class)->group(function () {
-    Route::get('/users', 'index')->name('users.index');
+    Route::get('/users', 'index')->name('users');
     Route::get('/users/create', 'create')->name('users.create');
     Route::post('/users', 'store')->name('users.store');
     Route::get('/users/{id}/edit', 'edit')->name('users.edit');

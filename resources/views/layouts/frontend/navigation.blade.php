@@ -6,9 +6,9 @@
                         <div class="col-lg-6 col-md-7">
                             <div class="left">
                                 <ul class="list-unstyled m-b-0">
-                                    <li><a href="#" class="btn btn-link"><i class="zmdi zmdi-email m-r-5"></i>info@example.com</a>
+                                    <li><a href="#" class="btn btn-link"><i class="zmdi zmdi-email m-r-5"></i>info@okwach.com</a>
                                         <a href="#" class="btn btn-link"><i class="zmdi zmdi-phone m-r-5"></i>+
-                                            202-555-0191</a>
+                                            254-728-745303</a>
                                     </li>
                                 </ul>
                             </div>

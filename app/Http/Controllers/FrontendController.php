@@ -54,8 +54,8 @@ class FrontendController extends Controller
 
     public function faqs()
     {
-        $faq = Faq::all();
-        return view('frontend.home.faqs', compact('faq'));
+        $faqs = Faq::all();
+        return view('frontend.home.faqs', compact('faqs'));
     }
 
     public function gallery()

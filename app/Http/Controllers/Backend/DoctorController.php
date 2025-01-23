@@ -135,7 +135,7 @@ class DoctorController extends Controller
             $doctor->description = $request->description;
             $doctor->save();
 
-            // Update the profile details using the relationship
+            // Update the profile details using the relationship 
             $doctor->profile()->update([
                 'profile_type' => 'doctor', // Set profile type to 'doctor' (fixed value)
                 'country' => $request->country,

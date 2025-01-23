@@ -28,7 +28,7 @@
                         <h2><strong>All Appointments</strong> </h2>
                         <ul class="header-dropdown">
                             <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('appointment.create')}}" role="button">Create Appointment</a>
+                                <a class="btn btn-primary btn-lg" href="{{route('appointments.create')}}" role="button">Create Appointment</a>
                             </li>
                         </ul>
                     </div>

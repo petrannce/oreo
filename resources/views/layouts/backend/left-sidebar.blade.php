@@ -26,7 +26,14 @@
                                 class="zmdi zmdi-calendar-check"></i><span>Appointment</span> </a>
                         <ul class="ml-menu">
                             <li><a href="{{route('appointments.index')}}">All Appointments</a></li>
-                            <li><a href="{{route('appointment.create')}}">Add Appointment</a></li>
+                            <li><a href="{{route('appointments.create')}}">Add Appointment</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i
+                                class="zmdi zmdi-calendar-check"></i><span>Services</span> </a>
+                        <ul class="ml-menu">
+                            <li><a href="{{route('services.index')}}">All Services</a></li>
+                            <li><a href="{{route('services.create')}}">Add Service</a></li>
                         </ul>
                     </li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
@@ -41,18 +48,10 @@
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-o"></i><span>Patients</span> </a>
                         <ul class="ml-menu">
-                            <li><a href="{{route('patients.index')}}">All Patients</a></li>
+                            <li><a href="{{route('patients')}}">All Patients</a></li>
                             <li><a href="{{route('patient.create')}}">Add Patient</a></li>
                             <li><a href="patient-profile.html">Patient Profile</a></li>
                             <li><a href="patient-invoice.html">Invoice</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="javascript:void(0);" class="menu-toggle"><i
-                                class="zmdi zmdi-balance-wallet"></i><span>Payments</span> </a>
-                        <ul class="ml-menu">
-                            <li><a href="payments.html">Payments</a></li>
-                            <li><a href="add-payments.html">Add Payment</a></li>
-                            <li><a href="invoice.html">Invoice</a></li>
                         </ul>
                     </li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
@@ -89,45 +88,8 @@
                     <li><a href="{{route('galleries.index')}}"><i class="zmdi zmdi-home"></i><span>Galleries</span></a></li>
                     <li><a href="{{route('subscribers')}}"><i class="zmdi zmdi-home"></i><span>Subscribers</span></a>
                     </li>
-                    <li><a href="{{route('users.index')}}"><i class="zmdi zmdi-home"></i><span>Users</span></a></li>
-                    <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-folder"></i><span>File
-                                Manager</span> </a>
-                        <ul class="ml-menu">
-                            <li><a href="file-dashboard.html">All File</a></li>
-                            <li><a href="file-documents.html">Documents</a></li>
-                            <li><a href="file-media.html">Media</a></li>
-                            <li><a href="file-images.html">Images</a></li>
-                        </ul>
-                    </li>
-                    <li> <a href="javascript:void(0);" class="menu-toggle"><i
-                                class="zmdi zmdi-apps"></i><span>App</span> </a>
-                        <ul class="ml-menu">
-                            <li><a href="mail-inbox.html">Inbox</a></li>
-                            <li><a href="chat.html">Chat</a></li>
-                            <li><a href="contact.html">Contact list</a></li>
-                        </ul>
-                    </li>
-                    <li class="header">Extra</li>
-                    <li>
-                        <div class="progress-container progress-primary m-t-10">
-                            <span class="progress-badge">Traffic this Month</span>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="67"
-                                    aria-valuemin="0" aria-valuemax="100" style="width: 67%;">
-                                    <span class="progress-value">67%</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress-container progress-info">
-                            <span class="progress-badge">Server Load</span>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="86"
-                                    aria-valuemin="0" aria-valuemax="100" style="width: 86%;">
-                                    <span class="progress-value">86%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
+                    <li><a href="{{route('users')}}"><i class="zmdi zmdi-home"></i><span>Users</span></a></li>
+
                 </ul>
             </div>
         </div>

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Gallery;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 
 class GalleryController extends Controller
 {
@@ -23,28 +22,32 @@ class GalleryController extends Controller
 
     public function store(Request $request)
     {
+
+        $request->validate([
+            'title' => 'required',
+            'image' => 'required',
+        ]);
+
         DB::beginTransaction();
 
         try {
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $image_name = time() . '_' . $image->getClientOriginalName();
-                $image->move('public/gallery', $image_name);
-
-                $gallery = new Gallery();
-                $gallery->image = $image_name;
-            } else {
-                $gallery = new gallery();
+                $image_name = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('public/gallery'), $image_name);
+                $request->image = $image_name;
             }
 
+            $gallery = new Gallery();
             $gallery->title = $request->title;
+            $gallery->image = $request->image;
             $gallery->save();
 
             DB::commit();
-            return redirect()->route('gallerys.index');
+            return redirect()->route('galleries.index')->with('success', 'Gallery created successfully');
         } catch (\Exception $e) {
-            DB::rollBack();            
-            return redirect()->back();
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Something went wrong');
         }
     }
 
@@ -61,21 +64,20 @@ class GalleryController extends Controller
             'image' => 'nullable',
         ]);
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $image_name = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/gallery'), $image_name);
-            $request->image = $image_name;
-        }
-
         DB::beginTransaction();
 
         try {
             $gallery = Gallery::findOrFail($id);
-            $gallery->title = $request->title;
+
             if ($request->hasFile('image')) {
-                $gallery->image = $request->image;
+                $image = $request->file('image');
+                $image_name = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('public/gallery'), $image_name);
+                $request->image = $image_name;
             }
+
+            $gallery->title = $request->title;
+            $gallery->image = $request->image;
             $gallery->save();
 
             DB::commit();

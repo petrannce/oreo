@@ -22,19 +22,20 @@
     <div class="container-fluid">
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <form action="{{route('galleries.store')}}" method="POST">
-                    @csrf
 
-                    <div class="card">
-                        <div class="header">
-                            <h2><strong>Add</strong> Faq </h2>
-                            <ul class="header-dropdown">
-                                <li class="remove">
-                                    <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="body">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>Add</strong> Gallery </h2>
+                        <ul class="header-dropdown">
+                            <li class="remove">
+                                <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <form action="{{route('galleries.store')}}" method="POST">
+                            @csrf
+
                             <div class="row clearfix">
                                 <div class="col-sm-12">
                                     <div class="form-group">
@@ -55,8 +56,8 @@
                                     <button type="submit" class="btn btn-default btn-round btn-simple">Cancel</button>
                                 </div>
                             </div>
-                        </div>
                     </div>
+                </div>
                 </form>
             </div>
         </div>

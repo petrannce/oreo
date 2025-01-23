@@ -13,7 +13,7 @@
             <div class="col-lg-5 col-md-7 col-sm-12">
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a></li>
-                    <li class="breadcrumb-item"><a href="{{route('patients.index')}}">Patients</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('patients')}}">Patients</a></li>
                     <li class="breadcrumb-item active">Patients</li>
                 </ul>
             </div>

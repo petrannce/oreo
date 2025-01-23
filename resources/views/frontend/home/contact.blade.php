@@ -74,11 +74,11 @@
                             </li>
                             <li>
                                 <i class="zmdi zmdi-phone"></i>
-                                <p>+ (123) 0200 12345,<br>+ 1800-45-678-9012</p>
+                                <p>+ (254) 728 745303</p>
                             </li>
                             <li>
                                 <i class="zmdi zmdi-email"></i>
-                                <p>Mailus@hospitalteam.com</p>
+                                <p>Mailus@Oreo.com</p>
                             </li>
                         </ul>
                         <ul class="list-unstyled social-icon clearfix">

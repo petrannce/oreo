@@ -90,7 +90,7 @@
                                     <ul class="list-unstyled">
                                         <li><a href="{{route('services')}}">Services</a></li>
                                         <li><a href="javascript:void(0);">Healthy Foods</a></li>
-                                        <li><a href="javascript:void(0);">Latest News</a></li>
+                                        <li><a href="{{route('blog')}}">Latest News</a></li>
                                         <li><a href="javascript:void(0);">Certificates</a></li>
                                     </ul>
                                 </div>
@@ -102,8 +102,8 @@
                             <h5 class="title">Contact Details</h5>
                             <ul class="list-unstyled">
                                 <li><i class="zmdi zmdi-pin"></i>Park Drive, Varick Str NY 10012, USA</li>
-                                <li><i class="zmdi zmdi-email"></i>Getwell@Hospitals.com</li>
-                                <li><i class="zmdi zmdi-phone"></i>(123) 0200 12345 & 7890</li>
+                                <li><i class="zmdi zmdi-email"></i>Getwell@Oreo.com</li>
+                                <li><i class="zmdi zmdi-phone"></i>(+254) 728-745303</li>
                                 <li><i class="zmdi zmdi-time"></i>Mon-Friday: 9am to 18pm</li>
                                 <li><i class="zmdi zmdi-time"></i>Sat-Sunday: 10am to 16pm</li>
                             </ul>
@@ -115,9 +115,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-6 col-md-6">
-                            <small>Copyright &copy; {{date('Y')}} Oreo Theme by <a href="http://thememakker.com/"
-                                    target="_blank">ThemeMakker</a>
-                            </small>
+                            <small>Copyright &copy; {{date('Y')}} Oreo by Okwach</small>
                         </div>
                         <div class="col-lg-2 col-md-2">
                             <div class="up"><a href="#header"><i class="zmdi zmdi-caret-up-circle"></i></a></div>
