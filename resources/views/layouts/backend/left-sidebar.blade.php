@@ -9,9 +9,21 @@
         <div class="tab-pane stretchRight active" id="dashboard">
             <div class="menu">
                 <ul class="list">
+                    @if(Auth::check())
                     <li>
                         <div class="user-info">
-                            <div class="image"><a href="profile.html"><img src="../assets/images/profile_av.jpg"
+                            <div class="image"><a href="profile.html"><img src="{{asset('../assets/images/profile_av.jpg')}}"
+                                        alt="User"></a></div>
+                            <div class="detail">
+                                <h4>{{Auth::user()->fname}} {{Auth::user()->lname}}</h4>
+                                <small>{{Auth::user()->username}}</small>
+                            </div>
+                        </div>
+                    </li>
+                    @else
+                    <li>
+                        <div class="user-info">
+                            <div class="image"><a href="profile.html"><img src="{{asset('../assets/images/profile_av.jpg')}}"
                                         alt="User"></a></div>
                             <div class="detail">
                                 <h4>Dr. Charlotte</h4>
@@ -19,6 +31,7 @@
                             </div>
                         </div>
                     </li>
+                    @endif
                     <li class="header">MAIN</li>
                     <li class="active open"><a href="index.html"><i
                                 class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>

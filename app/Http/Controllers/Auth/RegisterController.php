@@ -8,6 +8,7 @@ use App\Models\Profile;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Request;
 
 class RegisterController extends Controller
 {
@@ -65,26 +66,34 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    protected function create(Array $data)
     {
+        // $user = User::create([
+        //     'fname' => $data['fname'],
+        //     'lname' => $data['lname'],
+        //     'username' => $data['username'],
+        //     'email' => $data['email'],
+        //     'password' => Hash::make($data['password']),
+        // ]);
+        
         $user = User::create([
             'fname' => $data['fname'],
-            'lname' => $data['lname'],
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+                'lname' => $data['lname'],
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
         ]);
 
         $user->profile()->create([
             'user_id' => $user->id,
             'profile_type' => 'user',
-            'country' => $data['country'],
-            'city' => $data['city'],
-            'address' => $data['address'],
-            'phone_number' => $data['phone_number'],
-            'gender' => $data['gender'],
+            'country' => $data['country'] ?? null,
+            'city' => $data['city'] ?? null,
+            'address' => $data['address'] ?? null,
+            'phone_number' => $data['phone_number'] ?? null,
+            'gender' => $data['gender'] ?? null,
             'status' => 'active',
-            'image' => $data['image'],
+            'image' => $data['image'] ?? null,
         ]);
         
         return redirect()->route('login');

@@ -17,10 +17,36 @@
                 </div>
                 <div class="content">
                     <div class="input-group">
-                        <input type="text" name="name" value="{{ old('name') }}"
-                            class="form-control @error('name') is-invalid @enderror" placeholder="Enter Your Full Name"
+                        <input type="text" name="fname" value="{{ old('fname') }}"
+                            class="form-control @error('fname') is-invalid @enderror" placeholder="Enter Your First Name"
                             required>
-                        @error('name')
+                        @error('fname')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <span class="input-group-addon">
+                            <i class="zmdi zmdi-account-circle"></i>
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" name="lname" value="{{ old('lname') }}"
+                            class="form-control @error('lname') is-invalid @enderror" placeholder="Enter Your Last Name"
+                            required>
+                        @error('lname')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <span class="input-group-addon">
+                            <i class="zmdi zmdi-account-circle"></i>
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" name="username" value="{{ old('username') }}"
+                            class="form-control @error('username') is-invalid @enderror" placeholder="Enter UserName"
+                            required>
+                        @error('username')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

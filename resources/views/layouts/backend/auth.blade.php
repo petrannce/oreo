@@ -77,7 +77,7 @@
                     <script>
                         document.write(new Date().getFullYear())
                     </script>,
-                    <span>Designed by <a href="http://thememakker.com/" target="_blank">ThemeMakker</a></span>
+                    <span>Designed by Okwach</span>
                 </div>
             </div>
         </footer>
