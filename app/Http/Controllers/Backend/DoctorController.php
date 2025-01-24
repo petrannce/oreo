@@ -169,6 +169,12 @@ class DoctorController extends Controller
         return redirect()->route('doctors.index')->with('success', 'Doctor deleted successfully');
     }
 
+    public function profile($id)
+    {
+        $doctor = Doctor::findOrFail($id);
+        return view('backend.doctors.profile', compact('doctor'));
+    }
+
     public function updateProfile(Request $request, $id)
     {
         // Validate incoming request data

@@ -54,7 +54,7 @@
                         <ul class="ml-menu">
                             <li><a href="{{route('doctors.index')}}">All Doctors</a></li>
                             <li><a href="{{route('doctors.create')}}">Add Doctor</a></li>
-                            <li><a href="route('doctors.profile', Auth::user()->id)">Doctor Profile</a></li>
+                            <li><a href="{{route('doctors.profile', Auth::user()->id)}}">Doctor Profile</a></li>
                             <li><a href="events.html">Doctor Schedule</a></li>
                         </ul>
                     </li>
