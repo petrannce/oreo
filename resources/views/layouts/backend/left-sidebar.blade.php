@@ -10,31 +10,45 @@
             <div class="menu">
                 <ul class="list">
                     @if(Auth::check())
-                    <li>
-                        <div class="user-info">
-                            <div class="image"><a href="profile.html"><img src="{{asset('../assets/images/profile_av.jpg')}}"
-                                        alt="User"></a></div>
-                            <div class="detail">
-                                <h4>{{Auth::user()->fname}} {{Auth::user()->lname}}</h4>
-                                <small>{{Auth::user()->username}}</small>
+                        <li>
+                            <div class="user-info">
+                                <div class="image"><a href="profile.html"><img
+                                            src="{{asset('../assets/images/profile_av.jpg')}}" alt="User"></a></div>
+                                <div class="detail">
+                                    <h4>{{Auth::user()->fname}} {{Auth::user()->lname}}</h4>
+                                    <small>{{Auth::user()->username}}</small>
+                                </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
                     @else
-                    <li>
-                        <div class="user-info">
-                            <div class="image"><a href="profile.html"><img src="{{asset('../assets/images/profile_av.jpg')}}"
-                                        alt="User"></a></div>
-                            <div class="detail">
-                                <h4>Dr. Charlotte</h4>
-                                <small>Neurologist</small>
+                        <li>
+                            <div class="user-info">
+                                <div class="image"><a href="profile.html"><img
+                                            src="{{asset('../assets/images/profile_av.jpg')}}" alt="User"></a></div>
+                                <div class="detail">
+                                    <h4>Dr. Charlotte</h4>
+                                    <small>Neurologist</small>
+                                </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
                     @endif
+                    <li class="header">DASHBOARD</li>
+
+                    <li class="active open">
+                        <a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i>
+                        <span> Admin Dashboard</span></a></li>
+
+                    <li>
+                        <a href="{{route('dashboard.doctors')}}"><i class="zmdi zmdi-accounts-alt"></i>
+                        <span> Doctors Dashboard</span></a>
+                    </li>
+
+                    <li>
+                        <a href="{{route('dashboard.receptionists')}}"><i class="zmdi zmdi-female"></i>
+                        <span>Receptionist</span></a>
+                    </li>
+
                     <li class="header">MAIN</li>
-                    <li class="active open"><a href="index.html"><i
-                                class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-calendar-check"></i><span>Appointment</span> </a>
                         <ul class="ml-menu">
@@ -98,7 +112,8 @@
                         </ul>
                     </li>
                     <li><a href="{{route('faqs')}}"><i class="zmdi zmdi-home"></i><span>FAQ</span></a></li>
-                    <li><a href="{{route('galleries.index')}}"><i class="zmdi zmdi-home"></i><span>Galleries</span></a></li>
+                    <li><a href="{{route('galleries.index')}}"><i class="zmdi zmdi-home"></i><span>Galleries</span></a>
+                    </li>
                     <li><a href="{{route('subscribers')}}"><i class="zmdi zmdi-home"></i><span>Subscribers</span></a>
                     </li>
                     <li><a href="{{route('users')}}"><i class="zmdi zmdi-home"></i><span>Users</span></a></li>

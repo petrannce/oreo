@@ -36,6 +36,20 @@ class HomeController extends Controller
         return view('backend.dashboard.admin', compact('patients', 'doctors', 'users', 'appointments', 'contacts'));
     }
 
+    public function doctors()
+    {
+        $doctors = Doctor::all();
+        $appointments = DB::table('appointments')->get();
+        return view('backend.dashboard.doctor', compact('doctors', 'appointments'));
+    }
+
+    public function receptionists()
+    {
+        $appointments = DB::table('appointments')->get();
+        $contacts = DB::table('contacts')->get();
+        return view('backend.dashboard.receptionist', compact( 'appointments', 'contacts'));
+    }
+
     public function subscribers()
     {
         $subscribers = Subscriber::all();

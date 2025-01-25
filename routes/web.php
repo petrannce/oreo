@@ -54,7 +54,9 @@ Route::controller(FrontendController::class)->group(function () {
 Auth::routes();
 
 Route::controller(HomeController::class)->group(function () {
-    Route::get('/admin', 'admin')->name('admin');
+    Route::get('/dashboard/admin', 'admin')->name('admin');
+    Route::get('/dashboard/doctors', 'doctors')->name('dashboard.doctors');
+    Route::get('/dashboard/receptionists', 'receptionists')->name('dashboard.receptionists');
     Route::get('/subscribers', 'subscribers')->name('subscribers');
     Route::delete('/subscribers/{id}', 'subscribersDestroy')->name('subscribers.destroy');
 });

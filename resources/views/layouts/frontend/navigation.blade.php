@@ -22,7 +22,7 @@
 
                                 @if(Auth::check())
                                     <li>
-                                        <a href="{{ route('home') }}" class="btn btn-link">Dashboard</a>
+                                        <a href="{{ route('admin') }}" class="btn btn-link">Dashboard</a>
                                         <a href="{{ route('logout') }}" class="btn btn-link"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             Logout
