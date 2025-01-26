@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
 use DB;
+use App\Models\Service;
+use App\Models\Doctor;
 
 class AppointmentController extends Controller
 {
@@ -17,7 +19,9 @@ class AppointmentController extends Controller
 
     public function create()
     {
-        return view('backend.appointments.create');
+        $services = Service::all();
+        $doctors = Doctor::all();
+        return view('backend.appointments.create',compact('services','doctors'));
     }
 
     public function store(Request $request)

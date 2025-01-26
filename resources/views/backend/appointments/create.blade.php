@@ -13,7 +13,7 @@
             <div class="col-lg-5 col-md-7 col-sm-12">
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Oreo</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Appointment</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('appointments.index')}}">Appointment</a></li>
                     <li class="breadcrumb-item active">Book Appointment</li>
                 </ul>
             </div>
@@ -38,66 +38,69 @@
                             <div class="row clearfix">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="First Name">
+                                        <input name="fname" type="text" class="form-control" placeholder="First Name">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Last Name">
+                                        <input name="lname" type="text" class="form-control" placeholder="Last Name">
                                     </div>
                                 </div>
                             </div>
                             <div class="row clearfix">
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Date of Birth">
+                                        <input name="email" type="text" class="form-control"
+                                            placeholder="Enter Your Email">
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    <select class="form-control show-tick">
-                                        <option value="">- Gender -</option>
-                                        <option value="10">Male</option>
-                                        <option value="20">Female</option>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Phone_number">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <select name="service" class="form-control show-tick">
+                                        <option value="">-Select Service -</option>
+                                        @foreach ($services as $service)
+
+                                            <option value="{{$service->name}}">{{$service->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-3">
-                                    <select class="form-control show-tick">
-                                        <option value="">- Service -</option>
-                                        <option>Select Service</option>
-                                        <option>Dental Checkup</option>
-                                        <option>Full Body Checkup</option>
-                                        <option>ENT Checkup</option>
-                                        <option>Heart Checkup</option>
+                            </div>
+                            <div class="row clearfix">
+
+                                <div class="col-sm-4">
+                                    <select name="doctor" class="form-control show-tick">
+                                        <option value="">-Select Doctor -</option>
+                                        @foreach ($doctors as $doctor)
+
+                                            <option value="{{$doctor->name}}">{{$doctor->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <div class="input-group">
                                         <span class="input-group-addon">
                                             <i class="zmdi zmdi-calendar"></i>
                                         </span>
-                                        <input type="text" class="form-control datetimepicker"
-                                            placeholder="Please choose date & time...">
+                                        <input name="date" type="text" class="form-control datetimepicker"
+                                            placeholder="Please choose a date">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="zmdi zmdi-calendar"></i>
+                                        </span>
+                                        <input name="time" type="text" class="form-control timepicker"
+                                            placeholder="Please choose a time...">
                                     </div>
                                 </div>
                             </div>
                             <div class="row clearfix">
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Enter Your Email">
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Phone">
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <textarea rows="4" class="form-control no-resize"
-                                            placeholder="Please type what you want..."></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
+                                <div class="col-sm-12" align="center">
                                     <button type="submit" class="btn btn-primary btn-round">Submit</button>
                                     <button type="submit" class="btn btn-default btn-round btn-simple">Cancel</button>
                                 </div>
