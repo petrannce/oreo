@@ -57,6 +57,7 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/dashboard/admin', 'admin')->name('admin');
     Route::get('/dashboard/doctors', 'doctors')->name('dashboard.doctors');
     Route::get('/dashboard/receptionists', 'receptionists')->name('dashboard.receptionists');
+    Route::get('/dashboard/patients', 'patients')->name('dashboard.patients');
     Route::get('/subscribers', 'subscribers')->name('subscribers');
     Route::delete('/subscribers/{id}', 'subscribersDestroy')->name('subscribers.destroy');
 });

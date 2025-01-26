@@ -10,7 +10,7 @@
                     <h3 class="title"><span>Welcome to</span> <br>
                         Oreo <strong>Hospital</strong></h3>
                     <p class="sub-title">Contrary to popular belief, Lorem Ipsum is not simply random text.</p><br>
-                    <button class="btn btn-primary btn-round">View More</button>
+                    <a href="{{route('about')}}" class="btn btn-primary btn-round">View More</a href="{{url('about')}}">
                 </div>
                 <div class="slider_form row">
                     <p class="col-12">Make an Appointment</p>
@@ -93,7 +93,7 @@
                             <p>There are many variations of passages of Lorem Ipsum available, but the majority have
                                 suffered alteration in some form, by injected humour</p>
                             <p>
-                                <a href="{{url('about')}}" class="btn btn-primary btn-simple btn-round margin-0" data-aos="flip-up">View More</a>
+                                <a href="{{route('about')}}" class="btn btn-primary btn-simple btn-round margin-0" data-aos="flip-up">View More</a>
                             </p>
                         </div>
                     </div>
@@ -332,9 +332,6 @@
                             <p data-aos="fade-down" data-aos-duration="3000">Professional dental clinic 32roDent offers the whole range of dentistry services:
                                 treatment of caries, gum diseases, tooth whitening, implantation, dentures (crowns
                                 installation), surgery, correction (braces) etc.</p>
-                            <p>
-                                <a class="btn btn-primary btn-round" data-aos="flip-up">More about practice</a>
-                            </p>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
@@ -353,7 +350,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h4>We provide 24/7 customer support.</h4>
-                        <p>Please feel free to contact us at (01) 234 5678 for emergency case.</p>
+                        <p>Please feel free to contact us at (254) 728 745303 for emergency case.</p>
                         <a class="btn btn-primary btn-simple btn-round" href="{{route('contact')}}">Read More</a>
                     </div>
                 </div>

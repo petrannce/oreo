@@ -48,6 +48,11 @@
                         <span>Receptionist</span></a>
                     </li>
 
+                    <li>
+                        <a href="{{route('dashboard.patients')}}"><i class="zmdi zmdi-female"></i>
+                        <span>Patients</span></a>
+                    </li>
+
                     <li class="header">MAIN</li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-calendar-check"></i><span>Appointment</span> </a>

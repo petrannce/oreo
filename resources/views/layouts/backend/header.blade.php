@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>:: Oreo Hospital :: Home</title>
+<title>:: Oreo Hospital | Dashboard ::</title>
 
 <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Favicon-->
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
@@ -18,7 +18,7 @@
 <link href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}" rel="stylesheet" />
 
 <!-- JQuery DataTable Css -->
-<link rel="stylesheet" href="../assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{{asset("assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css")}}">
 
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">

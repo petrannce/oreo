@@ -66,22 +66,15 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(Array $data)
+    protected function create(array $data)
     {
-        // $user = User::create([
-        //     'fname' => $data['fname'],
-        //     'lname' => $data['lname'],
-        //     'username' => $data['username'],
-        //     'email' => $data['email'],
-        //     'password' => Hash::make($data['password']),
-        // ]);
-        
+
         $user = User::create([
             'fname' => $data['fname'],
-                'lname' => $data['lname'],
-                'username' => $data['username'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
+            'lname' => $data['lname'],
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
         ]);
 
         $user->profile()->create([
@@ -95,7 +88,9 @@ class RegisterController extends Controller
             'status' => 'active',
             'image' => $data['image'] ?? null,
         ]);
-        
+
+        $user->assignRole($data['role'] ?? 'patient');
+
         return redirect()->route('login');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -19,42 +20,76 @@ class PermissionsOreo extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['name' => 'edit articles']);
-        Permission::create(['name' => 'delete articles']);
-        Permission::create(['name' => 'publish articles']);
-        Permission::create(['name' => 'unpublish articles']);
+        $permissions = [
+            'manage appointments',
+            'manage services',
+            'manage doctors',
+            'manage patients',
+            'manage departments',
+            'manage resources',
+            'manage blogs',
+            'manage users',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
 
         // create roles and assign existing permissions
-        $role1 = Role::create(['name' => 'writer']);
-        $role1->givePermissionTo('edit articles');
-        $role1->givePermissionTo('delete articles');
+        $doctor = Role::firstOrCreate(['name' => 'Doctor']);
+        $doctor->givePermissionTo('manage appointments', 'manage services', 'manage patients');
 
-        $role2 = Role::create(['name' => 'admin']);
-        $role2->givePermissionTo('publish articles');
-        $role2->givePermissionTo('unpublish articles');
+        $receptionist = Role::firstOrCreate(['name' => 'Receptionist']);
+        $receptionist->givePermissionTo('manage appointments', 'manage patients');
 
-        $role3 = Role::create(['name' => 'Super-Admin']);
-        // gets all permissions via Gate::before rule; see AuthServiceProvider
+        $patient = Role::firstOrCreate(['name' => 'Patient']);
+        $patient->givePermissionTo('manage appointments');
 
-        // create demo users
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Example User',
-            'email' => 'tester@example.com',
+        $admin = Role::firstOrCreate(['name' => 'Admin']);
+        $admin->givePermissionTo('manage appointments', 'manage services', 'manage doctors', 'manage patients', 'manage departments', 'manage resources', 'manage blogs', 'manage users');
+
+        // Create demo admin user if it does not exist
+        $adminUser = User::firstOrCreate([
+            'email' => 'admin@admin.com',
+        ], [
+            'fname' => 'Hillary',
+            'lname' => 'Okwach',
+            'username' => 'Okwach',
+            'password' => bcrypt('123456789'), // Use a secure password
+            'role' => 'admin', // Only if this field is necessary
         ]);
-        $user->assignRole($role1);
 
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Example Admin User',
-            'email' => 'admin@example.com',
+        //associated profile
+        $adminUser->profile()->create([
+            'user_id' => $adminUser->id,
+            'profile_type' => 'user',
+            'country' => 'Kenya',
+            'city' => 'Nairobi',
+            'address' => 'Nairobi',
+            'phone_number' => '0728745303',
+            'gender' => 'male',
+            'status' => 'active',
         ]);
-        $user->assignRole($role2);
 
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Super-Admin User',
-            'email' => 'superadmin@oreo.com',
-            'password' => bcrypt('password'),
-        ]);
-        $user->assignRole($role3);
+
+        // Assign the admin role to this user
+        $adminUser->assignRole($admin);
+
+        // Assign roles to existing users based on their current role in the database
+        $users = User::all();
+        foreach ($users as $user) {
+            // Assuming you have a `role` column in your users table
+            if ($user->role === 'admin') {
+                $user->syncRoles([$admin]);
+            } elseif ($user->role === 'doctor') {
+                $user->syncRoles([$doctor]);
+            } elseif ($user->role === 'receptionist') {
+                $user->syncRoles([$receptionist]);
+            } else {
+                // Default role
+                $user->syncRoles([$patient]);
+            }
+        }
     }
 
 
