@@ -15,13 +15,11 @@ class Appointment extends Model
         'fname',
         'lname',
         'email',
-        'phone',
-        'gender',
-        'service',
+        'phone_number',
         'date',
-        'department',
+        'time',
+        'service',
         'doctor',
-        'message',
         'status',
     ];
 }

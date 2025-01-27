@@ -40,7 +40,7 @@
                                         <th>*</th>
                                         <th>Full Name</th>
                                         <th>Email</th>
-                                        <th>Profile Type</th>
+                                        <th>Role</th>
                                         <th>Phone Number</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -54,7 +54,7 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$user->fname}} {{$user->lname}}</td>
                                         <td>{{$user->email}}</td>
-                                        <td>{{$user->profile->profile_type ?? 'No Profile Type'}}</td>
+                                        <td>{{$user->role}}</td>
                                         <td>{{$user->profile->phone_number ?? 'No Phone Number'}}</td>
                                         <td>{{$user->profile->status ?? 'No Status'}}</td>
                                         <td>

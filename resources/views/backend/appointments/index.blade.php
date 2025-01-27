@@ -38,8 +38,7 @@
                                 <thead>
                                     <tr>
                                         <th>*</th>
-                                        <th>Patient ID</th>
-                                        <th>Doctor ID</th>
+                                        <th>Full Name</th>
                                         <th>Date</th>
                                         <th>Time</th>
                                         <th>Status</th>
@@ -52,8 +51,7 @@
 
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$appointment->patient_id}}</td>
-                                        <td>{{$appointment->doctor_id}}</td>
+                                        <td>{{$appointment->fname}} {{$appointment->lname}}</td>
                                         <td>{{$appointment->date}}</td>
                                         <td>{{$appointment->time}}</td>
                                         <td>{{$appointment->status}}</td>

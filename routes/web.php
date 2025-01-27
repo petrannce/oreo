@@ -28,9 +28,9 @@ use App\Http\Controllers\Backend\ServiceController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('frontend.home.index');
-// });
+Route::get('/', function () {
+    return view('frontend.home.index');
+});
 
 Route::controller(FrontendController::class)->group(function () {
     Route::get('/', 'index')->name('home');

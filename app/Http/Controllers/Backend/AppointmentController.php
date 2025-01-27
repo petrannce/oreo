@@ -26,18 +26,16 @@ class AppointmentController extends Controller
 
     public function store(Request $request)
     {
+        //dd($request->all());
         $request->validate([
             'fname' => 'required',
             'lname' => 'required',
             'email' => 'required',
-            'phone' => 'required',
-            'gender' => 'required',
-            'service' => 'required',
+            'phone_number' => 'required',
             'date' => 'required',
-            'department' => 'required',
+            'time' => 'required',
+            'service' => 'required',
             'doctor' => 'required',
-            'message' => 'required',
-            'status' => 'required',
         ]);
 
         DB::beginTransaction();
@@ -46,17 +44,16 @@ class AppointmentController extends Controller
             $appointment->fname = $request->fname;
             $appointment->lname = $request->lname;
             $appointment->email = $request->email;
-            $appointment->phone = $request->phone;
-            $appointment->gender = $request->gender;
-            $appointment->service = $request->service;
+            $appointment->phone_number = $request->phone_number;
             $appointment->date = $request->date;
-            $appointment->department = $request->department;
+            $appointment->time = $request->time;
+            $appointment->service = $request->service;
             $appointment->doctor = $request->doctor;
-            $appointment->message = $request->message;
-            $appointment->status = $request->status;
             $appointment->save();
+
             DB::commit();
-            return redirect()->back()->with('success', 'Appointment created successfully');
+
+            return redirect()->route('appointments.index')->with('success', 'Appointment created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Appointment creation failed');

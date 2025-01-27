@@ -56,12 +56,12 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Phone_number">
+                                        <input name="phone_number" type="text" class="form-control" placeholder="Phone_number">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <select name="service" class="form-control show-tick">
-                                        <option value="">-Select Service -</option>
+                                        <option value="">- Select Service -</option>
                                         @foreach ($services as $service)
 
                                             <option value="{{$service->name}}">{{$service->name}}</option>
@@ -73,11 +73,8 @@
 
                                 <div class="col-sm-4">
                                     <select name="doctor" class="form-control show-tick">
-                                        <option value="">-Select Doctor -</option>
-                                        @foreach ($doctors as $doctor)
-
-                                            <option value="{{$doctor->name}}">{{$doctor->name}}</option>
-                                        @endforeach
+                                        <option value="">- Select Doctor -</option>
+                                            <option value="Nozim">Nozim</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
