@@ -28,9 +28,9 @@ use App\Http\Controllers\Backend\ServiceController;
 |
 */
 
-Route::get('/', function () {
-    return view('frontend.home.index');
-});
+// Route::get('/', function () {
+//     return view('frontend.home.index');
+// });
 
 Route::controller(FrontendController::class)->group(function () {
     Route::get('/', 'index')->name('home');
@@ -73,14 +73,7 @@ Route::controller(FaqController::class)->prefix('admin')->group(function () {
 });
 
 //gallery
-Route::controller(GalleryController::class)->prefix('admin')->group(function () {
-    Route::get('/gallery', 'index')->name('galleries.index');
-    Route::get('/gallery/create', 'create')->name('gallery.create');
-    Route::post('/gallery', 'store')->name('galleries.store');
-    Route::get('/gallery/{id}/edit', 'edit')->name('galleries.edit');
-    Route::put('/gallery/{id}', 'update')->name('galleries.update');
-    Route::delete('/gallery/{id}', 'destroy')->name('galleries.destroy');
-});
+
 
 Route::controller(AppointmentController::class)->group(function () {
     Route::get('/appointment', 'index')->name('appointments.index');
