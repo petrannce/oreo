@@ -40,13 +40,13 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/gallery', 'gallery')->name('gallery');
     Route::get('/faqs', 'faqs')->name('faq');
     Route::get('/services', 'services')->name('services');
-    Route::get('/service-details', 'serviceDetails')->name('serviceDetails');
+    Route::get('service-details/{id}', 'serviceDetails')->name('serviceDetails');
     Route::get('/departments', 'department')->name('department');
-    Route::get('/departments-details', 'departmentDetails')->name('departmentDetails');
+    Route::get('/departments-details/{id}', 'departmentDetails')->name('departmentDetails');
     Route::get('/doctors', 'doctors')->name('doctors');
     Route::get('/doctors-details', 'doctorsDetails')->name('doctorsDetails');
     Route::get('/blog', 'blog')->name('blog');
-    Route::get('/blog-details', 'blogDetails')->name('blogDetails');
+    Route::get('/blog-details/{id}', 'blogDetails')->name('blogDetails');
     Route::get('/subscribers', 'subscriber')->name('subscriber');
     Route::post('/subscribers', 'subscriberStore')->name('subscriber.store');
     Route::post('/appointment', 'appointment')->name('appointment.store');

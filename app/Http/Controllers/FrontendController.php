@@ -75,8 +75,9 @@ class FrontendController extends Controller
 
     public function serviceDetails($id)
     {
-        $service = Service::firstOrFail($id);
-        return view('frontend.services.serviceDetails', compact('service'));
+        $service = Service::where('id', $id)->firstOrFail();
+        $services = Service::latest()->limit(3)->get();
+        return view('frontend.services.serviceDetails', compact('service', 'services'));
     }
 
     public function department()
@@ -88,8 +89,9 @@ class FrontendController extends Controller
 
     public function departmentDetails($id)
     {
-        $department = Department::firstOrFail($id);
-        return view('frontend.departments.departmentDetails', compact('department'));
+        $department = Department::where('id', $id)->firstOrFail();
+        $departments = Department::latest()->limit(3)->get();
+        return view('frontend.departments.departmentDetails', compact('department', 'departments'));
     }
 
     public function doctors()
@@ -114,8 +116,10 @@ class FrontendController extends Controller
 
     public function blogDetails($id)
     {
-        $blog = Blog::firstOrFail($id);
-        return view('frontend.blogs.blogDetails', compact('blog'));
+        $blog = Blog::where('id', $id)->firstOrFail();
+        $blogs = Blog::latest()->limit(3)->get();
+        $tags = DB::table('tags')->get();
+        return view('frontend.blogs.blogDetails', compact('blog', 'blogs', 'tags'));
     }
 
     public function subscriber()

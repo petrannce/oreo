@@ -23,11 +23,11 @@
 
                     <div class="col-md-4 col-sm-6">
                         <div class="department-box box-img-cnt" data-aos="fade-up" data-aos-duration="6000">
-                            <div class="box-img"><img src="{{asset($department->image)}}" alt=""></div>
+                            <div class="box-img"><img src="{{ asset('public/departments/' . $department->image) }}" alt=""></div>
                             <div class="box-cnt">
                                 <h4>{{$department->name}}</h4>
                                 <p>{{str_limit($department->description, 100, '...')}}</p>
-                                <a class="btn btn-primary btn-simple btn-round" href="#">View More</a>
+                                <a class="btn btn-primary btn-simple btn-round" href="{{route('departmentDetails', $department->id)}}">View More</a>
                             </div>
                         </div>
                     </div>

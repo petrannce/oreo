@@ -33,7 +33,7 @@
                         </ul>
                     </div>
                     <div class="body">
-                        <form action="{{route('galleries.store')}}" method="POST">
+                        <form action="{{route('galleries.store')}}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <div class="row clearfix">

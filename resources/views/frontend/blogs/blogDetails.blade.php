@@ -4,7 +4,7 @@
 
     <!-- start hero -->
     <section id="hero">
-        <div class="inner-banner" style="background-image:url(assets/images/banner-blog.jpg)">
+        <div class="inner-banner" style="background-image:url({{asset('images/banner-blog.jpg')}})">
             <div class="container">
                 <h3 class="title">Our <br><big><strong>Blog</strong></big></h3>
             </div>
@@ -20,7 +20,7 @@
                 <div class="col-lg-8 col-md-12">
                     <div class="card single_post">
                         <div class="body">
-                            <h3 class="m-t-0 m-b-5"><a href="blog-details.html">{{ $blog->title }}</a></h3>
+                            <h3 class="m-t-0 m-b-5">{{ $blog->title }}</h3>
                             <ul class="meta">
                                 <li><a href="javascript:void(0);"><i class="zmdi zmdi-account col-blue"></i>Posted By: John Smith</a></li>
                                 <li><a href="javascript:void(0);"><i class="zmdi zmdi-label col-red"></i>Photography</a></li>
@@ -29,15 +29,9 @@
                         </div>                    
                         <div class="body">
                             <div class="img-post m-b-15">
-                                <img src="assets/images/blog/blog-page-1.jpg" alt="Awesome Image">
-                                <div class="social_share">                            
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-facebook"></i></button>
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-twitter"></i></button>
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-instagram"></i></button>
-                                </div>
+                                <img src="{{ asset('public/blogs/' . $blog->image) }}" alt="Awesome Image">
                             </div>
                             <p>{{ $blog->description }}</p>
-                            <a href="blog-details.html" title="read more" class="btn btn-round btn-info">Read More</a>                        
                         </div>
                     </div>
                     <div class="card">
@@ -128,20 +122,19 @@
                         <div class="body widget popular-post">
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12">
+
+                                    @foreach ($blogs as $blog)
+
                                     <div class="border single_post">                                    
                                         <div class="img-post m-b-5">
-                                            <img src="assets/images/blog/blog-page-2.jpg" alt="Awesome Image">                                        
+                                            <img src="{{ asset('public/blogs/' . $blog->image) }}" alt="Awesome Image">                                        
                                         </div>
-                                        <p class="m-b-0">Apple Introduces Search Ads Basic</p>
-                                        <small>Dec 20, 2017</small>
+                                        <p class="m-b-0">{{ $blog->title }}</p>
+                                        <small>{{ $blog->created_at}}</small>
                                     </div>
-                                    <div class="border single_post m-t-20">
-                                        <div class="img-post m-b-5">
-                                            <img src="assets/images/blog/blog-page-3.jpg" alt="Awesome Image">                                            
-                                        </div>
-                                        <p class="m-b-0">new rules, more cars, more races</p>
-                                        <small>Dec 20, 2017</small>
-                                    </div>
+                                    
+                                    @endforeach
+
                                 </div>
                             </div>
                         </div>
@@ -152,43 +145,13 @@
                         </div>
                         <div class="body widget tag-clouds">
                             <ul class="list-unstyled m-b-0">
-                                <li><a href="javascript:void(0);" class="tag badge badge-default">Cardio Monitoring</a></li>
-                                <li><a href="javascript:void(0);" class="tag badge badge-success">Traumatology</a></li>
-                                <li><a href="javascript:void(0);" class="tag badge badge-info">Creative UX</a></li>
-                                <li><a href="javascript:void(0);" class="tag badge badge-success">Pulmonary</a></li>
-                                <li><a href="javascript:void(0);" class="tag badge badge-warning">Cardiology</a></li>
+                                @foreach ($tags as $tag)
+                                    <li>
+                                        <a href="javascript:void(0);" class="tag badge badge-default">{{$tag->name}}</a>
+                                    </li>
+                                
+                                @endforeach
                             </ul>
-                        </div>
-                    </div>
-                    <div class="card" data-aos="fade-left" data-aos-offset="200" data-aos-duration="2000">
-                        <div class="header">
-                            <h2><strong>Instagram</strong> Post</h2>                        
-                        </div>
-                        <div class="body widget">
-                            <ul class="list-unstyled instagram-plugin m-b-0">
-                                <li><a href="javascript:void(0);"><img src="assets/images/blog/05-img.jpg" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="assets/images/blog/06-img.jpg" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="assets/images/blog/07-img.jpg" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="assets/images/blog/08-img.jpg" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="assets/images/blog/09-img.jpg" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="assets/images/blog/10-img.jpg" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="assets/images/blog/11-img.jpg" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="assets/images/blog/12-img.jpg" alt="image description"></a></li>
-                                <li><a href="javascript:void(0);"><img src="assets/images/blog/13-img.jpg" alt="image description"></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card" data-aos="fade-left" data-aos-offset="200" data-aos-duration="2000">
-                        <div class="header">
-                            <h2><strong>Email</strong> Newsletter <small>Get our products/news earlier than others, let’s get in touch.</small></h2>
-                        </div>
-                        <div class="body widget newsletter">                        
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Enter Email">
-                                <span class="input-group-addon">
-                                    <i class="zmdi zmdi-mail-send"></i>
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>

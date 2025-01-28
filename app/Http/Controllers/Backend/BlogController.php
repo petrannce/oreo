@@ -36,15 +36,19 @@ class BlogController extends Controller
         try {
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $image_name = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images'), $image_name);
+                $image_name = time() . '_' . $image->getClientOriginalName();
+                $image->move('public/blogs', $image_name);
+            } else {
+                $image_name = null;
             }
+
             $blog = new Blog();
             $blog->title = $request->title;
             $blog->tag = $request->tag;
             $blog->description = $request->description;
             $blog->image = $image_name;
             $blog->save();
+            
             DB::commit();
             return redirect()->route('blogs')->with('success', 'Blog created successfully');
         } catch (\Exception $e) {

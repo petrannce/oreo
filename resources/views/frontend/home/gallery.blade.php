@@ -22,10 +22,12 @@
                     </div>
                 </div>
                 <div class="row">
+
                     @foreach ($galleries as $gallery)
 
                     <div class="col-lg-4 col-md-12">
-                        <div class="popup-gallery"> <a class="popup2" href="{{asset('uploads/gallery/' .$gallery->image)}}"> <img src="{{asset('../upload/gallery/'.$gallery->image)}}" alt="pic"><span class="eye-wrapper"><i class="zmdi zmdi-eye"></i></span></a> </div>
+                        <div class="popup-gallery"> <a class="popup2" href="{{ asset('public/galleries/' . $gallery->image) }}"> 
+                            <img src="{{ asset('public/galleries/' . $gallery->image) }}" alt="pic"><span class="eye-wrapper"><i class="zmdi zmdi-eye"></i></span></a> </div>
                     </div>
                     
                     @endforeach

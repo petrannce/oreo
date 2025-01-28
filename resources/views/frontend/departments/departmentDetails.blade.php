@@ -6,7 +6,7 @@
     <section id="hero">
         <div class="inner-banner" style="background-image:url({{asset('images/banner-blog.jpg')}})">
             <div class="container">
-                <h3 class="title">Our <br><big><strong>Service</strong></big></h3>
+                <h3 class="title">Our <br><big><strong>Department</strong></big></h3>
             </div>
         </div>
     </section>
@@ -14,13 +14,13 @@
     <!-- Content Area -->
     <section class="main-section blog-page">
 
-        <!-- Service -->
+        <!-- department -->
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-md-12">
                     <div class="card single_post">
                         <div class="body">
-                            <h3 class="m-t-0 m-b-5"><a href="{{route('serviceDetails', ['id' => $service->id ])}}">{{ $service->name }}</a></h3>
+                            <h3 class="m-t-0 m-b-5"><a href="{{route('departmentDetails', ['id' => $department->id ])}}">{{ $department->name }}</a></h3>
                             <ul class="meta">
                                 <li><a href="javascript:void(0);"><i class="zmdi zmdi-account col-blue"></i>Posted By: John Smith</a></li>
                                 <li><a href="javascript:void(0);"><i class="zmdi zmdi-label col-red"></i>Photography</a></li>
@@ -29,14 +29,14 @@
                         </div>                    
                         <div class="body">
                             <div class="img-post m-b-15">
-                                <img src="{{ asset('public/services/' . $service->image) }}" alt="Awesome Image">
+                                <img src="{{ asset('public/departments/' . $department->image) }}" alt="Awesome Image">
                                 <div class="social_share">                            
                                     <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-facebook"></i></button>
                                     <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-twitter"></i></button>
                                     <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-instagram"></i></button>
                                 </div>
                             </div>
-                            <p>{{ $service->description }}</p>
+                            <p>{{ $department->description }}</p>
                         </div>
                     </div>
                 </div>
@@ -58,13 +58,13 @@
                         <div class="body widget popular-post">
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12">
-                                    @foreach ($services as $service)
+                                    @foreach ($departments as $department)
                                     <div class="border single_post">                                    
                                         <div class="img-post m-b-5">
-                                            <img src="{{ asset('public/services/' . $service->image) }}" alt="Awesome Image">                                        
+                                            <img src="{{ asset('public/departments/' . $department->image) }}" alt="Awesome Image">                                        
                                         </div>
-                                        <p class="m-b-0">{{ $service->name }}</p>
-                                        <small>{{ $service->created_at }}</small>
+                                        <p class="m-b-0">{{ $department->name }}</p>
+                                        <small>{{ $department->created_at }}</small>
                                     </div>
                                     
                                     @endforeach

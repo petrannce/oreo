@@ -23,7 +23,7 @@
 
                     <div class="card single_post" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
                         <div class="body">
-                            <h3 class="m-t-0 m-b-5"><a href="blog-detail.html">{{$blog->title}}</a></h3>
+                            <h3 class="m-t-0 m-b-5"><a href="{{route('blogDetails', $blog->id)}}">{{$blog->title}}</a></h3>
                             <ul class="meta">
                                 <li><a href="javascript:void(0);"><i class="zmdi zmdi-account col-blue"></i>Posted By: John
                                         Smith</a></li>
@@ -38,40 +38,14 @@
                                 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                                     <div class="carousel-inner" role="listbox">
                                         <div class="carousel-item active">
-                                            <img class="d-block img-fluid" src="assets/images/blog/blog-page-1.jpg"
+                                            <img class="d-block img-fluid" src="{{ asset('public/blogs/' . $blog->image) }}"
                                                 alt="First slide">
                                         </div>
-                                        <div class="carousel-item">
-                                            <img class="d-block img-fluid" src="assets/images/blog/blog-page-2.jpg"
-                                                alt="Second slide">
-                                        </div>
-                                        <div class="carousel-item">
-                                            <img class="d-block img-fluid" src="assets/images/blog/blog-page-3.jpg"
-                                                alt="Third slide">
-                                        </div>
                                     </div>
-                                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
-                                        data-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                    <a class="carousel-control-next" href="#carouselExampleControls" role="button"
-                                        data-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </div>
-                                <div class="social_share">
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i
-                                            class="zmdi zmdi-facebook"></i></button>
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i
-                                            class="zmdi zmdi-twitter"></i></button>
-                                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i
-                                            class="zmdi zmdi-instagram"></i></button>
                                 </div>
                             </div>
-                            <p>{{str_limit($blog->description, 200, '...')}}</p>
-                            <a href="blog-detail.html" title="read more" class="btn btn-round btn-info">Read More</a>
+                            <p>{{str_limit($blog->description, 100, '...')}}</p>
+                            <a href="{{route('blogDetails', $blog->id)}}" title="read more" class="btn btn-round btn-info">Read More</a>
                         </div>
                     </div>
 

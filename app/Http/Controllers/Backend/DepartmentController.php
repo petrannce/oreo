@@ -32,14 +32,16 @@ class DepartmentController extends Controller
         try {
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/departments'), $imageName);
+                $image_name = time() . '_' . $image->getClientOriginalName();
+                $image->move('public/departments', $image_name);
+            } else {
+                $image_name = null;
             }
 
             $department = new Department();
             $department->name = $request->name;
             $department->description = $request->description;
-            $department->image = $imageName;
+            $department->image = $image_name;
             $department->save();
 
             DB::commit(); 

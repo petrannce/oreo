@@ -22,7 +22,6 @@ class GalleryController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'title' => 'required',
             'image' => 'required',
@@ -33,14 +32,15 @@ class GalleryController extends Controller
         try {
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $image_name = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('public/gallery'), $image_name);
-                $request->image = $image_name;
+                $image_name = time() . '_' . $image->getClientOriginalName();
+                $image->move('public/galleries', $image_name);
+            } else {
+                $image_name = null;
             }
 
             $gallery = new Gallery();
             $gallery->title = $request->title;
-            $gallery->image = $request->image;
+            $gallery->image = $image_name;
             $gallery->save();
 
             DB::commit();

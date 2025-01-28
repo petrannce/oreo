@@ -20,19 +20,19 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="form-group">
                             <input type="text" name="fname" value="{{Auth::user()->fname}}"
-                                placeholder="Enter First Name" class="form-control m-b-15">
+                                placeholder="Enter First Name" class="form-control m-b-15" hidden>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="form-group">
                             <input type="text" name="lname" value="{{Auth::user()->lname}}"
-                                placeholder="Enter Last Name" class="form-control m-b-15">
+                                placeholder="Enter Last Name" class="form-control m-b-15" hidden>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="form-group">
                             <input type="email" name="email" value="{{Auth::user()->email}}" placeholder="Enter Email"
-                                class="form-control m-b-15">
+                                class="form-control m-b-15" hidden>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6 col-6">
@@ -261,86 +261,6 @@
         </div>
     </div>
     <!-- Home Fun Fact -->
-
-    <!-- Home Our Team -->
-    <div class="our-team">
-        <div class="container">
-            <div class="row justify-content-between">
-                <div class="section-title left col-lg-4" data-aos="fade-up">
-                    <h2><span>Meet </span>Our Team</h2>
-                </div>
-                <div class="section-title right col-lg-8" data-aos="fade-up">
-                    <p><span class="color-212121">Oreo Hospital</span> The wise man therefore always holds in these
-                        matters to this principle of selection: he rejects pleasures to secure.</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="team-box text-center" data-aos="flip-left" data-aos-easing="ease-out-cubic"
-                        data-aos-duration="5000">
-                        <div class="doctor-pic"><img src="{{asset('images/team-member-01.png')}}" alt="Dr. John"></div>
-                        <div class="doctor-info">
-                            <h4>Dr. John <span>Dentist</span></h4>
-                            <ul class="clearfix">
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-facebook"></i></a></li>
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-twitter"></i></a></li>
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-instagram"></i></a></li>
-                            </ul>
-                            <a class="btn btn-simple btn-primary btn-round" href="javascript:void(0);">View More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="team-box text-center" data-aos="flip-left" data-aos-easing="ease-out-cubic"
-                        data-aos-duration="4000">
-                        <div class="doctor-pic"><img src="{{asset('images/team-member-02.png')}}" alt="Dr. Amelia">
-                        </div>
-                        <div class="doctor-info">
-                            <h4>Dr. Amelia <span>Gynecologist</span></h4>
-                            <ul class="clearfix">
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-twitter"></i></a></li>
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-instagram"></i></a></li>
-                            </ul>
-                            <a class="btn btn-simple btn-primary btn-round" href="javascript:void(0);">View More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="team-box text-center" data-aos="flip-left" data-aos-easing="ease-out-cubic"
-                        data-aos-duration="5000">
-                        <div class="doctor-pic"><img src="{{asset('images/team-member-03.png')}}" alt="Dr. Jack"></div>
-                        <div class="doctor-info">
-                            <h4>Dr. Jack <span>Audiology</span></h4>
-                            <ul class="clearfix">
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-facebook"></i></a></li>
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-twitter"></i></a></li>
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-instagram"></i></a></li>
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-google-plus"></i></a></li>
-                            </ul>
-                            <a class="btn btn-simple btn-primary btn-round" href="javascript:void(0);">View More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="team-box text-center" data-aos="flip-left" data-aos-easing="ease-out-cubic"
-                        data-aos-duration="3000">
-                        <div class="doctor-pic"><img src="{{asset('images/team-member-04.png')}}" alt="Dr. Charlie">
-                        </div>
-                        <div class="doctor-info">
-                            <h4>Dr. Charlie<span>Dentist</span></h4>
-                            <ul class="clearfix">
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-facebook"></i></a></li>
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-twitter"></i></a></li>
-                                <li><a href="javascript:void(0);"><i class="zmdi zmdi-instagram"></i></a></li>
-                            </ul>
-                            <a class="btn btn-simple btn-primary btn-round" href="javascript:void(0);">View More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Home Our Team -->
 
     <!-- Home Why choose us -->
     <div class="why-choose-us">
