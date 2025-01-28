@@ -144,6 +144,7 @@
 
     <script src="{{asset('js/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{asset('js/lightbox.js')}}"></script>
+    
 
 </body>
 

@@ -82,7 +82,7 @@
                                         <span class="input-group-addon">
                                             <i class="zmdi zmdi-calendar"></i>
                                         </span>
-                                        <input name="date" type="text" class="form-control datetimepicker"
+                                        <input name="date" type="text" class="form-control datetimepicker" min={{date('Y-m-d')}}
                                             placeholder="Please choose a date">
                                     </div>
                                 </div>

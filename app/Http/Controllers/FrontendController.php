@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Subscriber;
@@ -18,7 +19,9 @@ class FrontendController extends Controller
     public function index()
     {
         $blogs = Blog::all();
-        return view('frontend.home.index', compact('blogs'));
+        $services = Service::all();
+        $doctors = Doctor::all();
+        return view('frontend.home.index', compact('blogs', 'services', 'doctors'));
     }
 
     public function about()
@@ -142,5 +145,40 @@ class FrontendController extends Controller
             return redirect()->back()->with('error', 'Something went wrong');
         }
 
+    }
+
+    public function appointment(Request $request)
+    {
+        $request->validate([
+            'fname' => 'required',
+            'lname' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'required',
+            'date' => 'required',
+            'time' => 'required',
+            'service' => 'required',
+            'doctor' => 'required',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $appointment = new Appointment();
+            $appointment->fname = $request->fname;
+            $appointment->lname = $request->lname;
+            $appointment->email = $request->email;
+            $appointment->phone_number = $request->phone_number;
+            $appointment->date = $request->date;
+            $appointment->time = $request->time;
+            $appointment->service = $request->service;
+            $appointment->doctor = $request->doctor;
+            $appointment->save();
+
+            DB::commit();
+            return redirect()->route('home')->with('success', 'Appointment made successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
     }
 }

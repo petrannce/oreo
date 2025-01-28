@@ -49,6 +49,7 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/blog-details', 'blogDetails')->name('blogDetails');
     Route::get('/subscribers', 'subscriber')->name('subscriber');
     Route::post('/subscribers', 'subscriberStore')->name('subscriber.store');
+    Route::post('/appointment', 'appointment')->name('appointment.store');
 });
 
 Auth::routes();
@@ -73,9 +74,16 @@ Route::controller(FaqController::class)->prefix('admin')->group(function () {
 });
 
 //gallery
+Route::controller(GalleryController::class)->prefix('admin')->group(function () {
+    Route::get('/gallery', 'index')->name('galleries.index');
+    Route::get('/gallery/create', 'create')->name('gallery.create');
+    Route::post('/gallery', 'store')->name('galleries.store');
+    Route::get('/gallery/{id}/edit', 'edit')->name('galleries.edit');
+    Route::put('/gallery/{id}', 'update')->name('galleries.update');
+    Route::delete('/gallery/{id}', 'destroy')->name('galleries.destroy');
+});
 
-
-Route::controller(AppointmentController::class)->group(function () {
+Route::controller(AppointmentController::class)->prefix('admin')->group(function () {
     Route::get('/appointment', 'index')->name('appointments.index');
     Route::get('/appointment/create', 'create')->name('appointments.create');
     Route::post('/appointment', 'store')->name('appointments.store');
