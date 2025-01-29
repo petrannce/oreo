@@ -45,7 +45,8 @@
                                 </div>
                             </div>
                             <p>{{str_limit($blog->description, 100, '...')}}</p>
-                            <a href="{{route('blogDetails', $blog->id)}}" title="read more" class="btn btn-round btn-info">Read More</a>
+                            <a href="{{route('blogDetails', $blog->id)}}" title="read more"
+                                class="btn btn-round btn-info">Read More</a>
                         </div>
                     </div>
 
@@ -77,20 +78,17 @@
                     <div class="body widget popular-post">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12">
-                                <div class="border single_post">
-                                    <div class="img-post m-b-5">
-                                        <img src="assets/images/blog/blog-page-2.jpg" alt="Awesome Image">
+                                @foreach ($blogs as $blog)
+                                    <div class="border single_post">
+                                        <div class="img-post m-b-5">
+                                            <img src="{{ asset('public/blogs/' . $blog->image) }}" alt="Awesome Image">
+                                        </div>
+                                        <p class="m-b-0">{{$blog->title}}</p>
+                                        <small>{{$blog->created_at}}</small>
                                     </div>
-                                    <p class="m-b-0">Apple Introduces Search Ads Basic</p>
-                                    <small>Dec 20, 2017</small>
-                                </div>
-                                <div class="border single_post m-t-20">
-                                    <div class="img-post m-b-5">
-                                        <img src="assets/images/blog/blog-page-3.jpg" alt="Awesome Image">
-                                    </div>
-                                    <p class="m-b-0">new rules, more cars, more races</p>
-                                    <small>Dec 20, 2017</small>
-                                </div>
+
+                                @endforeach
+
                             </div>
                         </div>
                     </div>
@@ -109,24 +107,6 @@
 
                             @endforeach
 
-                        </ul>
-                    </div>
-                </div>
-                <div class="card" data-aos="fade-left" data-aos-offset="200" data-aos-duration="2000">
-                    <div class="header">
-                        <h2><strong>Instagram</strong> Post</h2>
-                    </div>
-                    <div class="body widget">
-                        <ul class="list-unstyled instagram-plugin m-b-0">
-
-                        @foreach ($galleries as $gallery)
-
-                        <li><a href="javascript:void(0);"><img src="{{asset('images/gallery/'.$gallery->image)}}"
-                                        alt="image description"></a>
-                            </li>
-                        
-                        @endforeach
-                            
                         </ul>
                     </div>
                 </div>

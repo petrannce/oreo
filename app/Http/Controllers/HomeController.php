@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Subscriber;
 use App\Models\Patient;
@@ -52,9 +53,19 @@ class HomeController extends Controller
 
     public function patients()
     {
-        $patients = Patient::all();
-        $appointments = DB::table('appointments')->get();
-        return view('backend.dashboard.patient', compact('patients', 'appointments'));
+        $user = Auth::user(); // Get the currently authenticated user
+
+    // Check if the user has the 'patient' role
+    if ($user->Role('Patient')) {
+        // Fetch appointments based on the logged-in user
+        $appointments = $user->appointments; // Get all appointments of the logged-in user
+        $pendingAppointments = $appointments->where('status', 'pending'); // Filter pending appointments
+    } else {
+        // If user is not a 'patient', return a default value or handle differently
+        $appointments = collect(); // No appointments for non-patient users
+        $pendingAppointments = collect();
+    }
+        return view('backend.dashboard.patient', compact( 'appointments', 'pendingAppointments'));
     }
 
     public function subscribers()
