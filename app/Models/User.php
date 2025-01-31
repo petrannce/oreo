@@ -47,13 +47,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function profile()
+    public function patient()
     {
-        return $this->hasOne(Profile::class);
+        return $this->hasOne(Patient::class, 'user_id'); // One-to-One: User → Patient
     }
 
     public function appointments()
     {
-        return $this->hasMany(Appointment::class, 'user_id'); // Define relationship
+        return $this->hasMany(Appointment::class, 'booked_by'); // One-to-Many: User → Appointments booked
     }
 }

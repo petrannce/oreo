@@ -57,15 +57,14 @@ class HomeController extends Controller
         $user = Auth::user(); // Get the currently authenticated user
 
     // Check if the user has the 'patient' role
-    if ($user->Role('Patient')) {
-        // Fetch appointments based on the logged-in user
-        $appointments = Appointment::where('user_id', $user->id)->get();
-        $pendingAppointments = $appointments->where('status', 'pending'); // Filter pending appointments
+    if ($user->role === 'patient') {
+        $appointments = Appointment::whereHas('patient', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->get();
     } else {
-        // If user is not a 'patient', return a default value or handle differently
-        $appointments = collect(); // No appointments for non-patient users
-        $pendingAppointments = collect();
+        $appointments = collect(); // Empty collection for non-patients
     }
+
         return view('backend.dashboard.patient', compact( 'appointments', 'pendingAppointments'));
     }
 

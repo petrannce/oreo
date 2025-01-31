@@ -36,15 +36,14 @@
                         </div>
                         <div class="body">
                             <div class="row clearfix">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <input name="fname" type="text" class="form-control" placeholder="First Name">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <input name="lname" type="text" class="form-control" placeholder="Last Name">
-                                    </div>
+                            <div class="col-sm-4">
+                                    <select name="service" class="form-control show-tick">
+                                        <option value="">- Select Service -</option>
+                                        @foreach ($users as $user)
+
+                                            <option value="{{$user->fname}}">{{$user->fname}} {{$user->lname}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="row clearfix">

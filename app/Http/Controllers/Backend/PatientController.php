@@ -24,28 +24,24 @@ class PatientController extends Controller
     {
 
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required|email|unique:patients,email',
             'DOB' => 'required',
-            'phone' => 'required',
+            'phone_number' => 'required',
             'gender' => 'required',
             'age' => 'required',
             'address' => 'required|nullable',
+            'medical_history' => 'required|nullable',
         ]);
 
         DB::beginTransaction();
 
         try {
             $patient = new Patient();
-            $patient->fname = $request->fname;
-            $patient->lname = $request->lname;
-            $patient->email = $request->email;
             $patient->DOB = $request->DOB;
-            $patient->phone = $request->phone;
+            $patient->phone_number = $request->phone_number;
             $patient->gender = $request->gender;
             $patient->age = $request->age;
             $patient->address = $request->address;
+            $patient->medical_history = $request->medical_history;
             $patient->save();
 
             DB::commit();
@@ -65,28 +61,24 @@ class PatientController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required|email|unique:patients,email,' . $id,
             'DOB' => 'required',
-            'phone' => 'required',
+            'phone_number' => 'required',
             'gender' => 'required',
             'age' => 'required',
             'address' => 'required|nullable',
+            'medical_history' => 'required|nullable',
         ]);
 
         DB::beginTransaction();
 
         try {
             $patient = Patient::findOrFail($id);
-            $patient->fname = $request->fname;
-            $patient->lname = $request->lname;
-            $patient->email = $request->email;
             $patient->DOB = $request->DOB;
-            $patient->phone = $request->phone;
+            $patient->phone_number = $request->phone_number;
             $patient->gender = $request->gender;
             $patient->age = $request->age;
             $patient->address = $request->address;
+            $patient->medical_history = $request->medical_history;
             $patient->save();
             
             DB::commit();

@@ -8,6 +8,7 @@ use App\Models\Appointment;
 use DB;
 use App\Models\Service;
 use App\Models\Doctor;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
@@ -28,21 +29,25 @@ class AppointmentController extends Controller
     {
         //dd($request->all());
         $request->validate([
-            'user_id' => 'required',
+            'patient_id' => 'required',
             'date' => 'required',
             'time' => 'required',
             'service' => 'required',
-            'doctor' => 'required',
+            'doctor_id' => 'required',
         ]);
+
+        $bookedBy = Auth::user();
 
         DB::beginTransaction();
         try {
             $appointment = new Appointment();
-            $appointment->user_id = $request->user_id;
+            $appointment->patient_id = $request->patient_id;
+            $appointment->booked_by = $bookedBy->id;
             $appointment->date = $request->date;
             $appointment->time = $request->time;
             $appointment->service = $request->service;
-            $appointment->doctor = $request->doctor;
+            $appointment->doctor_id = $request->doctor_id;
+            $appointment->status = 'pending';
             $appointment->save();
 
             DB::commit();
@@ -63,28 +68,27 @@ class AppointmentController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'user_id' => 'required',
-            'gender' => 'required',
-            'service' => 'required',
+            'patient_id' => 'required',
             'date' => 'required',
-            'department' => 'required',
-            'doctor' => 'required',
-            'message' => 'required',
-            'status' => 'required',
+            'time' => 'required',
+            'service' => 'required',
+            'doctor_id' => 'required',
         ]);
+
+        $bookedBy = Auth::user();
 
         DB::beginTransaction();
         try {
             $appointment = Appointment::findOrFail($id);
-            $appointment->user_id = $request->user_id;
-            $appointment->gender = $request->gender;
-            $appointment->service = $request->service;
+            $appointment->patient_id = $request->patient_id;
+            $appointment->booked_by = $bookedBy->id;
             $appointment->date = $request->date;
-            $appointment->department = $request->department;
-            $appointment->doctor = $request->doctor;
-            $appointment->message = $request->message;
-            $appointment->status = $request->status;
+            $appointment->time = $request->time;
+            $appointment->service = $request->service;
+            $appointment->doctor_id = $request->doctor_id;
+            $appointment->status = 'pending';
             $appointment->save();
+            
             DB::commit();
             return redirect()->back()->with('success', 'Appointment updated successfully');
         } catch (\Exception $e) {

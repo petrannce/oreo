@@ -11,16 +11,20 @@ class Appointment extends Model
 
     protected $table = 'appointments';
 
-    protected $fillable = [
-        'date',
-        'time',
-        'service',
-        'doctor',
-        'status',
-    ];
+    protected $fillable = ['patient_id', 'booked_by', 'date', 'time', 'service', 'doctor_id', 'status'];
 
-    public function user()
+    public function patient()
     {
-        return $this->belongsTo(User::class, 'user_id'); // Fetch user details when needed
+        return $this->belongsTo(Patient::class, 'patient_id'); // Appointment belongs to a Patient
+    }
+
+    public function bookedBy()
+    {
+        return $this->belongsTo(User::class, 'booked_by'); // Who booked this appointment
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(User::class, 'doctor_id'); // Assigned Doctor
     }
 }
