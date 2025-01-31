@@ -28,10 +28,7 @@ class AppointmentController extends Controller
     {
         //dd($request->all());
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required',
-            'phone_number' => 'required',
+            'user_id' => 'required',
             'date' => 'required',
             'time' => 'required',
             'service' => 'required',
@@ -41,10 +38,7 @@ class AppointmentController extends Controller
         DB::beginTransaction();
         try {
             $appointment = new Appointment();
-            $appointment->fname = $request->fname;
-            $appointment->lname = $request->lname;
-            $appointment->email = $request->email;
-            $appointment->phone_number = $request->phone_number;
+            $appointment->user_id = $request->user_id;
             $appointment->date = $request->date;
             $appointment->time = $request->time;
             $appointment->service = $request->service;
@@ -69,10 +63,7 @@ class AppointmentController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required',
-            'phone' => 'required',
+            'user_id' => 'required',
             'gender' => 'required',
             'service' => 'required',
             'date' => 'required',
@@ -85,10 +76,7 @@ class AppointmentController extends Controller
         DB::beginTransaction();
         try {
             $appointment = Appointment::findOrFail($id);
-            $appointment->fname = $request->fname;
-            $appointment->lname = $request->lname;
-            $appointment->email = $request->email;
-            $appointment->phone = $request->phone;
+            $appointment->user_id = $request->user_id;
             $appointment->gender = $request->gender;
             $appointment->service = $request->service;
             $appointment->date = $request->date;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -58,7 +59,7 @@ class HomeController extends Controller
     // Check if the user has the 'patient' role
     if ($user->Role('Patient')) {
         // Fetch appointments based on the logged-in user
-        $appointments = $user->appointments; // Get all appointments of the logged-in user
+        $appointments = Appointment::where('user_id', $user->id)->get();
         $pendingAppointments = $appointments->where('status', 'pending'); // Filter pending appointments
     } else {
         // If user is not a 'patient', return a default value or handle differently

@@ -12,14 +12,15 @@ class Appointment extends Model
     protected $table = 'appointments';
 
     protected $fillable = [
-        'fname',
-        'lname',
-        'email',
-        'phone_number',
         'date',
         'time',
         'service',
         'doctor',
         'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id'); // Fetch user details when needed
+    }
 }

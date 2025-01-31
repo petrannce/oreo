@@ -53,7 +53,7 @@ class User extends Authenticatable
     }
 
     public function appointments()
-{
-    return $this->hasMany(Appointment::class);
-}
+    {
+        return $this->hasMany(Appointment::class, 'user_id'); // Define relationship
+    }
 }
