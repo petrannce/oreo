@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -12,13 +13,15 @@ return new class extends Migration {
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Links to Users Table
-            $table->string(column: 'DOB');
-            $table->string('phone_number')->unique();
-            $table->string('gender');
-            $table->string('age');
-            $table->string('address')->nullable();
-            $table->text('medical_history')->nullable();
+            $table->string('fname');
+            $table->string('lname');
+            $table->string('email');
+            $table->string('phone_number');
+            $table->string('address');
+            $table->string('city');
+            $table->string('country');
+            $table->enum('gender', ['male', 'female']);
+            $table->date('dob');
             $table->timestamps();
         });
     }
