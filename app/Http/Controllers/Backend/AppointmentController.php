@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
 use DB;
@@ -22,7 +23,8 @@ class AppointmentController extends Controller
     {
         $services = Service::all();
         $doctors = Doctor::all();
-        return view('backend.appointments.create',compact('services','doctors'));
+        $patients = Patient::all();
+        return view('backend.appointments.create',compact('services','doctors','patients'));
     }
 
     public function store(Request $request)

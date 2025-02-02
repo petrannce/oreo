@@ -65,7 +65,7 @@ class HomeController extends Controller
         $appointments = collect(); // Empty collection for non-patients
     }
 
-        return view('backend.dashboard.patient', compact( 'appointments', 'pendingAppointments'));
+        return view('backend.dashboard.patient', compact( 'appointments'));
     }
 
     public function subscribers()

@@ -36,26 +36,18 @@
                         </div>
                         <div class="body">
                             <div class="row clearfix">
-                            <div class="col-sm-4">
-                                    <select name="service" class="form-control show-tick">
-                                        <option value="">- Select Service -</option>
-                                        @foreach ($users as $user)
-
-                                            <option value="{{$user->fname}}">{{$user->fname}} {{$user->lname}}</option>
+                                <div class="col-sm-4">
+                                    <select name="patient_id" class="form-control show-tick">
+                                        <option value="">- Select Patient -</option>
+                                        @foreach ($patients as $patient)
+                                            <option value="{{$patient->id}}">{{$patient->fname}} {{$patient->lname}}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row clearfix">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input name="email" type="text" class="form-control"
-                                            placeholder="Enter Your Email">
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <input name="phone_number" type="text" class="form-control" placeholder="Phone_number">
+                                        <input name="booked_by" type="text" class="form-control"value="{{Auth::user()->fname}} {{Auth::user()->lname}}"
+                                            placeholder="Booked By">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -73,7 +65,7 @@
                                 <div class="col-sm-4">
                                     <select name="doctor" class="form-control show-tick">
                                         <option value="">- Select Doctor -</option>
-                                            <option value="Nozim">Nozim</option>
+                                        <option value="Nozim">Nozim</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
@@ -81,8 +73,8 @@
                                         <span class="input-group-addon">
                                             <i class="zmdi zmdi-calendar"></i>
                                         </span>
-                                        <input name="date" type="text" class="form-control datetimepicker" min={{date('Y-m-d')}}
-                                            placeholder="Please choose a date">
+                                        <input name="date" type="text" class="form-control datetimepicker"
+                                            min="{{date('Y-m-d')}}" placeholder="Please choose a date">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">

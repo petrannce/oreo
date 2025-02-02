@@ -47,6 +47,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function profile()
+    {
+        return $this->hasOne(Profile::class, 'user_id');
+    }
+
     public function patient()
     {
         return $this->hasOne(Patient::class, 'user_id'); // One-to-One: User → Patient

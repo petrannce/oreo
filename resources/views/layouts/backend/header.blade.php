@@ -230,9 +230,17 @@
                 </div>
             </li>
             <li class="float-right">
-                <a href="sign-in.html" class="mega-menu" data-close="true"><i class="zmdi zmdi-power"></i></a>
-                <a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i
-                        class="zmdi zmdi-settings zmdi-hc-spin"></i></a>
+                <a href="{{route('logout')}}"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="mega-menu"
+                    data-close="true">
+                    <i class="zmdi zmdi-power"></i>
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+                <a href="javascript:void(0);" class="js-right-sidebar" data-close="true">
+                    <i class="zmdi zmdi-settings zmdi-hc-spin"></i>
+                </a>
             </li>
         </ul>
     </nav>

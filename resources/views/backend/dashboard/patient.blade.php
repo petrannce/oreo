@@ -33,9 +33,9 @@
             <div class="col-lg-4 col-md-6">
                 <div class="card">
                     <div class="body">
-                        <h3 class="number count-to m-b-0" data-from="0" data-to="{{ $pendingAppointments->count() }}"
+                        <h3 class="number count-to m-b-0" data-from="0" data-to="{{ $appointments->count()}}"
                             data-speed="2500" data-fresh-interval="1000">
-                            {{ $pendingAppointments->count() }} <i class="zmdi zmdi-trending-up float-right"></i>
+                            {{  $appointments->count() }} <i class="zmdi zmdi-trending-up float-right"></i>
                         </h3>
                         <p class="text-muted">Pending Appointments</p>
                         <div class="progress">
