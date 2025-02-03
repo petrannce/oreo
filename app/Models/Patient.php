@@ -11,12 +11,17 @@ class Patient extends Model
 
     protected $table = 'patients';
 
-    protected $fillable = ['user_id', 'DOB', 'phone_number', 'gender', 'age', 'address', 'medical_history'];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id'); // Each patient has a user account
-    }
+    protected $fillable = [
+            'fname',
+            'lname',
+            'email',
+            'phone_number',
+            'address',
+            'city',
+            'country',
+            'gender',
+            'dob'
+        ];
 
     public function appointments()
     {

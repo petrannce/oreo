@@ -54,17 +54,7 @@ class HomeController extends Controller
 
     public function patients()
     {
-        $user = Auth::user(); // Get the currently authenticated user
-
-    // Check if the user has the 'patient' role
-    if ($user->role === 'patient') {
-        $appointments = Appointment::whereHas('patient', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->get();
-    } else {
-        $appointments = collect(); // Empty collection for non-patients
-    }
-
+        $appointments = DB::table('appointments')->get();
         return view('backend.dashboard.patient', compact( 'appointments'));
     }
 

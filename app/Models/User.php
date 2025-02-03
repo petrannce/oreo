@@ -52,13 +52,4 @@ class User extends Authenticatable
         return $this->hasOne(Profile::class, 'user_id');
     }
 
-    public function patient()
-    {
-        return $this->hasOne(Patient::class, 'user_id'); // One-to-One: User → Patient
-    }
-
-    public function appointments()
-    {
-        return $this->hasMany(Appointment::class, 'booked_by'); // One-to-Many: User → Appointments booked
-    }
 }

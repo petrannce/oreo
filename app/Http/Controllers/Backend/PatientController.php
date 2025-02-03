@@ -24,24 +24,30 @@ class PatientController extends Controller
     {
 
         $request->validate([
-            'DOB' => 'required',
+            'fname' => 'required',
+            'lname' => 'required',
+            'email' => 'required|email|unique:users,email',
             'phone_number' => 'required',
+            'address' => 'required',
+            'city' => 'required',
+            'country' => 'required',
             'gender' => 'required',
-            'age' => 'required',
-            'address' => 'required|nullable',
-            'medical_history' => 'required|nullable',
+            'dob' => 'required',
         ]);
 
         DB::beginTransaction();
 
         try {
             $patient = new Patient();
-            $patient->DOB = $request->DOB;
+            $patient->fname = $request->fname;
+            $patient->lname = $request->lname;
+            $patient->email = $request->email;
             $patient->phone_number = $request->phone_number;
-            $patient->gender = $request->gender;
-            $patient->age = $request->age;
             $patient->address = $request->address;
-            $patient->medical_history = $request->medical_history;
+            $patient->city = $request->city;
+            $patient->country = $request->country;
+            $patient->gender = $request->gender;
+            $patient->DOB = $request->DOB;
             $patient->save();
 
             DB::commit();
@@ -61,31 +67,37 @@ class PatientController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'DOB' => 'required',
+            'fname' => 'required',
+            'lname' => 'required',
+            'email' => 'required|email|unique:users,email',
             'phone_number' => 'required',
+            'address' => 'required',
+            'city' => 'required',
+            'country' => 'required',
             'gender' => 'required',
-            'age' => 'required',
-            'address' => 'required|nullable',
-            'medical_history' => 'required|nullable',
+            'dob' => 'required',
         ]);
 
         DB::beginTransaction();
 
         try {
             $patient = Patient::findOrFail($id);
-            $patient->DOB = $request->DOB;
+            $patient->fname = $request->fname;
+            $patient->lname = $request->lname;
+            $patient->email = $request->email;
             $patient->phone_number = $request->phone_number;
-            $patient->gender = $request->gender;
-            $patient->age = $request->age;
             $patient->address = $request->address;
-            $patient->medical_history = $request->medical_history;
+            $patient->city = $request->city;
+            $patient->country = $request->country;
+            $patient->gender = $request->gender;
+            $patient->DOB = $request->DOB;
             $patient->save();
             
             DB::commit();
-            return redirect()->route('patients.index')->with('success', 'Patient updated successfully');
+            return redirect()->route('patients')->with('success', 'Patient updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('patients.index')->with('error', 'Patient update failed');
+            return redirect()->route('patients')->with('error', 'Patient update failed');
         }
     }
 
