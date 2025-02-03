@@ -40,14 +40,37 @@
                                     <select name="patient_id" class="form-control show-tick">
                                         <option value="">- Select Patient -</option>
                                         @foreach ($patients as $patient)
-                                            <option value="{{$patient->id}}">{{$patient->fname}} {{$patient->lname}}</option>
+                                            <option value="{{$patient->id}}">{{$patient->fname}} {{$patient->lname}}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input name="booked_by" type="text" class="form-control"value="{{Auth::user()->fname}} {{Auth::user()->lname}}"
-                                            placeholder="Booked By">
+                                        <input name="booked_by" type="text" class="form-control"
+                                            value="{{Auth::user()->fname}} {{Auth::user()->lname}}"
+                                            placeholder="Booked By" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="zmdi zmdi-calendar"></i>
+                                        </span>
+                                        <input name="date" type="text" class="form-control datetimepicker"
+                                            min="{{date('Y-m-d')}}" placeholder="Please choose a date">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="zmdi zmdi-calendar"></i>
+                                        </span>
+                                        <input name="time" type="text" class="form-control timepicker"
+                                            placeholder="Please choose a time...">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -59,32 +82,12 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row clearfix">
 
                                 <div class="col-sm-4">
                                     <select name="doctor" class="form-control show-tick">
                                         <option value="">- Select Doctor -</option>
                                         <option value="Nozim">Nozim</option>
                                     </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="zmdi zmdi-calendar"></i>
-                                        </span>
-                                        <input name="date" type="text" class="form-control datetimepicker"
-                                            min="{{date('Y-m-d')}}" placeholder="Please choose a date">
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="zmdi zmdi-calendar"></i>
-                                        </span>
-                                        <input name="time" type="text" class="form-control timepicker"
-                                            placeholder="Please choose a time...">
-                                    </div>
                                 </div>
                             </div>
                             <div class="row clearfix">

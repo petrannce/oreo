@@ -41,7 +41,6 @@
                                     <tr>
                                         <th>*</th>
                                         <th>Patient Name</th>
-                                        <th>Phone</th>
                                         <th>Date</th>
                                         <th>Time</th>
                                         <th>Service</th>
@@ -59,7 +58,6 @@
                                             <td>{{ $appointment->patient->user->fname }}
                                                 {{ $appointment->patient->user->lname }}
                                             </td>
-                                            <td>{{ $appointment->patient->user->phone_number ?? 'N/A' }}</td>
                                             <td>{{ $appointment->date }}</td>
                                             <td>{{ $appointment->time }}</td>
                                             <td>{{ $appointment->service }}</td>
