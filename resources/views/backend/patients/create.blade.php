@@ -102,7 +102,7 @@
                                         <span class="input-group-addon">
                                             <i class="zmdi zmdi-calendar"></i>
                                         </span>
-                                        <input type="date" class="form-control" name="DOB"
+                                        <input type="date" class="form-control" name="dob"
                                             placeholder="Enter date of birth">
                                     </div>
                                 </div>

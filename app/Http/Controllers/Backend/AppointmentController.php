@@ -29,27 +29,25 @@ class AppointmentController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request->all());
         $request->validate([
             'patient_id' => 'required',
+            'booked_by' => 'required',
             'date' => 'required',
             'time' => 'required',
             'service' => 'required',
             'doctor_id' => 'required',
         ]);
 
-        $bookedBy = Auth::user();
-
         DB::beginTransaction();
         try {
             $appointment = new Appointment();
             $appointment->patient_id = $request->patient_id;
-            $appointment->booked_by = $bookedBy->id;
+            $appointment->booked_by = $request->booked_by;
             $appointment->date = $request->date;
             $appointment->time = $request->time;
             $appointment->service = $request->service;
             $appointment->doctor_id = $request->doctor_id;
-            $appointment->status = 'pending';
+            dd($appointment);
             $appointment->save();
 
             DB::commit();

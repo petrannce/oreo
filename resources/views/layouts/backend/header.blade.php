@@ -358,6 +358,7 @@
                 clearButton: true,
                 weekStart: 1,
                 time: false
+                min: date('Y-M-D')
             });
 
             $('.timepicker').bootstrapMaterialDatePicker({

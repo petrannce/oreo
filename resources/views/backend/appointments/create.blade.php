@@ -48,8 +48,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <input name="booked_by" type="text" class="form-control"
-                                            value="{{Auth::user()->fname}} {{Auth::user()->lname}}"
-                                            placeholder="Booked By" disabled>
+                                            value="{{auth()->user()->fname}} {{auth()->user()->lname}}" placeholder="Booked By" readonly>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -57,7 +56,7 @@
                                         <span class="input-group-addon">
                                             <i class="zmdi zmdi-calendar"></i>
                                         </span>
-                                        <input name="date" type="text" class="form-control datetimepicker"
+                                        <input name="date" type="date" class="form-control datetimepicker"
                                             min="{{date('Y-m-d')}}" placeholder="Please choose a date">
                                     </div>
                                 </div>
@@ -69,7 +68,7 @@
                                         <span class="input-group-addon">
                                             <i class="zmdi zmdi-calendar"></i>
                                         </span>
-                                        <input name="time" type="text" class="form-control timepicker"
+                                        <input name="time" type="time" class="form-control timepicker"
                                             placeholder="Please choose a time...">
                                     </div>
                                 </div>

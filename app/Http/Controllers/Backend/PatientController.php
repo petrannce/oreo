@@ -22,7 +22,6 @@ class PatientController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'fname' => 'required',
             'lname' => 'required',
@@ -34,6 +33,8 @@ class PatientController extends Controller
             'gender' => 'required',
             'dob' => 'required',
         ]);
+
+        //dd($request->all());
 
         DB::beginTransaction();
 
@@ -47,7 +48,8 @@ class PatientController extends Controller
             $patient->city = $request->city;
             $patient->country = $request->country;
             $patient->gender = $request->gender;
-            $patient->DOB = $request->DOB;
+            $patient->dob = $request->dob;
+            //dd($patient);
             $patient->save();
 
             DB::commit();
