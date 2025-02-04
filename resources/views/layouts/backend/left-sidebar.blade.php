@@ -114,6 +114,19 @@
                         </ul>
                     </li>
                     @endrole
+                    @role('Admin')
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i
+                                class="zmdi zmdi-account-o"></i><span>Receptionists</span> </a>
+                        <ul class="ml-menu">
+                            <li class="{{ Request::route()->getName() == 'receptionists' ? 'active' : 'inactive' }}">
+                                <a href="{{route('receptionists')}}">All Receptionists</a>
+                            </li>
+                            <li class="{{ Request::route()->getName() == 'receptionist.create' ? 'active' : 'inactive' }}">
+                                <a href="{{route('receptionist.create')}}">Add Receptionist</a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endrole
 
                     @role('Admin')
                     <li><a href="javascript:void(0);" class="menu-toggle"><i

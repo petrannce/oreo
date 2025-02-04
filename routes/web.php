@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeController;
@@ -16,6 +15,7 @@ use App\Http\Controllers\Backend\TagController;
 use App\Http\Controllers\Backend\GalleryController;
 use App\Http\Controllers\Backend\ResourceController;
 use App\Http\Controllers\Backend\ServiceController;
+use App\Http\Controllers\Backend\ReceptionistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,6 +121,16 @@ Route::controller(PatientController::class)->group(function () {
     Route::get('/patients/{id}/edit', 'edit')->name('patients.edit');
     Route::put('/patients/{id}', 'update')->name('patients.update');
     Route::delete('/patients/{id}', 'destroy')->name('patients.destroy');
+});
+
+//Receptionists
+Route::controller(ReceptionistController::class)->prefix('admin')->group(function () {
+    Route::get('/receptionists', 'index')->name('receptionists');
+    Route::get('/receptionists/create', 'create')->name('receptionist.create');
+    Route::post('/receptionists', 'store')->name('receptionists.store');
+    Route::get('/receptionists/{id}/edit', 'edit')->name('receptionists.edit');
+    Route::put('/receptionists/{id}', 'update')->name('receptionists.update');
+    Route::delete('/receptionists/{id}', 'destroy')->name('receptionists.destroy');
 });
 
 Route::controller(DepartmentController::class)->prefix('admin')->group(function () {
