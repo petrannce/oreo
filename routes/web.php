@@ -126,7 +126,7 @@ Route::controller(PatientController::class)->group(function () {
 //Receptionists
 Route::controller(ReceptionistController::class)->prefix('admin')->group(function () {
     Route::get('/receptionists', 'index')->name('receptionists');
-    Route::get('/receptionists/create', 'create')->name('receptionist.create');
+    Route::get('/receptionists/create', 'create')->name('receptionists.create');
     Route::post('/receptionists', 'store')->name('receptionists.store');
     Route::get('/receptionists/{id}/edit', 'edit')->name('receptionists.edit');
     Route::put('/receptionists/{id}', 'update')->name('receptionists.update');

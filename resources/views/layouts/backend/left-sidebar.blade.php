@@ -122,7 +122,7 @@
                                 <a href="{{route('receptionists')}}">All Receptionists</a>
                             </li>
                             <li class="{{ Request::route()->getName() == 'receptionist.create' ? 'active' : 'inactive' }}">
-                                <a href="{{route('receptionist.create')}}">Add Receptionist</a>
+                                <a href="{{route('receptionists.create')}}">Add Receptionist</a>
                             </li>
                         </ul>
                     </li>
