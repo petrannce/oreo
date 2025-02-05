@@ -56,10 +56,8 @@
                                         <td>
                                             <button class="btn btn-icon btn-neutral btn-icon-mini"><i
                                                     class="zmdi zmdi-edit"></i></button>
-                                                    <!-- <a href="{{route('users.edit', $user->id)}}"></a> -->
                                             <button class="btn btn-icon btn-neutral btn-icon-mini"><i
                                                     class="zmdi zmdi-delete"></i></button>
-                                                    <!-- <a href="{{route('users.destroy', $user->id)}}"></a> -->
                                         </td>
                                     </tr>
 
