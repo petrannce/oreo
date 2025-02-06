@@ -54,10 +54,22 @@
                                             <td>{{str_limit($faq->question, 30)}}</td>
                                             <td>{{str_limit($faq->answer, 50)}}</td>
                                             <td>
-                                                <button onclick="" class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-edit"></i></button>
-                                                <button onclick="" class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-delete"></i></button>
+                                                <!-- Edit Button -->
+                                                <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="editFaq({{ $faq->id }})">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('faqs.destroy', $faq->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
+                                                        onclick="return confirm('Are you sure you want to delete this faq?');">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
 
@@ -72,8 +84,10 @@
     </div>
 </section>
 
-<script>
-
-</script>
-
 @endsection
+
+<script>
+    function editFaq(faqId) {
+        window.location.href = `/admin/faqs/${faqId}/edit`;
+    }
+</script>

@@ -29,8 +29,9 @@
                         <h2><strong>All Galleries</strong> </h2>
                         <ul class="header-dropdown">
                             <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('gallery.create')}}" role="button">Create
-                                Gallery</a>
+                                <a class="btn btn-primary btn-lg" href="{{route('gallery.create')}}"
+                                    role="button">Create
+                                    Gallery</a>
                             </li>
                         </ul>
                     </div>
@@ -54,16 +55,22 @@
                                             <td>{{$gallery->title}}</td>
                                             <td>{{$gallery->image}}</td>
                                             <td>
-                                                <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-edit"></i></button> -->
-                                                <a href="{{route('galleries.edit', $gallery->id)}}"
-                                                    class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-edit"></i></a>
-                                                <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-delete"></i></button> -->
-                                                <a href="{{route('galleries.destroy', $gallery->id)}}"
-                                                    class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-delete"></i></a>
+                                                <!-- Edit Button -->
+                                                <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="editGallery({{ $gallery->id }})">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('gallerys.destroy', $gallery->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
+                                                        onclick="return confirm('Are you sure you want to delete this gallery?');">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
 
@@ -79,3 +86,9 @@
 </section>
 
 @endsection
+
+<script>
+    function editGallery(galleryId) {
+        window.location.href = `/admin/galleries/${galleryId}/edit`;
+    }
+</script>

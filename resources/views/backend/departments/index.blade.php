@@ -12,7 +12,8 @@
             </div>
             <div class="col-lg-5 col-md-7 col-sm-12">
                 <ul class="breadcrumb float-md-right">
-                    <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a>
+                    </li>
                     <li class="breadcrumb-item"><a href="{{route('departments')}}">Departments</a></li>
                     <li class="breadcrumb-item active">Departments</li>
                 </ul>
@@ -28,7 +29,8 @@
                         <h2><strong>All Departments</strong> </h2>
                         <ul class="header-dropdown">
                             <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('departments.create')}}" role="button">Create Department</a>
+                                <a class="btn btn-primary btn-lg" href="{{route('departments.create')}}"
+                                    role="button">Create Department</a>
                             </li>
                         </ul>
                     </div>
@@ -46,26 +48,34 @@
                                 </thead>
                                 <tbody>
 
-                                @foreach($departments as $department)
+                                    @foreach($departments as $department)
 
-                                    <tr>
-                                        <td>{{$loop->iteration}}</td>
-                                        <td>{{$department->name}}</td>
-                                        <td>{{str_limit($department->description, 50)}}</td>
-                                        <td>{{$department->image}}</td>
-                                        <td>
-                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-edit"></i></button>
-                                                    <!-- <a href="{{route('departments.edit', $department->id)}}" class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-edit"></i></a> -->
-                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-delete"></i></button>
-                                                    <!-- <a href="{{route('departments.destroy', $department->id)}}" class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-delete"></i></a> -->
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td>{{$loop->iteration}}</td>
+                                            <td>{{$department->name}}</td>
+                                            <td>{{str_limit($department->description, 50)}}</td>
+                                            <td>{{$department->image}}</td>
+                                            <td>
+                                                <!-- Edit Button -->
+                                                <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="editDepartment({{ $department->id }})">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
 
-                                @endforeach
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('departments.destroy', $department->id) }}"
+                                                    method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
+                                                        onclick="return confirm('Are you sure you want to delete this department?');">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -77,3 +87,10 @@
 </section>
 
 @endsection
+
+<script>
+    function editDepartment(departmentId) {
+        window.location.href = `/admin/departments/${departmentId}/edit`;
+    }
+
+</script>

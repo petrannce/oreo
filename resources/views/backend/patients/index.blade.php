@@ -58,16 +58,22 @@
                                             <td>{{$patient->age}}</td>
                                             <td>{{$patient->gender}}</td>
                                             <td>
-                                                <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-edit"></i></button>
-                                                <!-- <a href="{{route('patients.edit', $patient->id)}}"></a> -->
-                                                <a href="javascript:void(0);" data-id="{{$patient->id}}"
-                                                    onclick="deleteElement(this)"
-                                                    class="btn btn-icon btn-neutral btn-icon-mini">
-                                                    <i class="zmdi zmdi-delete"></i>
-                                                </a>
+                                                <!-- Edit Button -->
+                                                <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="editPatient({{ $patient->id }})">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
 
-                                                <!-- <a href="{{route('patients.destroy', $patient->id)}}"></a> -->
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('patients.destroy', $patient->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
+                                                        onclick="return confirm('Are you sure you want to delete this patient?');">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
 
@@ -84,50 +90,8 @@
 
 @endsection
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function deleteElement(button) {
-        if (!button || !button.getAttribute('data-id')) {
-            console.error("Button or data-id is missing.");
-            return;
-        }
-
-        const patientId = button.getAttribute('data-id');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]');
-
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`/patients/${patientId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Content-Type': 'application/json',
-                    },
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        }
-                        throw new Error("Failed to delete");
-                    })
-                    .then(data => {
-                        Swal.fire("Deleted!", data.message, "success");
-                        button.closest('tr').remove();
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        Swal.fire("Error!", "Something went wrong.", "error");
-                    });
-            }
-        });
+    function editPatient(patientId) {
+        window.location.href = `/admin/patients/${patientId}/edit`;
     }
-
 </script>
