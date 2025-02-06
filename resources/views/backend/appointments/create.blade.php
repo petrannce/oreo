@@ -48,7 +48,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <input name="booked_by" type="text" class="form-control"
-                                            value="{{auth()->user()->fname}} {{auth()->user()->lname}}" placeholder="Booked By" readonly>
+                                            value="{{auth()->user()->fname}} {{auth()->user()->lname}}" placeholder="Booked By">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -83,9 +83,13 @@
                                 </div>
 
                                 <div class="col-sm-4">
-                                    <select name="doctor" class="form-control show-tick">
+                                    <select name="doctor_id" class="form-control show-tick">
                                         <option value="">- Select Doctor -</option>
-                                        <option value="Nozim">Nozim</option>
+                                       @foreach ($doctors as $doctor)
+
+                                       <option value="{{$doctor->id}}">{{$doctor->fname}} {{$doctor->lname}}</option>
+                                       
+                                       @endforeach
                                     </select>
                                 </div>
                             </div>

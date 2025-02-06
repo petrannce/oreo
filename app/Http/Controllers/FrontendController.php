@@ -153,29 +153,28 @@ class FrontendController extends Controller
 
     public function appointment(Request $request)
     {
+        //dd($request->all());
+
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required',
+            'patient_id' => 'required',
+            'booked_by' => 'required',
             'date' => 'required',
             'time' => 'required',
             'service' => 'required',
-            'doctor' => 'required',
+            'doctor_id' => 'required',
         ]);
-
+        
         DB::beginTransaction();
 
         try {
             $appointment = new Appointment();
-            $appointment->fname = $request->fname;
-            $appointment->lname = $request->lname;
-            $appointment->email = $request->email;
-            $appointment->phone_number = $request->phone_number;
+            $appointment->patient_id = $request->patient_id;
+            $appointment->booked_by = $request->booked_by;
             $appointment->date = $request->date;
             $appointment->time = $request->time;
             $appointment->service = $request->service;
-            $appointment->doctor = $request->doctor;
+            $appointment->doctor_id = $request->doctor_id;
+            $appointment->status = 'pending';
             $appointment->save();
 
             DB::commit();

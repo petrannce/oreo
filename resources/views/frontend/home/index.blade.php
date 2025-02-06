@@ -21,26 +21,14 @@
                         <p class="col-12">Make an Appointment</p>
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group">
-                                <input type="text" name="fname" value="{{Auth::user()->fname}}"
-                                    placeholder="Enter First Name" class="form-control m-b-15" hidden>
+                                <input type="text" name="patient_id" value="{{Auth::user()->fname}} {{Auth::user()->lname}}"
+                                    placeholder="Enter First Name" class="form-control m-b-15">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group">
-                                <input type="text" name="lname" value="{{Auth::user()->lname}}"
-                                    placeholder="Enter Last Name" class="form-control m-b-15" hidden>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <input type="email" name="email" value="{{Auth::user()->email}}" placeholder="Enter Email"
-                                    class="form-control m-b-15" hidden>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-6">
-                            <div class="form-group">
-                                <input type="text" name="phone_number" placeholder="Enter Phone Mobile"
-                                    class="form-control m-b-15">
+                                <input type="text" name="booked_by" value="{{Auth::user()->fname}} {{Auth::user()->lname}}" placeholder="Enter Email"
+                                    class="form-control m-b-15" >
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6 col-6">
@@ -69,7 +57,7 @@
                             <select class="form-control m-b-15" name="doctor">
                                 <option selected="selected">Select Doctor</option>
                                 @foreach ($doctors as $doctor)
-                                    <option value="{{$doctor->fname}}">{{$doctor->fname}}</option>
+                                    <option value="{{$doctor->id}}">{{$doctor->fname}} {{$doctor->lname}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -407,7 +395,6 @@
                             </div>
                             <div class="blog-info">
                                 <span class="blog-date"><i class="zmdi zmdi-calendar"></i> {{$blog->created_at}}</span>
-                                <span class="blog-comment"><i class="zmdi zmdi-comments"></i> Comment ( 25 )</span>
                             </div>
                         </div>
                     </div>
