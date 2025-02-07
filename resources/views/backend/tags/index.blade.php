@@ -50,15 +50,23 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$tag->name}}</td>
                                         <td>
-                                            <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-edit"></i></button> -->
-                                                    <a href="{{route('tags.edit', $tag->id)}}" class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-edit"></i></a>
-                                            <!-- <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-delete"></i></button> -->
-                                                    <a href="{{route('tags.destroy', $tag->id)}}" class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-delete"></i></a>
-                                        </td>
+                                                <!-- Edit Button -->
+                                                <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="editTags({{ $tag->id }})">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('tags.destroy', $tag->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
+                                                        onclick="return confirm('Are you sure you want to delete this tag?');">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
                                     </tr>
 
                                 @endforeach
@@ -73,3 +81,9 @@
 </section>
 
 @endsection
+
+<script>
+    function editTags(tagsId) {
+        window.location.href = `/admin/tags/${tagsId}/edit`;
+    }
+</script>

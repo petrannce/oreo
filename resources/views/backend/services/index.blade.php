@@ -56,10 +56,22 @@
                                             <td>{{$service->image}}</td>
                                             <td>{{str_limit($service->description, 30)}}</td>
                                             <td>
-                                                <button class="btn btn-icon btn-neutral btn-icon-mini" onclick="{handleEdit}"><i
-                                                        class="zmdi zmdi-edit"></i></button>
-                                                <button class="btn btn-icon btn-neutral btn-icon-mini delete-btn" onclick="{deleteElement(this)}"><i
-                                                        class="zmdi zmdi-delete" data-id="{{$service->id}}"></i></button>
+                                                <!-- Edit Button -->
+                                                <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="editServices({{ $service->id }})">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('services.destroy', $service->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
+                                                        onclick="return confirm('Are you sure you want to delete this service?');">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
 
@@ -78,38 +90,7 @@
 @endsection
 
 <script>
-    
-  document.addEventListener("DOMContentLoaded", function () {
-    // Attach event listeners to all delete buttons
-    const buttons = document.querySelectorAll(".delete-btn");
-
-    buttons.forEach(button => {
-        button.addEventListener("click", function () {
-            const serviceId = this.getAttribute("data-id");
-
-            // Confirm deletion
-            if (confirm("Are you sure you want to delete this service?")) {
-                fetch(`/delete/${serviceId}`, {
-                    method: "DELETE",
-                    headers: {
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-                        "Content-Type": "application/json"
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        // Remove the record from the DOM
-                        const recordElement = document.getElementById(`service-${serviceId}`);
-                        recordElement.remove();
-                        alert("Service deleted successfully.");
-                    } else {
-                        alert("Failed to delete the service. Please try again.");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-            }
-        });
-    });
-});
-
+    function editServices(servicesId) {
+        window.location.href = `/admin/services/${servicesId}/edit`;
+    }
 </script>

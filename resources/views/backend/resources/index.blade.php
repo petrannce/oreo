@@ -54,13 +54,23 @@
                                         <td>{{$resource->type}}</td>
                                         <td>{{$resource->description}}</td>
                                         <td>
-                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-edit"></i></button>
-                                                    <!-- <a href="{{route('resources.edit', $resource->id)}}"></a> -->
-                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-delete"></i></button>
-                                                    <!-- <a href="{{route('resources.destroy', $resource->id)}}"></a> -->
-                                        </td>
+                                                <!-- Edit Button -->
+                                                <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="editResources({{ $resource->id }})">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('resources.destroy', $resource->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
+                                                        onclick="return confirm('Are you sure you want to delete this resource?');">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
                                     </tr>
 
                                     @endforeach
@@ -75,3 +85,9 @@
 </section>
 
 @endsection
+
+<script>
+    function editResources(resourcesId) {
+        window.location.href = `/admin/resources/${resourcesId}/edit`;
+    }
+</script>

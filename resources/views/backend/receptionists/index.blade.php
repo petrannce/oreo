@@ -54,11 +54,23 @@
                                         <td>{{$receptionist->email}}</td>
                                         <td>{{$receptionist->profile->phone ?? 'No Phone Number'}}</td>
                                         <td>
-                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-edit"></i></button>
-                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-delete"></i></button>
-                                        </td>
+                                                <!-- Edit Button -->
+                                                <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="editReceptionist({{ $receptionist->id }})">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('receptionists.destroy', $receptionist->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
+                                                        onclick="return confirm('Are you sure you want to delete this receptionist?');">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
                                     </tr>
 
                                     @endforeach
@@ -73,3 +85,9 @@
 </section>
 
 @endsection
+
+<script>
+    function editReceptionist(receptionistId) {
+        window.location.href = `/admin/receptionists/${receptionistId}/edit`;
+    }
+</script>

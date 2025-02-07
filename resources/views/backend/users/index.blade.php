@@ -58,13 +58,23 @@
                                         <td>{{$user->profile->phone_number ?? 'No Phone Number'}}</td>
                                         <td>{{$user->profile->status ?? 'No Status'}}</td>
                                         <td>
-                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-edit"></i></button>
-                                                    <!-- <a href="{{route('users.edit', $user->id)}}"></a> -->
-                                            <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                    class="zmdi zmdi-delete"></i></button>
-                                                    <!-- <a href="{{route('users.destroy', $user->id)}}"></a> -->
-                                        </td>
+                                                <!-- Edit Button -->
+                                                <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="editUsers({{ $user->id }})">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
+                                                        onclick="return confirm('Are you sure you want to delete this user?');">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
                                     </tr>
 
                                     @endforeach
@@ -79,3 +89,9 @@
 </section>
 
 @endsection
+
+<script>
+    function editUsers(usersId) {
+        window.location.href = `/admin/users/${usersId}/edit`;
+    }
+</script>

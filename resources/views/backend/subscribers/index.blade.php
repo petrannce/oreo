@@ -48,10 +48,16 @@
                                             <td>{{$subscriber->name}}</td>
                                             <td>{{$subscriber->email}}</td>
                                             <td>
-                                                <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-edit"></i></button>
-                                                <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-delete"></i></button>
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('subscribers.destroy', $subscriber->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
+                                                        onclick="return confirm('Are you sure you want to delete this subscriber?');">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
 
