@@ -76,67 +76,13 @@
                     <p class="sub-title">Contrary to popular belief, Lorem Ipsum is not simply random text.</p><br>
                     <a href="{{route('about')}}" class="btn btn-primary btn-round">View More</a href="{{url('about')}}">
                 </div>
-                <form action="{{route('appointment.store')}}" method="post">
-                    @csrf
 
                     <div class="slider_form row">
                         <p class="col-12">Make an Appointment</p>
                         <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <input type="text" name="fname" placeholder="Enter First Name" class="form-control m-b-15" >
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <input type="text" name="lname" placeholder="Enter Last Name" class="form-control m-b-15" >
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <input type="email" name="email" placeholder="Enter Email" class="form-control m-b-15" >
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-6">
-                            <div class="form-group">
-                                <input type="text" name="phone_number" placeholder="Enter Phone Mobile"
-                                    class="form-control m-b-15">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-6">
-                            <div class="form-group">
-                                <input type="date" name="date" placeholder="Enter Date" class="form-control m-b-15"
-                                    min="{{date('Y-m-d')}}">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-6">
-                            <div class="form-group">
-                                <input type="time" name="time" placeholder="Enter Time" class="form-control m-b-15">
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-6 col-6">
-                            <select class="form-control" name="service">
-                                <option selected="selected">Select Service</option>
-                                @foreach ($services as $service)
-
-                                    <option value="{{$service->name}}">{{$service->name}}</option>
-
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-6">
-                            <select class="form-control m-b-15" name="doctor">
-                                <option selected="selected">Select Doctor</option>
-                                @foreach ($doctors as $doctor)
-                                    <option value="{{$doctor->fname}}">{{$doctor->fname}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <button type="submit" class="btn btn-primary btn-round btn-block m-t-0 m-b-0">Submit</button>
+                            <a href="{{route('login')}}" class="btn btn-primary btn-round btn-block m-t-0 m-b-0">Login</a>
                         </div>
                     </div>
-                </form>
             </div>
             
         @endif

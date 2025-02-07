@@ -29,9 +29,12 @@ class UserController extends Controller
             'lname' => 'required',
             'username' => 'required',
             'email' => 'required|email|unique:users,email', // Ensure unique email for users
-            'password' => 'required', 'string', 'min:8', 'confirmed',
+            'password' => 'required',
+            'string',
+            'min:8',
+            'confirmed',
         ]);
-        
+
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
@@ -108,4 +111,18 @@ class UserController extends Controller
         DB::table('users')->where('id', $id)->delete();
         return redirect()->route('users')->with('success', 'User deleted successfully');
     }
+
+    public function updateRole($id, $role)
+    {
+        // Validate role input
+        if (!in_array($role, ['admin', 'patient', 'receptionist'])) {
+            return redirect()->back()->with('error', 'Invalid role selected.');
+        }
+
+        $user = User::findOrFail($id);
+        $user->update(['role' => $role]);
+
+        return redirect()->back()->with('success', 'Role updated successfully!');
+    }
+
 }

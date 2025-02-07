@@ -12,7 +12,8 @@
             </div>
             <div class="col-lg-5 col-md-7 col-sm-12">
                 <ul class="breadcrumb float-md-right">
-                    <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a>
+                    </li>
                     <li class="breadcrumb-item"><a href="{{route('users')}}">Users</a></li>
                     <li class="breadcrumb-item active">Users</li>
                 </ul>
@@ -28,10 +29,19 @@
                         <h2><strong>All Users</strong> </h2>
                         <ul class="header-dropdown">
                             <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('users.create')}}" role="button">Create User</a>
+                                <a class="btn btn-primary btn-lg" href="{{route('users.create')}}" role="button">Create
+                                    User</a>
                             </li>
                         </ul>
                     </div>
+                    @if(session('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">{{ session('error') }}</div>
+                    @endif
+
                     <div class="body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
@@ -50,14 +60,33 @@
 
                                     @foreach($users as $user)
 
-                                    <tr>
-                                        <td>{{$loop->iteration}}</td>
-                                        <td>{{$user->fname}} {{$user->lname}}</td>
-                                        <td>{{$user->email}}</td>
-                                        <td>{{$user->role}}</td>
-                                        <td>{{$user->profile->phone_number ?? 'No Phone Number'}}</td>
-                                        <td>{{$user->profile->status ?? 'No Status'}}</td>
-                                        <td>
+                                        <tr>
+                                            <td>{{$loop->iteration}}</td>
+                                            <td>{{$user->fname}} {{$user->lname}}</td>
+                                            <td>{{$user->email}}</td>
+
+                                            <td>
+                                                @if ($user->role === 'admin')
+                                                    <span class="badge badge-primary">Admin</span>
+                                                @elseif ($user->role === 'patient')
+                                                    <span class="badge badge-info">Patient</span>
+                                                @else
+                                                    <span class="badge badge-warning">No Role</span>
+                                                @endif
+                                            </td>
+
+                                            <td>{{$user->profile->phone_number ?? 'No Phone Number'}}</td>
+
+                                            @if (isset($user->profile) && $user->profile->status === 'active')
+                                                <td><span class="badge badge-success">Active</span></td>
+                                            @elseif (isset($user->profile) && $user->profile->status === 'inactive')
+                                                <td><span class="badge badge-danger">Inactive</span></td>
+                                            @else
+                                                <td><span class="badge badge-warning">No Status</span></td>
+                                            @endif
+
+
+                                            <td>
                                                 <!-- Edit Button -->
                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"
                                                     onclick="editUsers({{ $user->id }})">
@@ -75,7 +104,7 @@
                                                     </button>
                                                 </form>
                                             </td>
-                                    </tr>
+                                        </tr>
 
                                     @endforeach
                                 </tbody>
