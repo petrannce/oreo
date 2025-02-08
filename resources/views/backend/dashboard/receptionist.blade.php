@@ -9,24 +9,7 @@
                 <h2>Dashboard
                 <small>Welcome to Oreo</small>
                 </h2>
-            </div>            
-            <div class="col-lg-7 col-md-7 col-sm-12 text-right">
-                <div class="inlineblock text-center m-r-15 m-l-15 d-none d-lg-inline-block">
-                    <div class="sparkline" data-type="bar" data-width="97%" data-height="25px" data-bar-Width="2" data-bar-Spacing="5" data-bar-Color="#fff">3,2,6,5,9,8,7,9,5,1,3,5,7,4,6</div>
-                    <small class="col-white">Visitors</small>
-                </div>
-                <div class="inlineblock text-center m-r-15 m-l-15 d-none d-lg-inline-block">
-                    <div class="sparkline" data-type="bar" data-width="97%" data-height="25px" data-bar-Width="2" data-bar-Spacing="5" data-bar-Color="#fff">1,3,5,7,4,6,3,2,6,5,9,8,7,9,5</div>
-                    <small class="col-white">Operations</small>
-                </div>
-                <button class="btn btn-white btn-icon btn-round d-none d-md-inline-block float-right m-l-10" type="button">
-                    <i class="zmdi zmdi-plus"></i>
-                </button>
-                <ul class="breadcrumb float-md-right">
-                    <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Oreo</a></li>
-                    <li class="breadcrumb-item active">Dashboard</li>
-                </ul>
-            </div>
+            </div>  
         </div>
     </div>
     <div class="container-fluid">
@@ -46,7 +29,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="card">
                     <div class="body">
-                        <h3 class="number count-to m-b-0" data-from="0" data-to="3218" data-speed="2500" data-fresh-interval="1000">3218 <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                        <h3 class="number count-to m-b-0" data-from="0" data-to="{{ $appointments->where('status', 'pending')->count() }}" data-speed="2500" data-fresh-interval="1000">{{ $appointments->where('status', 'pending')->count() }} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                         <p class="text-muted">Pending Appointments</p>
                         <div class="progress">
                             <div class="progress-bar l-green" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
@@ -55,84 +38,80 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-12">
-                <div class="card">
-                    <div class="body">
-                        <h3 class="number count-to m-b-0" data-from="0" data-to="{{ $contacts->count() }}" data-speed="3000" data-fresh-interval="1000">{{ $contacts->count() }} 
-                            <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                        <p class="text-muted">Contacts <i class="zmdi zmdi-mood"></i></p>
-                        <div class="progress">
-                            <div class="progress-bar l-parpl" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                        </div>
-                        <small>Change 20%</small>
-                    </div>
-                </div>
-            </div>
-        </div>       
+        </div>
         <div class="row clearfix">
-            <div class="col-lg-4 col-md-12">
+            <div class="col-lg-12 col-md-12">
                 <div class="card">
-                    <div class="header">
-                        <h2><strong>Dr.</strong> Timeline</h2>
-                        <ul class="header-dropdown">                            
-                            <li class="remove">
-                                <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
-                            </li>
-                        </ul>
-                    </div>
                     <div class="body">
-                        <div class="new_timeline">
-                            <div class="header">
-                                <div class="color-overlay">
-                                    <div class="day-number">8</div>
-                                    <div class="date-right">
-                                    <div class="day-name">Monday</div>
-                                    <div class="month">February 2018</div>
-                                    </div>
-                                </div>                                
-                            </div>
-                            <ul>
-                                <li>
-                                    <div class="bullet pink"></div>
-                                    <div class="time">5pm</div>
-                                    <div class="desc">
-                                        <h3>New Icon</h3>
-                                        <h4>Mobile App</h4>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="bullet green"></div>
-                                    <div class="time">3 - 4pm</div>
-                                    <div class="desc">
-                                        <h3>Design Stand Up</h3>
-                                        <h4>Hangouts</h4>
-                                        <ul class="list-unstyled team-info margin-0 p-t-5">                                            
-                                            <li><img src="http://via.placeholder.com/35x35" alt="Avatar"></li>
-                                            <li><img src="http://via.placeholder.com/35x35" alt="Avatar"></li>                                            
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="bullet orange"></div>
-                                    <div class="time">12pm</div>
-                                    <div class="desc">
-                                        <h3>Lunch Break</h3>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="bullet green"></div>
-                                    <div class="time">9 - 11am</div>
-                                    <div class="desc">
-                                        <h3>Finish Home Screen</h3>
-                                        <h4>Web App</h4>
-                                    </div>
-                                </li>
-                            </ul>
+                        <div class="sparkline m-b-10" data-type="bar" data-width="97%" data-height="38px" data-bar-Width="2" data-bar-Spacing="6" data-bar-Color="#555555">2,8,5,3,1,7,9,5,6,4,2,3,1,2,8,5,3,1,7,9,5,6,4,2,3,1</div>
+                        <h6 class="text-center m-b-15">Total New Patient</h6>
+                        <div id="world-map-markers2" style="height:125px;"></div>
+                        <div class="table-responsive m-t-20">
+                            <table class="table table-striped m-b-0">
+                                <thead>
+                                    <tr>
+                                        <th>City</th>                                        
+                                        <th>Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>New York</td>
+                                        <td>215<i class="zmdi zmdi-trending-up m-l-10"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Los Angeles</td>
+                                        <td>189<i class="zmdi zmdi-trending-up m-l-10"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Chicago</td>
+                                        <td>408<i class="zmdi zmdi-trending-down m-l-10"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Houston</td>
+                                        <td>78<i class="zmdi zmdi-trending-down m-l-10"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phoenix</td>
+                                        <td>148<i class="zmdi zmdi-trending-up m-l-10"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>San Diego</td>
+                                        <td>102<i class="zmdi zmdi-trending-down m-l-10"></i></td>
+                                    </tr>                                    
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>         
+        <div class="row clearfix">
             <div class="col-lg-8 col-md-12">
+                <div class="row clearfix">
+                    <div class="col-lg-4 col-md-8">
+                        <div class="card top_counter">
+                            <div class="body">
+                                <div class="icon xl-slategray"><i class="zmdi zmdi-account"></i> </div>
+                                <div class="content">
+                                    <div class="text">New Patient</div>
+                                    <h5 class="number">{{ $patients->count() }}</h5>
+                                </div>
+                            </div>                    
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="card top_counter">
+                            <div class="body">
+                                <div class="icon xl-slategray"><i class="zmdi zmdi-account"></i> </div>
+                                <div class="content">
+                                    <div class="text">Doctors</div>
+                                    <h5 class="number">{{ $doctors->count() }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card visitors-map">
                     <div class="header">
                         <h2><strong>Our</strong> Location <small>Contrary to popular belief, Lorem Ipsum is not simply random text</small></h2>
@@ -269,41 +248,25 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th></th>
                                         <th>Name</th>
+                                        <th>Email</th>
                                         <th>Address</th>
                                         <th>Diseases</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+
+                                    @foreach ($patients as $patient)
+
                                     <tr>
-                                        <td>1</td>
-                                        <td><img src="http://via.placeholder.com/35x35" alt="Avatar" class="rounded-circle"></td>
-                                        <td>Virginia</td>
-                                        <td>123 6th St. Melbourne, FL 32904</td>
-                                        <td><span class="badge badge-danger">Fever</span> </td>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td>{{$patient->fname}} {{$patient->lname}}</td>
+                                        <td>{{$patient->email}}</td>
+                                        <td>{{$patient->address}} </td>
                                     </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td><img src="http://via.placeholder.com/35x35" alt="Avatar" class="rounded-circle"></td>
-                                        <td>Julie </td>
-                                        <td>71 Pilgrim Avenue Chevy Chase, MD 20815</td>
-                                        <td><span class="badge badge-info">Cancer</span> </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td><img src="http://via.placeholder.com/35x35" alt="Avatar" class="rounded-circle"></td>
-                                        <td>Woods</td>
-                                        <td>70 Bowman St. South Windsor, CT 06074</td>
-                                        <td><span class="badge badge-warning">Lakva</span> </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td><img src="http://via.placeholder.com/35x35" alt="Avatar" class="rounded-circle"></td>
-                                        <td>Lewis</td>
-                                        <td>4 Goldfield Rd.Honolulu, HI 96815</td>
-                                        <td><span class="badge badge-success">Dental</span> </td>
-                                    </tr>
+                                    
+                                    @endforeach
+                                   
                                 </tbody>
                             </table>
                         </div>

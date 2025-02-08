@@ -22,37 +22,37 @@
                     @endif
                     <li class="header">DASHBOARD</li>
 
-                    @role('Admin')
+                    @if(auth()->user()->hasAnyRole(['Admin']))
                     <li class="{{ Request::route()->getName() == 'admin' ? 'active' : 'inactive' }}">
                         <a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i>
                             <span> Admin Dashboard</span></a>
                     </li>
-                    @endrole
+                    @endif
 
-                    @role('Admin|Doctor')
+                    @if(auth()->user()->hasAnyRole(['Admin', 'Doctor']))
                     <li class="{{ Request::route()->getName() == 'dashboard.doctors' ? 'active' : 'inactive' }}">
                         <a href="{{route('dashboard.doctors')}}"><i class="zmdi zmdi-accounts-alt"></i>
                             <span> Doctors Dashboard</span></a>
                     </li>
-                    @endrole
+                    @endif
 
-                    @role('Admin|Receptionist')
+                    @if(auth()->user()->hasAnyRole(['Admin', 'Receptionist']))
                     <li class="{{ Request::route()->getName() == 'dashboard.receptionists' ? 'active' : 'inactive' }}">
                         <a href="{{route('dashboard.receptionists')}}"><i class="zmdi zmdi-female"></i>
                             <span>Receptionist</span></a>
                     </li>
-                    @endrole
+                    @endif
 
-                    @role('Admin|Patient')
+                    @if(auth()->user()->hasAnyRole(['Admin', 'Patient']))
                     <li class="{{ Request::route()->getName() == 'dashboard.patients' ? 'active' : 'inactive' }}">
                         <a href="{{route('dashboard.patients')}}"><i class="zmdi zmdi-female"></i>
                             <span>Patients</span></a>
                     </li>
-                    @endrole
+                    @endif
 
                     <li class="header">MAIN</li>
 
-                    @role('Admin|Doctor|Receptionist|Patient')
+                    @if(auth()->user()->hasAnyRole(['Admin', 'Doctor', 'Receptionist', 'Patient']))
                     <li><a class="menu-toggle"><i class="zmdi zmdi-calendar-check"></i><span>Appointment</span> </a>
                         <ul class="ml-menu">
                             <li
@@ -65,9 +65,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endrole
+                    @endif
 
-                    @role('Admin|Doctor')
+                    @if(auth()->user()->hasAnyRole(['Admin', 'Doctor']))
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-calendar-check"></i><span>Services</span> </a>
                         <ul class="ml-menu">
@@ -79,9 +79,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endrole
+                    @endif
 
-                    @role('Admin')
+                    @if(auth()->user()->hasAnyRole(['Admin']))
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-add"></i><span>Doctors</span> </a>
                         <ul class="ml-menu">
@@ -96,9 +96,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endrole
+                    @endif
 
-                    @role('Admin|Receptionist')
+                    @if(auth()->user()->hasAnyRole(['Admin', 'Receptionist']))
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-o"></i><span>Patients</span> </a>
                         <ul class="ml-menu">
@@ -113,8 +113,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endrole
-                    @role('Admin')
+                    @endif
+
+                    @if(auth()->user()->hasAnyRole(['Admin']))
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-o"></i><span>Receptionists</span> </a>
                         <ul class="ml-menu">
@@ -126,9 +127,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endrole
+                    @endif
 
-                    @role('Admin')
+                    @if(auth()->user()->hasAnyRole(['Admin']))
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-label-alt"></i><span>Departments</span> </a>
                         <ul class="ml-menu">
@@ -141,9 +142,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endrole
+                    @endif
 
-                    @role('Admin')
+                    @if(auth()->user()->hasAnyRole(['Admin']))
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-label-alt"></i><span>Resources</span> </a>
                         <ul class="ml-menu">
@@ -155,9 +156,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endrole
+                    @endif
 
-                    @role('Admin')
+                    @if(auth()->user()->hasAnyRole(['Admin']))
                     <li class="header">EXTRA COMPONENTS</li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-blogger"></i><span>Blog</span></a>
@@ -196,7 +197,7 @@
                         <a href="{{route('users')}}"><i class="zmdi zmdi-home"></i><span>Users</span>
                         </a>
                     </li>
-                    @endrole
+                    @endif
                 </ul>
             </div>
         </div>
