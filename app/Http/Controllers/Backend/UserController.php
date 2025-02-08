@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Hash;
 use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -114,13 +116,22 @@ class UserController extends Controller
 
     public function updateRole($id, $role)
     {
-        // Validate role input
-        if (!in_array($role, ['admin', 'patient', 'receptionist'])) {
-            return redirect()->back()->with('error', 'Invalid role selected.');
+        $user = User::findOrFail($id);
+        $validRoles = ['admin', 'patient', 'receptionist'];
+
+        if (!in_array($role, $validRoles)) {
+            return redirect()->back()->with('error', 'Invalid role selected');
         }
 
-        $user = User::findOrFail($id);
-        $user->update(['role' => $role]);
+        $user->role = $role;
+        $user->save();
+
+        //if the authenticated user is changing their own role, update their session
+        if (Auth::id() == $user->id) {
+            Auth::logout();
+            Session::flush(); //clear the session
+            return redirect('/')->with('success', 'Role updated successfully! Please login again');
+        }
 
         return redirect()->back()->with('success', 'Role updated successfully!');
     }

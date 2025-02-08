@@ -66,14 +66,36 @@
                                             <td>{{$user->email}}</td>
 
                                             <td>
-                                                @if ($user->role === 'admin')
-                                                    <span class="badge badge-primary">Admin</span>
-                                                @elseif ($user->role === 'patient')
-                                                    <span class="badge badge-info">Patient</span>
-                                                @else
-                                                    <span class="badge badge-warning">No Role</span>
-                                                @endif
+                                                <div class="dropdown">
+                                                    <a href="#" class="btn btn-primary btn-sm btn-rounded dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false">
+                                                        @if($user->role == 'admin')
+                                                            <i class="text-success"></i> Admin
+                                                        @elseif($user->role == 'patient')
+                                                            <i class="text-primary"></i> Patient
+                                                        @elseif($user->role == 'receptionist')
+                                                            <i class="text-info"></i> Receptionist
+                                                        @else
+                                                            <i class="text-danger"></i> No Role
+                                                        @endif
+                                                    </a>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'admin']) }}">
+                                                            <i class="text-success"></i> Admin
+                                                        </a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'patient']) }}">
+                                                            <i class="text-primary"></i> Patient
+                                                        </a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'receptionist']) }}">
+                                                            <i class="text-info"></i> Receptionist
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             </td>
+
 
                                             <td>{{$user->profile->phone_number ?? 'No Phone Number'}}</td>
 
