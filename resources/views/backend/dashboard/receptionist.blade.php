@@ -55,30 +55,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach ($patients as $patient)
                                     <tr>
-                                        <td>New York</td>
-                                        <td>215<i class="zmdi zmdi-trending-up m-l-10"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Los Angeles</td>
-                                        <td>189<i class="zmdi zmdi-trending-up m-l-10"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Chicago</td>
-                                        <td>408<i class="zmdi zmdi-trending-down m-l-10"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Houston</td>
-                                        <td>78<i class="zmdi zmdi-trending-down m-l-10"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Phoenix</td>
-                                        <td>148<i class="zmdi zmdi-trending-up m-l-10"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <td>San Diego</td>
-                                        <td>102<i class="zmdi zmdi-trending-down m-l-10"></i></td>
-                                    </tr>                                    
+                                        <td>{{$patient->city}}</td>
+                                        <td>{{$patient->gender}}<i class="zmdi zmdi-trending-up m-l-10"></i></td>
+                                    </tr> 
+                                    @endforeach                                 
                                 </tbody>
                             </table>
                         </div>

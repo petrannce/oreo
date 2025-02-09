@@ -195,30 +195,6 @@
                                         <td>123 6th St. Melbourne, FL 32904</td>
                                         <td><span class="badge badge-danger">Fever</span> </td>
                                     </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td><img src="http://via.placeholder.com/35x35" alt="Avatar"
-                                                class="rounded-circle"></td>
-                                        <td>Julie </td>
-                                        <td>71 Pilgrim Avenue Chevy Chase, MD 20815</td>
-                                        <td><span class="badge badge-info">Cancer</span> </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td><img src="http://via.placeholder.com/35x35" alt="Avatar"
-                                                class="rounded-circle"></td>
-                                        <td>Woods</td>
-                                        <td>70 Bowman St. South Windsor, CT 06074</td>
-                                        <td><span class="badge badge-warning">Lakva</span> </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td><img src="http://via.placeholder.com/35x35" alt="Avatar"
-                                                class="rounded-circle"></td>
-                                        <td>Lewis</td>
-                                        <td>4 Goldfield Rd.Honolulu, HI 96815</td>
-                                        <td><span class="badge badge-success">Dental</span> </td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
