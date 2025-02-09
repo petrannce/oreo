@@ -114,6 +114,16 @@ Route::controller(DoctorController::class)->prefix('admin')->group(function () {
     Route::put('/doctors/{id}/profile', 'updateProfile')->name('updateProfile');
 });
 
+//medical records
+Route::controller(MedicalController::class)->prefix('admin')->group(function () {
+    Route::get('/medical-records', 'index')->name('records.index');
+    Route::get('/medical-records/create', 'create')->name('records.create');
+    Route::post('/medical-records', 'store')->name('records.store');
+    Route::get('/medical-records/{id}/edit', 'edit')->name('records.edit');
+    Route::put('/medical-records/{id}', 'update')->name('records.update');
+    Route::delete('/medical-records/{id}', 'destroy')->name('records.destroy');
+});
+
 Route::controller(PatientController::class)->group(function () {
     Route::get('/patients', 'index')->name('patients');
     Route::get('/patients/create', 'create')->name('patient.create');

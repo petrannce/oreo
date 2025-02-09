@@ -187,14 +187,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td><img src="http://via.placeholder.com/35x35" alt="Avatar"
-                                                class="rounded-circle"></td>
-                                        <td>Virginia</td>
-                                        <td>123 6th St. Melbourne, FL 32904</td>
-                                        <td><span class="badge badge-danger">Fever</span> </td>
-                                    </tr>
+                                    @foreach ($patients as $patient)
+                                        <tr>
+                                            <td>{{$loop->iteration}}</td>
+                                            <td>{{$patient->fname}} {{$patient->lname}}</td>
+                                            <td>{{$patient->address}}</td>
+                                            <td>{{$patient->gender}}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
