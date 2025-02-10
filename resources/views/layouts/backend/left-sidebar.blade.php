@@ -102,11 +102,11 @@
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-add"></i><span>Medical Records</span> </a>
                         <ul class="ml-menu">
-                            <li class="{{ Request::route()->getName() == 'doctors.index' ? 'active' : 'inactive' }}">
-                                <a href="{{route('doctors.index')}}">All Records</a>
+                            <li class="{{ Request::route()->getName() == 'medicals' ? 'active' : 'inactive' }}">
+                                <a href="{{route('medicals')}}">All Records</a>
                             </li>
                             <li class="{{ Request::route()->getName() == 'doctors.create' ? 'active' : 'inactive' }}">
-                                <a href="{{route('doctors.create')}}">Add Record</a>
+                                <a href="{{route('medicals.create')}}">Add Record</a>
                             </li>
                         </ul>
                     </li>

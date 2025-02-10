@@ -16,6 +16,7 @@ use App\Http\Controllers\Backend\GalleryController;
 use App\Http\Controllers\Backend\ResourceController;
 use App\Http\Controllers\Backend\ServiceController;
 use App\Http\Controllers\Backend\ReceptionistController;
+use App\Http\Controllers\Backend\MedicalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -116,12 +117,12 @@ Route::controller(DoctorController::class)->prefix('admin')->group(function () {
 
 //medical records
 Route::controller(MedicalController::class)->prefix('admin')->group(function () {
-    Route::get('/medical-records', 'index')->name('records.index');
-    Route::get('/medical-records/create', 'create')->name('records.create');
-    Route::post('/medical-records', 'store')->name('records.store');
-    Route::get('/medical-records/{id}/edit', 'edit')->name('records.edit');
-    Route::put('/medical-records/{id}', 'update')->name('records.update');
-    Route::delete('/medical-records/{id}', 'destroy')->name('records.destroy');
+    Route::get('/medical-records', 'index')->name('medicals');
+    Route::get('/medical-records/create', 'create')->name('medicals.create');
+    Route::post('/medical-records', 'store')->name('medicals.store');
+    Route::get('/medical-records/{id}/edit', 'edit')->name('medicals.edit');
+    Route::put('/medical-records/{id}', 'update')->name('medicals.update');
+    Route::delete('/medical-records/{id}', 'destroy')->name('medicals.destroy');
 });
 
 Route::controller(PatientController::class)->group(function () {
