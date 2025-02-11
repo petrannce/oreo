@@ -163,7 +163,7 @@ Route::controller(TagController::class)->group(function () {
     Route::delete('/tags/{id}', 'destroy')->name('tags.destroy');
 });
 
-Route::controller(BlogController::class)->group(function () {
+Route::controller(BlogController::class)->prefix('admin')->group(function () {
     Route::get('/blogs', 'index')->name('blogs');
     Route::get('/blogs/create', 'create')->name('blogs.create');
     Route::post('/blogs', 'store')->name('blogs.store');

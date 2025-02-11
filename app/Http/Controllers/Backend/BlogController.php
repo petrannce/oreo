@@ -60,11 +60,13 @@ class BlogController extends Controller
     public function edit($id)
     {
         $blog = Blog::find($id);
-        return view('backend.blogs.edit', compact('blog'));
+        $tags = Tag::all();
+        return view('backend.blogs.edit', compact('blog', 'tags'));
     }
 
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'title' => 'required',
             'tag' => 'required',
@@ -73,20 +75,23 @@ class BlogController extends Controller
         ]);
 
         DB::beginTransaction();
+
         try {
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $image_name = time() . '.' . $image->getClientOriginalExtension();
+                $image_name = time() . '.' . $image->getClientOriginalName();
                 $image->move(public_path('images'), $image_name);
             }
+
             $blog = Blog::find($id);
             $blog->title = $request->title;
             $blog->tag = $request->tag;
             $blog->description = $request->description;
             $blog->image = $image_name;
             $blog->save();
+
             DB::commit();
-            return redirect()->back()->with('success', 'Blog updated successfully');
+            return redirect()->route('blogs')->with('success', 'Blog updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Blog update failed');
