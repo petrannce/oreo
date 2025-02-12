@@ -16,7 +16,16 @@ class AppointmentController extends Controller
 {
     public function index()
     {
-        $appointments = Appointment::all();
+        $appointments = DB::table('appointments')
+        ->join('patients', 'appointments.patient_id', '=', 'patients.id')
+        ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
+        ->join('users', 'appointments.booked_by', '=', 'users.id')
+        ->select('appointments.*', 
+        'patients.fname as patient_fname', 'patients.lname as patient_lname', 
+        'doctors.fname as doctor_fname', 'doctors.lname as doctor_lname',
+        'users.fname as user_fname', 'users.lname as user_lname'
+        )
+        ->get();
         return view('backend.appointments.index',compact('appointments'));
     }
 
@@ -53,7 +62,7 @@ class AppointmentController extends Controller
             $appointment->save();
             
             DB::commit();
-            return redirect()->back()->with('success', 'Appointment created successfully');
+            return redirect()->route('appointments')->with('success', 'Appointment created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Appointment creation failed');

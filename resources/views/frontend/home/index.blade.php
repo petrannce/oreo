@@ -21,14 +21,14 @@
                         <p class="col-12">Make an Appointment</p>
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group">
-                                <input type="text" name="patient_id" value="{{Auth::user()->fname}} {{Auth::user()->lname}}"
+                                <input type="text" name="patient_id" value="{{Auth::user()->id}}"
                                     placeholder="Enter First Name" class="form-control m-b-15">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group">
-                                <input type="text" name="booked_by" value="{{Auth::user()->fname}} {{Auth::user()->lname}}" placeholder="Enter Email"
-                                    class="form-control m-b-15" >
+                                <input type="text" name="booked_by" value="{{Auth::user()->id}}" 
+                                placeholder="Enter Email" class="form-control m-b-15" >
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6 col-6">

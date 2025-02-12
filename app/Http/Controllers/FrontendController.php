@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Subscriber;
 use App\Models\Contact;
@@ -153,7 +154,6 @@ class FrontendController extends Controller
 
     public function appointment(Request $request)
     {
-        //dd($request->all());
 
         $request->validate([
             'patient_id' => 'required',
@@ -163,6 +163,8 @@ class FrontendController extends Controller
             'service' => 'required',
             'doctor_id' => 'required',
         ]);
+
+        dd($request);
         
         DB::beginTransaction();
 
@@ -175,6 +177,7 @@ class FrontendController extends Controller
             $appointment->service = $request->service;
             $appointment->doctor_id = $request->doctor_id;
             $appointment->status = 'pending';
+            dd($appointment);
             $appointment->save();
 
             DB::commit();

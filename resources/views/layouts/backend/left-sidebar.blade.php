@@ -56,8 +56,8 @@
                     <li><a class="menu-toggle"><i class="zmdi zmdi-calendar-check"></i><span>Appointment</span> </a>
                         <ul class="ml-menu">
                             <li
-                                class="{{ Request::route()->getName() == 'appointments.index' ? 'active' : 'inactive' }}">
-                                <a href="{{route('appointments.index')}}">All Appointments</a>
+                                class="{{ Request::route()->getName() == 'appointments' ? 'active' : 'inactive' }}">
+                                <a href="{{route('appointments')}}">All Appointments</a>
                             </li>
                             <li
                                 class="{{ Request::route()->getName() == 'appointments.create' ? 'active' : 'inactive' }}">

@@ -14,7 +14,7 @@
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="{{route('appointments.index')}}">Appointments</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('appointments')}}">Appointments</a></li>
                     <li class="breadcrumb-item active">Appointments</li>
                 </ul>
             </div>
@@ -40,7 +40,7 @@
                                 <thead>
                                     <tr>
                                         <th>*</th>
-                                        <th>Patient Name</th>
+                                        <th>Patient ID</th>
                                         <th>Date</th>
                                         <th>Time</th>
                                         <th>Service</th>
@@ -55,28 +55,37 @@
                                     @foreach($appointments as $appointment)
 
                                         <tr>
-                                            <td>{{ $appointment->patient->user->fname }}
-                                                {{ $appointment->patient->user->lname }}
-                                            </td>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $appointment->id }}</td>
                                             <td>{{ $appointment->date }}</td>
                                             <td>{{ $appointment->time }}</td>
                                             <td>{{ $appointment->service }}</td>
-                                            <td>{{ optional($appointment->doctor)->fname ?? 'Not Assigned' }}</td>
+                                            <td>{{ $appointment->doctor_fname }}</td>
                                             <td>{{ ucfirst($appointment->status) }}</td>
+                                            <td>{{ $appointment->user_fname }}</td>
                                             <td>
-                                                @if($appointment->bookedBy)
-                                                    {{ $appointment->bookedBy->fname }} ({{ $appointment->bookedBy->role }})
-                                                @else
-                                                    Self-booked
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-edit"></i></button>
-                                                <!-- <a href="{{route('appointments.edit', $appointment->id)}}"></a> -->
-                                                <button class="btn btn-icon btn-neutral btn-icon-mini"><i
-                                                        class="zmdi zmdi-delete"></i></button>
-                                                <!-- <a href="{{route('appointments.destroy', $appointment->id)}}"></a> -->
+                                                <!-- View Button -->
+                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="viewAppointment({{ $appointment->id }})">
+                                                    <i class="zmdi zmdi-eye"></i>
+                                                 </button>
+
+                                                <!-- Edit Button -->
+                                                <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="editAppointment({{ $appointment->id }})">
+                                                    <i class="zmdi zmdi-edit"></i>
+                                                </button>
+
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('appointments.destroy', $appointment->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
+                                                        onclick="return confirm('Are you sure you want to delete this appointment?');">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
 
@@ -92,3 +101,19 @@
 </section>
 
 @endsection
+
+<script>
+
+    function viewAppointment(appointmentId) {
+        window.location.href = `/admin/appointments/${appointmentId}`;
+    }
+
+</script>
+
+<script>
+    
+    function editAppointment(appointmentId) {
+        window.location.href = `/admin/appointments/${appointmentId}/edit`;
+    }
+
+</script>

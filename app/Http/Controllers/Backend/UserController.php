@@ -76,7 +76,6 @@ class UserController extends Controller
             'lname' => 'required',
             'username' => 'required',
             'email' => 'required|email|unique:users,email,' . $user->id, // Ensure unique email for users
-            'role' => 'required',
             'password' => 'nullable',
         ]);
 
@@ -85,18 +84,7 @@ class UserController extends Controller
             'lname' => $request->lname,
             'username' => $request->username,
             'email' => $request->email,
-            'role' => 'user',
             'password' => Hash::make($request->password),
-        ]);
-
-        $user->profile()->update([
-            'country' => $request->country,
-            'city' => $request->city,
-            'address' => $request->address,
-            'phone_number' => $request->phone_number,
-            'gender' => $request->gender,
-            'status' => 'active',
-            'image' => $request->image,
         ]);
 
         return redirect()->route('users')->with('success', 'User updated successfully');

@@ -62,7 +62,7 @@
                                                 </button>
 
                                                 <!-- Delete Button -->
-                                                <form action="{{ route('gallerys.destroy', $gallery->id) }}" method="POST"
+                                                <form action="{{ route('galleries.destroy', $gallery->id) }}" method="POST"
                                                     style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
@@ -89,6 +89,6 @@
 
 <script>
     function editGallery(galleryId) {
-        window.location.href = `/admin/galleries/${galleryId}/edit`;
+        window.location.href = `/admin/gallery/${galleryId}/edit`;
     }
 </script>

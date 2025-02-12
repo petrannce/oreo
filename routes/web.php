@@ -85,7 +85,7 @@ Route::controller(GalleryController::class)->prefix('admin')->group(function () 
 });
 
 Route::controller(AppointmentController::class)->prefix('admin')->group(function () {
-    Route::get('/appointment', 'index')->name('appointments.index');
+    Route::get('/appointment', 'index')->name('appointments');
     Route::get('/appointment/create', 'create')->name('appointments.create');
     Route::post('/appointment', 'store')->name('appointments.store');
     Route::get('/appointment/{id}/edit', 'edit')->name('appointments.edit');
@@ -154,7 +154,7 @@ Route::controller(DepartmentController::class)->prefix('admin')->group(function 
 });
 
 //Tags
-Route::controller(TagController::class)->group(function () {
+Route::controller(TagController::class)->prefix('admin')->group(function () {
     Route::get('/tags', 'index')->name('tags');
     Route::get('/tags/create', 'create')->name('tags.create');
     Route::post('/tags', 'store')->name('tags.store');
