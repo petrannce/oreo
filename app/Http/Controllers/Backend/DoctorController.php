@@ -77,11 +77,13 @@ class DoctorController extends Controller
     public function edit($id)
     {
         $doctor = Doctor::findOrFail($id);
-        return view('backend.doctors.edit', compact('doctor'));
+        $departments = DB::table('departments')->get();
+        return view('backend.doctors.edit', compact('doctor', 'departments'));
     }
 
     public function update(Request $request, $id)
     {
+
         // Validate incoming request data
         $request->validate([
             'fname' => 'required',
@@ -91,14 +93,6 @@ class DoctorController extends Controller
             'department' => 'required',
             'employment_type' => 'required',
             'description' => 'required',
-            'profile_type' => 'required|in:doctor',
-            'country' => 'nullable',
-            'city' => 'nullable',
-            'address' => 'required',
-            'phone_number' => 'nullable',
-            'gender' => 'nullable',
-            'status' => 'required|in:active,inactive', // Ensure only 'active' or 'inactive'
-            'image' => 'nullable|image|max:2048',
         ]);
 
         DB::beginTransaction();
@@ -134,17 +128,6 @@ class DoctorController extends Controller
             $doctor->employment_type = $request->employment_type;
             $doctor->description = $request->description;
             $doctor->save();
-
-            // Update the profile details using the relationship 
-            $doctor->profile()->update([
-                'profile_type' => 'doctor', // Set profile type to 'doctor' (fixed value)
-                'country' => $request->country,
-                'city' => $request->city,
-                'address' => $request->address,
-                'phone_number' => $request->phone_number,
-                'gender' => $request->gender,
-                'status' => $request->status ?? 'active', // Default to 'active' if no status is provided
-            ]);
 
             // Commit the transaction
             DB::commit();

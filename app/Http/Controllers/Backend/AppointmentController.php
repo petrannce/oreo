@@ -72,11 +72,18 @@ class AppointmentController extends Controller
     public function edit($id)
     {
         $appointment = Appointment::findOrFail($id);
-        return view('backend.appointments.edit', compact('appointment'));
+        $services = Service::all();
+        $doctors = Doctor::all();
+        $appointments = DB::table('appointments')
+        ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
+        ->select('appointments.*', 'doctors.fname as doctor_fname', 'doctors.lname as doctor_lname')
+        ->get();
+        return view('backend.appointments.edit', compact('appointment','services','doctors'));
     }
 
     public function update(Request $request, $id)
     {
+        
         $request->validate([
             'patient_id' => 'required',
             'date' => 'required',
@@ -100,7 +107,7 @@ class AppointmentController extends Controller
             $appointment->save();
             
             DB::commit();
-            return redirect()->back()->with('success', 'Appointment updated successfully');
+            return redirect()->route('appointments')->with('success', 'Appointment updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Appointment update failed');

@@ -113,7 +113,7 @@
 <script>
     
     function editAppointment(appointmentId) {
-        window.location.href = `/admin/appointments/${appointmentId}/edit`;
+        window.location.href = `/admin/appointment/${appointmentId}/edit`;
     }
 
 </script>
