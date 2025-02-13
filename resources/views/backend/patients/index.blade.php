@@ -42,7 +42,7 @@
                                         <th>*</th>
                                         <th>Full Name</th>
                                         <th>Email</th>
-                                        <th>Age</th>
+                                        <th>Phone Number</th>
                                         <th>Gender</th>
                                         <th>Action</th>
                                     </tr>
@@ -55,7 +55,7 @@
                                             <td>{{$loop->iteration}}</td>
                                             <td>{{$patient->fname}} {{$patient->lname}}</td>
                                             <td>{{$patient->email}}</td>
-                                            <td>{{$patient->age}}</td>
+                                            <td>{{$patient->phone_number}}</td>
                                             <td>{{$patient->gender}}</td>
                                             <td>
                                                 <!-- Edit Button -->

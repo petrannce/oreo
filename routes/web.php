@@ -125,7 +125,7 @@ Route::controller(MedicalController::class)->prefix('admin')->group(function () 
     Route::delete('/medical-records/{id}', 'destroy')->name('medicals.destroy');
 });
 
-Route::controller(PatientController::class)->group(function () {
+Route::controller(PatientController::class)->prefix('admin')->group(function () {
     Route::get('/patients', 'index')->name('patients');
     Route::get('/patients/create', 'create')->name('patient.create');
     Route::post('/patients', 'store')->name('patients.store');
