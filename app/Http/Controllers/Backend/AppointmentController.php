@@ -119,4 +119,19 @@ class AppointmentController extends Controller
         DB::table('appointments')->where('id', $id)->delete();
         return redirect()->back()->with('success', 'Appointment deleted successfully');
     }
+
+    public function updateStatus($id, $status)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $validStatuses = ['approved', 'pending', 'cancelled'];
+
+        if (!in_array($status, $validStatuses)) {
+            return redirect()->back()->with('error', 'Invalid status selected');
+        }
+
+        $appointment->status = $status;
+        $appointment->save();
+
+        return redirect()->back()->with('success', 'Status updated successfully!');
+    }
 }

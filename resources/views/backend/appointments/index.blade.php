@@ -34,6 +34,13 @@
                             </li>
                         </ul>
                     </div>
+                    @if(session('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">{{ session('error') }}</div>
+                    @endif
                     <div class="body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
@@ -56,12 +63,41 @@
 
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $appointment->id }}</td>
+                                            <td>{{ $appointment->patient_fname }} {{ $appointment->patient_lname }}</td>
                                             <td>{{ $appointment->date }}</td>
                                             <td>{{ $appointment->time }}</td>
                                             <td>{{ $appointment->service }}</td>
                                             <td>{{ $appointment->doctor_fname }}</td>
-                                            <td>{{ ucfirst($appointment->status) }}</td>
+                                            <td>
+                                                <div class="dropdown">
+                                                    <a href="#" class="btn btn-primary btn-sm btn-rounded dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false">
+                                                        @if($appointment->status == 'approved')
+                                                            <i class="text-success"></i> Approved
+                                                        @elseif($appointment->status == 'pending')
+                                                            <i class="text-primary"></i> Pending
+                                                        @elseif($appointment->status == 'cancelled')
+                                                            <i class="text-info"></i> Cancelled
+                                                        @else
+                                                            <i class="text-danger"></i> Rejected
+                                                        @endif
+                                                    </a>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('appointment.updateStatus', ['id' => $appointment->id, 'status' => 'approved']) }}">
+                                                            <i class="text-success"></i> Approved
+                                                        </a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('appointment.updateStatus', ['id' => $appointment->id, 'status' => 'pending']) }}">
+                                                            <i class="text-primary"></i> Pending
+                                                        </a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('appointment.updateStatus', ['id' => $appointment->id, 'status' => 'cancelled']) }}">
+                                                            <i class="text-info"></i> Cancelled
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </td>
                                             <td>{{ $appointment->user_fname }}</td>
                                             <td>
                                                 <!-- View Button -->
