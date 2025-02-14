@@ -172,7 +172,7 @@ Route::controller(BlogController::class)->prefix('admin')->group(function () {
     Route::delete('/blogs/{id}', 'destroy')->name('blogs.destroy');
 });
 
-Route::controller(ResourceController::class)->group(function () {
+Route::controller(ResourceController::class)->prefix('admin')->group(function () {
     Route::get('/resources', 'index')->name('resources');
     Route::get('/resources/create', 'create')->name('resources.create');
     Route::post('/resources', 'store')->name('resources.store');

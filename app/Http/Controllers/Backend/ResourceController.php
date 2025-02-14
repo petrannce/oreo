@@ -70,16 +70,16 @@ class ResourceController extends Controller
             $resource->save();
 
             DB::commit();
-            return redirect()->route('resources.index')->with('success', 'Resource updated successfully.');
+            return redirect()->route('resources')->with('success', 'Resource updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('resources.index')->with('error', 'Resource update failed.');
+            return redirect()->route('resources')->with('error', 'Resource update failed.');
         }
     }
 
     public function destroy($id)
     {
         DB::table('resources')->where('id', $id)->delete();
-        return redirect()->route('resources.index')->with('success', 'Resource deleted successfully');
+        return redirect()->route('resources')->with('success', 'Resource deleted successfully');
     }
 }

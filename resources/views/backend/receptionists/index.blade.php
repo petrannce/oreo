@@ -52,7 +52,7 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$receptionist->fname}} {{$receptionist->lname}}</td>
                                         <td>{{$receptionist->email}}</td>
-                                        <td>{{$receptionist->profile->phone ?? 'No Phone Number'}}</td>
+                                        <td>{{$receptionist->phone ?? 'No Phone Number'}}</td>
                                         <td>
                                                 <!-- Edit Button -->
                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"
