@@ -53,7 +53,7 @@
                                         <th>Service</th>
                                         <th>Doctor</th>
                                         <th>Status</th>
-                                        <th>Booked By</th>
+                                        <th>Medical Records</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -98,7 +98,7 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>{{ $appointment->user_fname }}</td>
+                                            <td><button class="btn btn-primary"><a href="{{ route('appointments.show', $appointment->id) }}">Medical</a></button></td>
                                             <td>
                                                 <!-- View Button -->
                                                  <button class="btn btn-icon btn-neutral btn-icon-mini"

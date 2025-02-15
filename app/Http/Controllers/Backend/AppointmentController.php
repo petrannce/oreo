@@ -114,6 +114,12 @@ class AppointmentController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        return view('backend.appointments.view', compact('appointment'));
+    }
+
     public function destroy($id)
     {
         DB::table('appointments')->where('id', $id)->delete();

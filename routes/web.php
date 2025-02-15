@@ -90,6 +90,7 @@ Route::controller(AppointmentController::class)->prefix('admin')->group(function
     Route::post('/appointment', 'store')->name('appointments.store');
     Route::get('/appointment/{id}/edit', 'edit')->name('appointments.edit');
     Route::put('/appointment/{id}', 'update')->name('appointments.update');
+    Route::get('/appointment/{id}', 'show')->name('appointments.show');
     Route::delete('/appointment/{id}', 'destroy')->name('appointments.destroy');
     Route::get('/appointment/update-status/{id}/{status}', 'updateStatus')->name('appointment.updateStatus');
 });

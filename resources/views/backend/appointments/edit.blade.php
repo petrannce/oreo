@@ -77,8 +77,7 @@
                                 </div>
 
                                 <div class="col-sm-4">
-                                    <select name="doctor_id" class="form-control show-tick">
-                                        <option value="">{{$appointment->doctor_fname}}</option>
+                                    <select name="doctor_id" class="form-control show-tick" value="{{ $appointment->doctor_id }}">
                                         @foreach ($doctors as $doctor)
 
                                             <option value="{{$doctor->id}}">{{$doctor->fname}} {{$doctor->lname}}</option>
