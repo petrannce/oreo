@@ -124,6 +124,7 @@ Route::controller(MedicalController::class)->prefix('admin')->group(function () 
     Route::post('/medical-records', 'store')->name('medicals.store');
     Route::get('/medical-records/{id}/edit', 'edit')->name('medicals.edit');
     Route::put('/medical-records/{id}', 'update')->name('medicals.update');
+    Route::get('/medical-records/{id}', 'show')->name('medicals.show');
     Route::delete('/medical-records/{id}', 'destroy')->name('medicals.destroy');
 });
 
@@ -133,6 +134,7 @@ Route::controller(PatientController::class)->prefix('admin')->group(function () 
     Route::post('/patients', 'store')->name('patients.store');
     Route::get('/patients/{id}/edit', 'edit')->name('patients.edit');
     Route::put('/patients/{id}', 'update')->name('patients.update');
+    Route::get('/patients/{id}', 'show')->name('patients.show');
     Route::delete('/patients/{id}', 'destroy')->name('patients.destroy');
 });
 

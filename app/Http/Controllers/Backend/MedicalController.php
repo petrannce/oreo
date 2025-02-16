@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\Medical;
 use App\Models\Patient;
 use DB;
@@ -12,7 +13,7 @@ class MedicalController extends Controller
 {
     public function index()
     {
-        $medical_records = Medical::all();
+        $medical_records = Medical::with('patient')->latest()->get();
         return view('backend.medicals.index', compact('medical_records'));
     }
 
@@ -82,6 +83,13 @@ class MedicalController extends Controller
             DB::rollBack();
             return redirect()->route('medicals')->with('error', 'Medical record update failed');
         }
+    }
+
+    public function show($id)
+    {
+        $medical_record = Medical::findOrFail($id);
+        $appointment = Appointment::where('patient_id', $medical_record->patient_id)->first();
+        return view('backend.medicals.view', compact('medical_record', 'appointment'));
     }
 
     public function destroy($id)

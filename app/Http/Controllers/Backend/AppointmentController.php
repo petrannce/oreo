@@ -21,7 +21,7 @@ class AppointmentController extends Controller
         ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
         ->join('users', 'appointments.booked_by', '=', 'users.id')
         ->select('appointments.*', 
-        'patients.fname as patient_fname', 'patients.lname as patient_lname', 
+        'patients.fname as patient_fname', 'patients.lname as patient_lname',
         'doctors.fname as doctor_fname', 'doctors.lname as doctor_lname',
         'users.fname as user_fname', 'users.lname as user_lname'
         )
@@ -116,7 +116,7 @@ class AppointmentController extends Controller
 
     public function show($id)
     {
-        $appointment = Appointment::findOrFail($id);
+        $appointment = Appointment::with(['patient', 'doctor'])->findOrFail($id);
         return view('backend.appointments.view', compact('appointment'));
     }
 

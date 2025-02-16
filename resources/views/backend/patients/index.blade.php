@@ -44,6 +44,7 @@
                                         <th>Email</th>
                                         <th>Phone Number</th>
                                         <th>Gender</th>
+                                        <th>Medical Records</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -57,6 +58,7 @@
                                             <td>{{$patient->email}}</td>
                                             <td>{{$patient->phone_number}}</td>
                                             <td>{{$patient->gender}}</td>
+                                            <td><a href="{{ route('medicals.show', $patient->id) }}">All Records</a></td>
                                             <td>
                                                 <!-- Edit Button -->
                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"

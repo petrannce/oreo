@@ -12,19 +12,25 @@ class Patient extends Model
     protected $table = 'patients';
 
     protected $fillable = [
-            'fname',
-            'lname',
-            'email',
-            'phone_number',
-            'address',
-            'city',
-            'country',
-            'gender',
-            'dob'
-        ];
+        'fname',
+        'lname',
+        'email',
+        'phone_number',
+        'address',
+        'city',
+        'country',
+        'gender',
+        'dob'
+    ];
 
     public function appointments()
     {
         return $this->hasMany(Appointment::class, 'patient_id'); // One-to-Many: Patient → Appointments
     }
+
+    public function medicalRecords()
+    {
+        return $this->hasMany(Medical::class, 'patient_id');
+    }
+
 }

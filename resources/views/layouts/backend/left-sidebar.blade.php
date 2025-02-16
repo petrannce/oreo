@@ -123,7 +123,7 @@
                                 <a href="{{route('patient.create')}}">Add Patient</a>
                             </li>
                             <li class="{{ Request::route()->getName() == 'patient-profile' ? 'active' : 'inactive' }}">
-                                <a href="patient-profile.html">Patient Profile</a>
+                                <a href="{{route('patients.show', Auth::user()->id) }}">Patient Profile</a>
                             </li>
                         </ul>
                     </li>

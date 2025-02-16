@@ -40,6 +40,7 @@
                                 <thead>
                                     <tr>
                                         <th>*</th>
+                                        <th>Patient Names</th>
                                         <th>Record Date</th>
                                         <th>Diagnosis</th>
                                         <th>Prescription</th>
@@ -51,10 +52,17 @@
 
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
+                                            <td><a href="{{ route('patients.show', $medical_record->patient_id) }}">{{$medical_record->patient->fname}} {{ $medical_record->patient->lname }}</a></td>
                                             <td>{{$medical_record->record_date}}</td>
                                             <td>{{$medical_record->diagnosis}}</td>
                                             <td>{{str_limit($medical_record->prescription, 30)}}</td>
                                             <td>
+                                                <!-- View Button -->
+                                                <button class="btn btn-icon btn-neutral btn-icon-mini"
+                                                    onclick="viewMedical({{ $medical_record->id }})">
+                                                    <i class="zmdi zmdi-eye"></i>
+                                                </button>
+
                                                 <!-- Edit Button -->
                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"
                                                     onclick="editMedical({{ $medical_record->id }})">
@@ -94,4 +102,10 @@
         window.location.href = `/admin/medical-records/${medicalId}/edit`;
     }
 
+</script>
+
+<script>
+    function viewMedical(medicalId) {
+        window.location.href = `/admin/medical-records/${medicalId}`;
+    }
 </script>
