@@ -77,6 +77,12 @@ class ResourceController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $resource = Resource::find($id);
+        return view('backend.resources.show', compact('resource'));
+    }
+
     public function destroy($id)
     {
         DB::table('resources')->where('id', $id)->delete();
