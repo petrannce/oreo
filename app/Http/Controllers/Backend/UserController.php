@@ -111,17 +111,18 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Invalid role selected');
         }
 
-        $user->role = $role;
-        $user->save();
+        $user->syncRoles($role); // Assign role correctly
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions(); // Clear Spatie cache
 
-        //if the authenticated user is changing their own role, update their session
+        // If the authenticated user is changing their own role, update their session
         if (Auth::id() == $user->id) {
             Auth::logout();
-            Session::flush(); //clear the session
+            Session::flush(); // Clear the session
             return redirect('/')->with('success', 'Role updated successfully! Please login again');
         }
 
         return redirect()->back()->with('success', 'Role updated successfully!');
     }
+
 
 }

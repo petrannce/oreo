@@ -32,7 +32,7 @@
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
-            <div class="m-t-30"><img class="zmdi-hc-spin" src="{{asset('assets/images/logo.svg')}}" width="48"
+            <div class="m-t-30"><img class="zmdi-hc-spin" src="{{asset('images/loader.svg')}}" width="48"
                     height="48" alt="Oreo"></div>
             <p>Please wait...</p>
         </div>
@@ -45,7 +45,7 @@
             <li>
                 <div class="navbar-header">
                     <a href="javascript:void(0);" class="bars"></a>
-                    <a class="navbar-brand" href="{{route('admin')}}"><img src="{{asset('assets/images/logo.svg')}}"
+                    <a class="navbar-brand" href="{{route('admin')}}"><img src="{{asset('images/loader.svg')}}"
                             width="30" alt="Oreo"><span class="m-l-10">Oreo</span></a>
                 </div>
             </li>

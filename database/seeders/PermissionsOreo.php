@@ -81,15 +81,14 @@ class PermissionsOreo extends Seeder
         foreach ($users as $user) {
             // Assuming you have a `role` column in your users table
             if ($user->role === 'admin') {
-                $user->syncRoles([$admin]);
+                $user->syncRoles('admin');
             } elseif ($user->role === 'doctor') {
-                $user->syncRoles([$doctor]);
+                $user->syncRoles('doctor');
             } elseif ($user->role === 'receptionist') {
-                $user->syncRoles([$receptionist]);
+                $user->syncRoles('receptionist');
             } else {
-                // Default role
-                $user->syncRoles([$patient]);
-            }
+                $user->syncRoles('patient');
+            }            
         }
     }
 
