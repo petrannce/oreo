@@ -36,16 +36,16 @@ class PermissionsOreo extends Seeder
         }
 
         // create roles and assign existing permissions
-        $doctor = Role::firstOrCreate(['name' => 'Doctor']);
+        $doctor = Role::firstOrCreate(['name' => 'doctor']);
         $doctor->givePermissionTo('manage appointments', 'manage services', 'manage patients');
 
-        $receptionist = Role::firstOrCreate(['name' => 'Receptionist']);
+        $receptionist = Role::firstOrCreate(['name' => 'receptionist']);
         $receptionist->givePermissionTo('manage appointments', 'manage patients');
 
-        $patient = Role::firstOrCreate(['name' => 'Patient']);
+        $patient = Role::firstOrCreate(['name' => 'patient']);
         $patient->givePermissionTo('manage appointments');
 
-        $admin = Role::firstOrCreate(['name' => 'Admin']);
+        $admin = Role::firstOrCreate(['name' => 'admin']);
         $admin->givePermissionTo('manage appointments', 'manage services', 'manage doctors', 'manage patients', 'manage departments', 'manage resources', 'manage blogs', 'manage users');
 
         // Create demo admin user if it does not exist
@@ -77,6 +77,7 @@ class PermissionsOreo extends Seeder
 
         // Assign roles to existing users based on their current role in the database
         $users = User::all();
+        
         foreach ($users as $user) {
             // Assuming you have a `role` column in your users table
             if ($user->role === 'admin') {

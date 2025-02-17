@@ -36,14 +36,14 @@
                     </li>
                     @endif
 
-                    @if(auth()->user()->hasAnyRole(['Admin', 'Receptionist']))
+                    @if(auth()->user()->hasRole('receptionist'))
                     <li class="{{ Request::route()->getName() == 'dashboard.receptionists' ? 'active' : 'inactive' }}">
                         <a href="{{route('dashboard.receptionists')}}"><i class="zmdi zmdi-female"></i>
                             <span>Receptionist</span></a>
                     </li>
                     @endif
 
-                    @if(auth()->user()->hasAnyRole(['Admin', 'Patient']))
+                    @if(auth()->user()->hasAnyRole(['Admin', 'patient']))
                     <li class="{{ Request::route()->getName() == 'dashboard.patients' ? 'active' : 'inactive' }}">
                         <a href="{{route('dashboard.patients')}}"><i class="zmdi zmdi-female"></i>
                             <span>Patients</span></a>

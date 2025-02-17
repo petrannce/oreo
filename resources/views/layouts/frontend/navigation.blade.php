@@ -31,7 +31,7 @@
                                             <a href="{{ route('dashboard.doctors') }}" class="btn btn-link" target="_blank">Doctor's Dashboard</a>
                                     @elseif(Auth::user()->role == 'patient')
                                             <a href="{{ route('dashboard.patients') }}" class="btn btn-link" target="_blank">Patient's Dashboard</a>
-                                    @elseif(Auth::user()->role == 'receiptionist')
+                                    @elseif(Auth::user()->role == 'receptionist')
                                             <a href="{{ route('dashboard.receptionists') }}" class="btn btn-link" target="_blank">Receptionist's Dashboard</a>
                                     @endif
 
