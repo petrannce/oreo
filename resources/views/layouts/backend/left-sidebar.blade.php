@@ -52,7 +52,6 @@
 
                     <li class="header">MAIN</li>
 
-                    @role('admin')
                     <li><a class="menu-toggle"><i class="zmdi zmdi-calendar-check"></i><span>Appointment</span> </a>
                         <ul class="ml-menu">
                             <li
@@ -128,7 +127,7 @@
                     </li>
                     @endrole
 
-                    @if(auth()->user()->hasAnyRole(['Admin']))
+                    @role('admin')
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-o"></i><span>Receptionists</span> </a>
                         <ul class="ml-menu">
@@ -140,9 +139,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endif
+                    @endrole
 
-                    @if(auth()->user()->hasAnyRole(['Admin']))
+                    @role('admin')
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-label-alt"></i><span>Departments</span> </a>
                         <ul class="ml-menu">
@@ -155,9 +154,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endif
+                    @endrole
 
-                    @if(auth()->user()->hasAnyRole(['Admin']))
+                    @role('admin')
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-label-alt"></i><span>Resources</span> </a>
                         <ul class="ml-menu">
@@ -169,9 +168,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endif
+                    @endrole
 
-                    @if(auth()->user()->hasAnyRole(['Admin']))
+                    @role('admin')
                     <li class="header">EXTRA COMPONENTS</li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-blogger"></i><span>Blog</span></a>
@@ -210,7 +209,7 @@
                         <a href="{{route('users')}}"><i class="zmdi zmdi-home"></i><span>Users</span>
                         </a>
                     </li>
-                    @endif
+                    @endrole
                 </ul>
             </div>
         </div>
