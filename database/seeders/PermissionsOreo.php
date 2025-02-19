@@ -32,21 +32,21 @@ class PermissionsOreo extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrcreate(['name' => $permission]);
         }
 
         // create roles and assign existing permissions
         $doctor = Role::firstOrCreate(['name' => 'doctor']);
-        $doctor->givePermissionTo('manage appointments', 'manage services', 'manage patients');
+        $doctor->syncPermissions(['manage appointments', 'manage services', 'manage patients']);
 
         $receptionist = Role::firstOrCreate(['name' => 'receptionist']);
-        $receptionist->givePermissionTo('manage appointments', 'manage patients');
+        $receptionist->syncPermissions(['manage appointments', 'manage patients']);
 
         $patient = Role::firstOrCreate(['name' => 'patient']);
-        $patient->givePermissionTo('manage appointments');
+        $patient->syncPermissions('manage appointments');
 
         $admin = Role::firstOrCreate(['name' => 'admin']);
-        $admin->givePermissionTo('manage appointments', 'manage services', 'manage doctors', 'manage patients', 'manage departments', 'manage resources', 'manage blogs', 'manage users');
+        $admin->syncPermissions(['manage appointments', 'manage services', 'manage doctors', 'manage patients', 'manage departments', 'manage resources', 'manage blogs', 'manage users']);
 
         // Create demo admin user if it does not exist
         $adminUser = User::firstOrCreate([
@@ -79,6 +79,7 @@ class PermissionsOreo extends Seeder
         $users = User::all();
         
         foreach ($users as $user) {
+            
             // Assuming you have a `role` column in your users table
             if ($user->role === 'admin') {
                 $user->syncRoles('admin');

@@ -22,37 +22,37 @@
                     @endif
                     <li class="header">DASHBOARD</li>
 
-                    @if(auth()->user()->hasRole('Admin'))
+                    @role('admin')
                     <li class="{{ Request::route()->getName() == 'admin' ? 'active' : 'inactive' }}">
                         <a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i>
                             <span> Admin Dashboard</span></a>
                     </li>
-                    @endif
+                    @endrole
 
-                    @if(auth()->user()->hasAnyRole(['Admin', 'Doctor']))
+                    @role('admin|doctor')
                     <li class="{{ Request::route()->getName() == 'dashboard.doctors' ? 'active' : 'inactive' }}">
                         <a href="{{route('dashboard.doctors')}}"><i class="zmdi zmdi-accounts-alt"></i>
                             <span> Doctors Dashboard</span></a>
                     </li>
-                    @endif
+                    @endrole
 
-                    @if(auth()->user()->hasAnyRole(['Admin', 'Receptionist']))
+                    @role('admin|receptionist')
                     <li class="{{ Request::route()->getName() == 'dashboard.receptionists' ? 'active' : 'inactive' }}">
                         <a href="{{route('dashboard.receptionists')}}"><i class="zmdi zmdi-female"></i>
                             <span>Receptionist</span></a>
                     </li>
-                    @endif
+                    @endrole
 
-                   
-                    @if(auth()->user()->roles->pluck('id')->contains(3) || auth()->user()->roles->pluck('id')->contains(4))
+                                       @role('admin|patient')
                     <li class="{{ Request::route()->getName() == 'dashboard.patients' ? 'active' : 'inactive' }}">
                         <a href="{{route('dashboard.patients')}}"><i class="zmdi zmdi-female"></i>
                             <span>Patients</span></a>
                     </li>
-                    @endif
+                    @endrole
 
                     <li class="header">MAIN</li>
 
+                    @role('admin')
                     <li><a class="menu-toggle"><i class="zmdi zmdi-calendar-check"></i><span>Appointment</span> </a>
                         <ul class="ml-menu">
                             <li
@@ -66,7 +66,7 @@
                         </ul>
                     </li>
 
-                    @if(auth()->user()->hasAnyRole(['Admin', 'Doctor']))
+                    @role('admin|doctor')
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-calendar-check"></i><span>Services</span> </a>
                         <ul class="ml-menu">
@@ -78,9 +78,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endif
+                    @endrole
 
-                    @if(auth()->user()->hasRole(['Admin']))
+                    @role('admin')
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-add"></i><span>Doctors</span> </a>
                         <ul class="ml-menu">
@@ -95,9 +95,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endif
+                    @endrole
 
-                    @if(auth()->user()->hasAnyRole(['Admin']))
+                    @role('admin')
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-add"></i><span>Medical Records</span> </a>
                         <ul class="ml-menu">
@@ -109,9 +109,9 @@
                             </li>
                         </ul>
                     </li>
-                    @endif
+                    @endrole
 
-                    @if(auth()->user()->hasAnyRole(['Admin', 'Receptionist']))
+                    @role('admin|receptionist')
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-o"></i><span>Patients</span> </a>
                         <ul class="ml-menu">
@@ -126,7 +126,7 @@
                             </li>
                         </ul>
                     </li>
-                    @endif
+                    @endrole
 
                     @if(auth()->user()->hasAnyRole(['Admin']))
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
