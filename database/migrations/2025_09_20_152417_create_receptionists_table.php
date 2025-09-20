@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('receptionists', function (Blueprint $table) {
             $table->id();
-            $table->string('fname');
-            $table->string('lname');
-            $table->string('email');
-            $table->string('phone');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('employee_code')->unique()->nullable();
+            $table->string('department')->nullable();
+            $table->string('hire_date')->nullable();
             $table->timestamps();
         });
     }

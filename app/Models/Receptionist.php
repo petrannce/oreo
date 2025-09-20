@@ -17,4 +17,9 @@ class Receptionist extends Model
         'email',
         'phone',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

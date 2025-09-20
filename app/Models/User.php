@@ -52,4 +52,9 @@ class User extends Authenticatable
         return $this->hasOne(Profile::class, 'user_id');
     }
 
+    public function receptionist()
+    {
+        return $this->hasOne(Receptionist::class, foreignKey: 'user_id');
+    }
+
 }

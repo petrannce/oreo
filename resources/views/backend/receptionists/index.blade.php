@@ -39,8 +39,9 @@
                                     <tr>
                                         <th>*</th>
                                         <th>Full Name</th>
-                                        <th>Email</th>
-                                        <th>Phone Number</th>
+                                        <th>Employee Code</th>
+                                        <th>Department</th>
+                                        <th>Hire Date</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -50,9 +51,10 @@
 
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$receptionist->fname}} {{$receptionist->lname}}</td>
-                                        <td>{{$receptionist->email}}</td>
-                                        <td>{{$receptionist->phone ?? 'No Phone Number'}}</td>
+                                        <td>{{$receptionist->user->fname}} {{$receptionist->user->lname}}</td>
+                                        <td>{{$receptionist->employee_code ?? 'No Employee Code'}}</td>
+                                        <td>{{$receptionist->department ?? 'No Department'}}</td> 
+                                        <td>{{$receptionist->hire_date ?? 'No Hire Date'}}</td>
                                         <td>
                                                 <!-- Edit Button -->
                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"

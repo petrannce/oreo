@@ -73,24 +73,23 @@ class PermissionsOreo extends Seeder
 
 
         // Assign the admin role to this user
-        $adminUser->assignRole($admin);
+        $adminUser->syncRoles([$admin->name]);
+        $adminUser->update(['role' => 'admin']);
 
         // Assign roles to existing users based on their current role in the database
         $users = User::all();
         
         foreach ($users as $user) {
             
-            // Assuming you have a `role` column in your users table
-            if ($user->role === 'admin') {
-                $user->syncRoles('admin');
-            } elseif ($user->role === 'doctor') {
-                $user->syncRoles('doctor');
-            } elseif ($user->role === 'receptionist') {
-                $user->syncRoles('receptionist');
-            } else {
-                $user->syncRoles('patient');
-            }            
+            if ($user->role && in_array($user->role, ['admin', 'doctor', 'receptionist', 'patient'])) {
+                $user->syncRoles([$user->role]);
+            }            else {
+                $user->syncRoles(['patient']); // Default role for new users
+            }           
         }
+
+        // clear cache again after seeding
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
     }
 
 

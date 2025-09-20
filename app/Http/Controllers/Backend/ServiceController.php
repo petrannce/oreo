@@ -62,6 +62,8 @@ class ServiceController extends Controller
             'description' => 'required',
         ]);
 
+        //dd($request->all());
+
         DB::beginTransaction();
 
         try{

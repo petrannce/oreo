@@ -10,7 +10,6 @@ use DB;
 use App\Models\Service;
 use App\Models\Doctor;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class AppointmentController extends Controller
 {
@@ -47,8 +46,8 @@ class AppointmentController extends Controller
             'doctor_id' => 'required',
         ]);
 
-        $bookedBy = Auth::user();
-
+            $bookedBy = Auth::user();
+        
         DB::beginTransaction();
         try {
             $appointment = new Appointment();

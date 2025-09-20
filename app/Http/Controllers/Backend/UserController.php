@@ -111,7 +111,13 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Invalid role selected');
         }
 
-        $user->syncRoles($role); // Assign role correctly
+        //sync Spatie role
+        $user->syncRoles([$role]);
+
+        //Update the role column in users table
+        $user->update(['role' => $role]);
+
+        // Clear Spatie cache
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions(); // Clear Spatie cache
 
         // If the authenticated user is changing their own role, update their session

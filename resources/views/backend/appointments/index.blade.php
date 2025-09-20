@@ -27,12 +27,14 @@
                 <div class="card">
                     <div class="header">
                         <h2><strong>All Appointments</strong> </h2>
+                        @role('admin|receptionist')
                         <ul class="header-dropdown">
                             <li class="remove">
                                 <a class="btn btn-primary btn-lg" href="{{route('appointments.create')}}"
                                     role="button">Create Appointment</a>
                             </li>
                         </ul>
+                        @endrole
                     </div>
                     @if(session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>

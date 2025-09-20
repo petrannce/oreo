@@ -40,7 +40,7 @@
                                 <thead>
                                     <tr>
                                         <th>*</th>
-                                        <th>Service Title</th>
+                                        <th>Service Name</th>
                                         <th>Description</th>
                                         <th>Image</th>
                                         <th>Action</th>
@@ -53,8 +53,8 @@
                                         <tr id="service-{{$service->id}}">
                                             <td>{{$loop->iteration}}</td>
                                             <td>{{str_limit($service->name, 25)}}</td>
-                                            <td>{{$service->image}}</td>
                                             <td>{{str_limit($service->description, 30)}}</td>
+                                            <td>{{$service->image}}</td>
                                             <td>
                                                 <!-- Edit Button -->
                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"

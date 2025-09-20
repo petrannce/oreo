@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use DB;
 use Illuminate\Http\Request;
 use App\Models\Receptionist;
+use App\Models\User;
+use illuminate\Support\Facades\Hash;
 class ReceptionistController extends Controller
 {
     public function index()
     {
-        $receptionists = Receptionist::all();
+        $receptionists = Receptionist::with('user')->get();
         return view('backend.receptionists.index', compact('receptionists'));
     }
 
@@ -26,17 +28,32 @@ class ReceptionistController extends Controller
             'lname' => 'required',
             'email' => 'required',
             'phone' => 'required',
+            'password' => 'required',
+            'employee_code' => 'required|unique:receptionists,employee_code',
+            'department' => 'nullable|string',
+            'hire_date' => 'nullable|date',
         ]);
 
         DB::beginTransaction();
 
         try {
-            $receptionist = new Receptionist();
-            $receptionist->fname = $request->fname;
-            $receptionist->lname = $request->lname;
-            $receptionist->email = $request->email;
-            $receptionist->phone = $request->phone;
-            $receptionist->save();
+            // Create user
+            $user = User::create([
+                'fname' => $request->fname,
+                'lname' => $request->lname,
+                'username' => strtolower($request->fname . '.' . $request->lname),
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'receptionist',
+            ]);
+
+            // Create receptionist
+            Receptionist::create([
+                'user_id' => $user->id,
+                'employee_code' => $request->employee_code,
+                'department' => $request->department,
+                'hire_date' => $request->hire_date,
+            ]);
             
             DB::commit();
             return redirect()->route('receptionists')->with('success', 'Receptionist created successfully');
@@ -48,7 +65,7 @@ class ReceptionistController extends Controller
 
     public function edit($id)
     {
-        $receptionist = Receptionist::findOrFail($id);
+        $receptionist = Receptionist::with('user')->findOrFail($id);
         return view('backend.receptionists.edit', compact('receptionist'));
     }
 
@@ -59,17 +76,32 @@ class ReceptionistController extends Controller
             'lname' => 'required',
             'email' => 'required',
             'phone' => 'required',
+            'password' => 'nullable',
+            'employee_code' => 'required|unique:receptionists,employee_code,' . $id,
+            'department' => 'nullable|string',
+            'hire_date' => 'nullable|date',
         ]);
 
         DB::beginTransaction();
 
         try {
             $receptionist = Receptionist::findOrFail($id);
-            $receptionist->fname = $request->fname;
-            $receptionist->lname = $request->lname;
-            $receptionist->email = $request->email;
-            $receptionist->phone = $request->phone;
-            $receptionist->save();
+
+            // Update user
+            $receptionist->user->update([
+                'fname' => $request->fname,
+                'lname' => $request->lname,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'password' => $request->password ? Hash::make($request->password) : $receptionist->user->password,
+            ]);
+
+            // Update receptionist
+            $receptionist->update([
+                'employee_code' => $request->employee_code,
+                'department' => $request->department,
+                'hire_date' => $request->hire_date,
+            ]);
             
             DB::commit();
             return redirect()->route('receptionists')->with('success', 'Receptionist updated successfully');

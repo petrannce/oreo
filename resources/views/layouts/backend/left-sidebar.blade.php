@@ -58,10 +58,12 @@
                                 class="{{ Request::route()->getName() == 'appointments' ? 'active' : 'inactive' }}">
                                 <a href="{{route('appointments')}}">All Appointments</a>
                             </li>
+                            @role('admin|receptionist')
                             <li
                                 class="{{ Request::route()->getName() == 'appointments.create' ? 'active' : 'inactive' }}">
                                 <a href="{{route('appointments.create')}}">Add Appointment</a>
                             </li>
+                            @endrole
                         </ul>
                     </li>
 

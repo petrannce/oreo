@@ -154,54 +154,6 @@
                 </div>
             </div>
         </div>
-        <div class="row clearfix">
-            <div class="col-lg-8 col-md-12">
-                <div class="card patient_list">
-                    <div class="header">
-                        <h2><strong>New</strong> Patient List</h2>
-                        <ul class="header-dropdown">
-                            <li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle"
-                                    data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i
-                                        class="zmdi zmdi-more"></i> </a>
-                                <ul class="dropdown-menu dropdown-menu-right slideUp">
-                                    <li><a href="javascript:void(0);">2017 Year</a></li>
-                                    <li><a href="javascript:void(0);">2016 Year</a></li>
-                                    <li><a href="javascript:void(0);">2015 Year</a></li>
-                                </ul>
-                            </li>
-                            <li class="remove">
-                                <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table table-striped m-b-0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th></th>
-                                        <th>Name</th>
-                                        <th>Address</th>
-                                        <th>Diseases</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($patients as $patient)
-                                        <tr>
-                                            <td>{{$loop->iteration}}</td>
-                                            <td>{{$patient->fname}} {{$patient->lname}}</td>
-                                            <td>{{$patient->address}}</td>
-                                            <td>{{$patient->gender}}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </section>
 
