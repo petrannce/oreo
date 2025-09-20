@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('doctors', function (Blueprint $table) {
             $table->id();
-            $table->string('fname');
-            $table->string('lname');
-            $table->string('email');
-            $table->string('speciality');
-            $table->string('department');
-            $table->enum('employment_type', ['permanent', 'contract', 'volunteer', 'consultant', 'other']); 
-            $table->text('description');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('speciality')->nullable();
+            $table->enum('employment_type', ['permanent','contract','volunteer','consultant','other'])->nullable();
+            $table->string('license_number')->unique()->nullable();
+            $table->text('bio')->nullable();
             $table->timestamps();
         });
     }

@@ -47,14 +47,18 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function profile()
-    {
-        return $this->hasOne(Profile::class, 'user_id');
-    }
+     // relationships
+    public function receptionist() { return $this->hasOne(Receptionist::class); }
+    public function doctor() { return $this->hasOne(Doctor::class); }
+    public function patient() { return $this->hasOne(Patient::class); }
 
-    public function receptionist()
+    // convenience: get profile for current role
+    public function profileForRole()
     {
-        return $this->hasOne(Receptionist::class, foreignKey: 'user_id');
+        if ($this->hasRole('doctor')) return $this->doctor;
+        if ($this->hasRole('receptionist')) return $this->receptionist;
+        if ($this->hasRole('patient')) return $this->patient;
+        return null;
     }
 
 }

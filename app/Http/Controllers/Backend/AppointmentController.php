@@ -10,6 +10,7 @@ use DB;
 use App\Models\Service;
 use App\Models\Doctor;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AppointmentController extends Controller
 {
@@ -46,13 +47,11 @@ class AppointmentController extends Controller
             'doctor_id' => 'required',
         ]);
 
-            $bookedBy = Auth::user();
-        
         DB::beginTransaction();
         try {
             $appointment = new Appointment();
             $appointment->patient_id = $request->patient_id;
-            $appointment->booked_by = $bookedBy->id;
+            $appointment->booked_by = Auth()->id();
             $appointment->date = $request->date;
             $appointment->time = $request->time;
             $appointment->service = $request->service;
@@ -64,6 +63,12 @@ class AppointmentController extends Controller
             return redirect()->route('appointments')->with('success', 'Appointment created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
+            // Log the error
+        Log::error('Appointment creation failed', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+            'input' => $request->all(),
+        ]);
             return redirect()->back()->with('error', 'Appointment creation failed');
         }
     }

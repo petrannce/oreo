@@ -45,10 +45,16 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <!-- <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control"
+                                            value="{{auth()->user()->fname}} {{auth()->user()->lname}}" readonly>
+                                    </div>
+                                </div> -->
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <input name="booked_by" type="text" class="form-control"
-                                            value="{{auth()->user()->fname}} {{auth()->user()->lname}}" placeholder="Booked By">
+                                            value="{{ auth()->id() }}" placeholder="Booked By" readonly>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">

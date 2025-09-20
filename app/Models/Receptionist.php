@@ -11,15 +11,10 @@ class Receptionist extends Model
 
     protected $table = 'receptionists';
 
-    protected $fillable = [
-        'fname',
-        'lname',
-        'email',
-        'phone',
-    ];
+    protected $fillable = ['user_id','employee_code','department','hire_date'];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+    public function user() 
+    { 
+        return $this->belongsTo(User::class); 
     }
 }
