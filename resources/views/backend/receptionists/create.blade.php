@@ -2,26 +2,26 @@
 
 @section('content')
 
-<section class="content">
-    <div class="block-header">
-        <div class="row">
-            <div class="col-lg-7 col-md-5 col-sm-12">
-                <h2>Add Receptionist
-                    <small>Welcome to Oreo</small>
-                </h2>
-            </div>
-            <div class="col-lg-5 col-md-7 col-sm-12">
-                <ul class="breadcrumb float-md-right">
-                    <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Oreo</a></li>
-                    <li class="breadcrumb-item"><a href="{{route('receptionists')}}">Receptionists</a></li>
-                    <li class="breadcrumb-item active">Add</li>
-                </ul>
+    <section class="content">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-7 col-md-5 col-sm-12">
+                    <h2>Add Receptionist
+                        <small>Welcome to Oreo</small>
+                    </h2>
+                </div>
+                <div class="col-lg-5 col-md-7 col-sm-12">
+                    <ul class="breadcrumb float-md-right">
+                        <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Oreo</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('receptionists')}}">Receptionists</a></li>
+                        <li class="breadcrumb-item active">Add</li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container-fluid">
-        <div class="row clearfix">
-            <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="container-fluid">
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="card">
                         <div class="header">
                             <h2><strong>Add</strong> Receptionist </h2>
@@ -38,28 +38,44 @@
                                 <div class="row clearfix">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input type="text" name="fname" class="form-control"
-                                                placeholder="First Name">
+                                            <label for="Full Name" class="form-label">Full Name</label>
+                                            <select class="form-control show-tick" name="user_id" id="user_id">
+                                                <option value="" selected disabled>Select User</option>
+                                                @foreach($users as $user)
+                                                    <option value="{{$user->id}}">{{$user->fname}} {{$user->lname}} -
+                                                        {{$user->email}}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input type="text" name="lname" class="form-control"
-                                                placeholder="Last Name">
+                                            <label for="department" class="form-label">Department</label>
+                                            <select class="form-control show-tick" name="department">
+                                                <option value="" selected disabled>Select Department</option>
+                                                @foreach ($departments as $department)
+                                                    <option value="{{$department->name}}">{{$department->name}}</option>
+                                                @endforeach
+                                            </select>
+
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row clearfix">
-                                    
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input type="text" name="email" class="form-control" placeholder="Enter Your Email">
+                                            <label for="Employee Code" class="form-label">Employee Code</label>
+                                            <input type="text" name="employee_code" class="form-control"
+                                                value="{{ old('employee_code') }}" readonly>
                                         </div>
                                     </div>
+
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input type="text" name="phone" class="form-control"
-                                                placeholder=" Enter Your Phone Number" min="10">
+                                            <label for="hire_date" class="form-label">Hire Date</label>
+                                            <input type="date" name="hire_date" class="form-control"
+                                                placeholder=" Enter Your Hire Date">
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
@@ -70,9 +86,9 @@
                             </form>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 @endsection

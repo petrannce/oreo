@@ -48,7 +48,7 @@
                                 <tbody>
 
                                     @foreach($receptionists as $receptionist)
-
+                                    
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$receptionist->user->fname}} {{$receptionist->user->lname}}</td>

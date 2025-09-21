@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use DB;
 use Illuminate\Http\Request;
 use App\Models\Receptionist;
@@ -18,18 +19,18 @@ class ReceptionistController extends Controller
 
     public function create()
     {
-        return view('backend.receptionists.create');
+        $users = User::where('role', 'receptionist')
+        ->whereDoesntHave('receptionist')
+        ->get();
+        $departments = Department::all();
+        return view('backend.receptionists.create',compact('users','departments'));
     }
 
     public function store(Request $request)
     {
+
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required',
-            'phone' => 'required',
-            'password' => 'required',
-            'employee_code' => 'required|unique:receptionists,employee_code',
+            'user_id' => 'required|exists:users,id',
             'department' => 'nullable|string',
             'hire_date' => 'nullable|date',
         ]);
@@ -37,20 +38,32 @@ class ReceptionistController extends Controller
         DB::beginTransaction();
 
         try {
-            // Create user
-            $user = User::create([
-                'fname' => $request->fname,
-                'lname' => $request->lname,
-                'username' => strtolower($request->fname . '.' . $request->lname),
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role' => 'receptionist',
-            ]);
 
-            // Create receptionist
+            // Get last receptionist entry
+            $lastReceptionist = Receptionist::whereNotNull('employee_code')
+                ->orderBy('id', 'desc')
+                ->select('employee_code')
+                ->first();
+
+            // Generate new employee code if not provided
+            if($lastReceptionist && preg_match('/(\d+)$/', $lastReceptionist->employee_code, $m)) {
+                $nextNumber = intval($m[1]) + 1;
+            } else {
+                $nextNumber = 1;
+            }
+
+            $employee_code = 'ER' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+            while(Receptionist::where('employee_code', $employee_code)->exists()) {
+                $nextNumber++;
+                $employee_code = 'ER' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            }
+
+            $finalcode = $request->employee_code ?? $employee_code;
+
             Receptionist::create([
-                'user_id' => $user->id,
-                'employee_code' => $request->employee_code,
+                'user_id' => $request->user_id,
+                'employee_code' => $finalcode,
                 'department' => $request->department,
                 'hire_date' => $request->hire_date,
             ]);
@@ -66,7 +79,8 @@ class ReceptionistController extends Controller
     public function edit($id)
     {
         $receptionist = Receptionist::with('user')->findOrFail($id);
-        return view('backend.receptionists.edit', compact('receptionist'));
+        $departments = Department::all();
+        return view('backend.receptionists.edit', compact('receptionist', 'departments'));
     }
 
     public function update(Request $request, $id)

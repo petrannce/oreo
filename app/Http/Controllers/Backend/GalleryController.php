@@ -61,7 +61,7 @@ class GalleryController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'image' => 'nullable',
+            'image' => 'required|image',
         ]);
 
         DB::beginTransaction();
@@ -71,8 +71,8 @@ class GalleryController extends Controller
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $image_name = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('public/gallery'), $image_name);
+                $image_name = time() . '.' . $image->getClientOriginalName();
+                $image->move(public_path('public/galleries'), $image_name);
                 $request->image = $image_name;
             }
 
@@ -91,6 +91,6 @@ class GalleryController extends Controller
     public function destroy($id)
     {
         DB::table('galleries')->where('id', $id)->delete();
-        return redirect()->route('galleries')->with('success', 'Gallery deleted successfully');
+        return redirect()->route('galleries.index')->with('success', 'Gallery deleted successfully');
     }
 }

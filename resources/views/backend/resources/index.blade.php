@@ -52,7 +52,7 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$resource->title}}</td>
                                         <td>{{$resource->type}}</td>
-                                        <td>{{$resource->description}}</td>
+                                        <td>{{str_limit($resource->description, 50)}}</td>
                                         <td>
                                                 <!-- Edit Button -->
                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"

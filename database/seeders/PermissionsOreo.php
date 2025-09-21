@@ -62,7 +62,6 @@ class PermissionsOreo extends Seeder
         //associated profile
         $adminUser->profile()->create([
             'user_id' => $adminUser->id,
-            'profile_type' => 'user',
             'country' => 'Kenya',
             'city' => 'Nairobi',
             'address' => 'Nairobi',

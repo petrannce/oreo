@@ -11,8 +11,6 @@ class Profile extends Model
 
     protected $fillable = [
         'user_id',
-        'doctor_id',
-        'profile_type',
         'country',
         'city',
         'address',

@@ -26,17 +26,6 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
-        $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'username' => 'required',
-            'email' => 'required|email|unique:users,email', // Ensure unique email for users
-            'password' => 'required',
-            'string',
-            'min:8',
-            'confirmed',
-        ]);
-
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
@@ -45,11 +34,8 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        //dd($user);
-
         $user->profile()->create([
             'user_id' => $user->id,
-            'profile_type' => 'user',
             'country' => $request->country,
             'city' => $request->city,
             'address' => $request->address,

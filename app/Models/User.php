@@ -48,7 +48,10 @@ class User extends Authenticatable
     ];
 
      // relationships
-    public function receptionist() { return $this->hasOne(Receptionist::class); }
+    public function receptionist() 
+    { 
+        return $this->hasOne(Receptionist::class); 
+    }
     public function doctor() { return $this->hasOne(Doctor::class); }
     public function patient() { return $this->hasOne(Patient::class); }
 
@@ -59,6 +62,11 @@ class User extends Authenticatable
         if ($this->hasRole('receptionist')) return $this->receptionist;
         if ($this->hasRole('patient')) return $this->patient;
         return null;
+    }
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
     }
 
 }

@@ -80,7 +80,7 @@ class BlogController extends Controller
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $image_name = time() . '.' . $image->getClientOriginalName();
-                $image->move(public_path('images'), $image_name);
+                $image->move(public_path('public/blogs'), $image_name);
             }
 
             $blog = Blog::find($id);
