@@ -43,7 +43,7 @@ class HomeController extends Controller
     {
         $doctors = Doctor::all();
         $appointments = DB::table('appointments')->get();
-        $patients = DB::table('patients')->get();
+        $patients = Patient::with('user')->get();
         return view('backend.dashboard.doctor', compact('doctors', 'appointments', 'patients'));
     }
 
@@ -51,7 +51,7 @@ class HomeController extends Controller
     {
         $doctors = Doctor::all();
         $appointments = DB::table('appointments')->get();
-        $patients = DB::table('patients')->get();
+        $patients = Patient::with('user')->get();
         $contacts = DB::table('contacts')->get();
         return view('backend.dashboard.receptionist', compact( 'appointments', 'contacts', 'doctors', 'patients'));
     }

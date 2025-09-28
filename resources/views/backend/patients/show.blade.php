@@ -45,7 +45,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="fname">First Name</label>
-                                        <input type="text" name="fname" value="{{$patient->fname}}" class="form-control"
+                                        <input type="text" name="fname" value="{{$patient->user->fname}}" class="form-control"
                                             placeholder="First Name">
                                     </div>
                                 </div>
@@ -54,49 +54,49 @@
                             <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="lname">Last Name</label>
-                                        <input type="text" name="lname" value="{{$patient->lname}}" class="form-control"
+                                        <input type="text" name="lname" value="{{$patient->user->lname}}" class="form-control"
                                             placeholder="Last Name">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="email">Email</label>
-                                        <input type="text" name="email" value="{{$patient->email}}" class="form-control"
+                                        <input type="text" name="email" value="{{$patient->user->email}}" class="form-control"
                                             placeholder="Enter Your Email">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="phone">Phone Number</label>
-                                        <input type="text" name="Phone_number" value="{{$patient->phone_number}}"
+                                        <input type="text" name="Phone_number" value="{{$patient->user->phone_number ?? 'No Phone Number' }}"
                                             class="form-control" placeholder=" Enter Your Phone Number">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="address">Address</label>
-                                        <input type="text" name="address" value="{{$patient->address}}" class="form-control"
+                                        <input type="text" name="address" value="{{$patient->user->address ?? 'No Address'}}" class="form-control"
                                             placeholder=" Enter Your Address">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="city">City</label>
-                                        <input type="text" name="city" value="{{$patient->city}}" class="form-control"
+                                        <input type="text" name="city" value="{{$patient->user->city ?? 'No City'}}" class="form-control"
                                             placeholder=" Enter Your City">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="country">Country</label>
-                                        <input type="text" name="country" value="{{$patient->country}}" class="form-control"
+                                        <input type="text" name="country" value="{{$patient->user->country ?? 'No Country'}}" class="form-control"
                                             placeholder=" Enter Your Country">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="gender">Gender</label>
-                                        <input type="text" name="gender" value="{{$patient->gender}}" class="form-control"
+                                        <input type="text" name="gender" value="{{$patient->user->gender ?? 'No Gender'}}" class="form-control"
                                             placeholder=" Enter Your Gender">
                                     </div>
                                 </div>

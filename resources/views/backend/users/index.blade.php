@@ -75,6 +75,8 @@
                                                             <i class="text-primary"></i> Patient
                                                         @elseif($user->role == 'receptionist')
                                                             <i class="text-info"></i> Receptionist
+                                                        @elseif($user->role == 'doctor')
+                                                            <i class="text-warning"></i> Doctor
                                                         @else
                                                             <i class="text-danger"></i> No Role
                                                         @endif
@@ -92,6 +94,9 @@
                                                             href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'receptionist']) }}">
                                                             <i class="text-info"></i> Receptionist
                                                         </a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'doctor']) }}">
+                                                            <i class="text-warning"></i> Doctor
                                                     </div>
                                                 </div>
                                             </td>

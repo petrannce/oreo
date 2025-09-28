@@ -30,4 +30,14 @@ class Profile extends Model
         return $this->belongsTo(Doctor::class);
     }
 
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function receptionist()
+    {
+        return $this->belongsTo(Receptionist::class);
+    }
+
 }

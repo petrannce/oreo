@@ -41,9 +41,8 @@
                                     <tr>
                                         <th>*</th>
                                         <th>Full Name</th>
-                                        <th>Email</th>
+                                        <th>Medical Record Number</th>
                                         <th>Phone Number</th>
-                                        <th>Gender</th>
                                         <th>Medical Records</th>
                                         <th>Action</th>
                                     </tr>
@@ -54,10 +53,9 @@
 
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
-                                            <td>{{$patient->fname}} {{$patient->lname}}</td>
-                                            <td>{{$patient->email}}</td>
-                                            <td>{{$patient->phone_number}}</td>
-                                            <td>{{$patient->gender}}</td>
+                                            <td>{{$patient->user->fname}} {{$patient->user->lname}}</td>
+                                            <td>{{$patient->medical_record_number }}</td>
+                                            <td>{{$patient->profile->phone_number ?? 'No Phone Number' }}</td>
                                             <td><a href="{{ route('medicals.show', $patient->id) }}">All Records</a></td>
                                             <td>
                                                 <!-- Edit Button -->

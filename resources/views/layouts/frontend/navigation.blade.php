@@ -110,9 +110,9 @@
                         </li>
                         <li class="nav-item"><a class="nav-link" href="{{route('contact')}}">Contact Us</a></li>
                         <li class="nav-item d-md-none d-lg-none d-xl-none"><a class="nav-link"
-                                href="javascript:void(0);">Sign in</a></li>
+                                href="{{ route('login') }}">Sign in</a></li>
                         <li class="nav-item d-md-none d-lg-none d-xl-none"><a class="nav-link"
-                                href="javascript:void(0);">Sign up</a></li>
+                                href="{{ route('register') }}">Sign up</a></li>
                     </ul>
                     <form class="form-inline my-2 my-lg-0 d-none d-lg-inline-block">
                         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">

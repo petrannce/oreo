@@ -33,6 +33,16 @@
                                 <label for="service_name" class="form-label">Service Name</label>
                                 <input type="text" class="form-control" name="name" placeholder="Enter Service title" />
                             </div>
+
+                            <div class="mb-3">
+                                <label for="service tag" class="form-label">Department</label>
+                                <select class="form-control show-tick" name="department">
+                                    <option value="">-- Select Department --</option>
+                                    @foreach ($departments as $department)
+                                        <option value="{{$department->name}}">{{$department->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="mb-3">
                                 <label for="service_desc" class="form-label">Description</label>
                                 <textarea rows="3" class="form-control no-resize" name="description"

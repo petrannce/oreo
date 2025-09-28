@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Medical;
 use App\Models\Patient;
+use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
 
@@ -19,14 +20,16 @@ class MedicalController extends Controller
 
     public function create()
     {
-        $patients = Patient::all();
+        $patients = Patient::with('user')->get();
         return view('backend.medicals.create', compact('patients'));
     }
 
     public function store(Request $request)
     {
+        
         $request->validate([
             'patient_id' => 'required',
+            'doctor_id' => 'required',
             'record_date' => 'required',
             'diagnosis' => 'required',
             'prescription' => 'required',
@@ -38,15 +41,19 @@ class MedicalController extends Controller
         try {
             $medical = new Medical();
             $medical->patient_id = $request->patient_id;
+            $medical->doctor_id = $request->doctor_id;
             $medical->record_date = $request->record_date;
             $medical->diagnosis = $request->diagnosis;
             $medical->prescription = $request->prescription;
             $medical->notes = $request->notes;
+
             $medical->save();
+
             DB::commit();
             return redirect()->route('medicals')->with('success', 'Medical record created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
+           dd($e->getMessage(), $e->getTraceAsString());
             return redirect()->route('medicals')->with('error', 'Medical record creation failed');
         }
     }
@@ -61,6 +68,7 @@ class MedicalController extends Controller
     {
         $request->validate([
             'patient_id' => 'required',
+            'doctor_id' => 'required',
             'record_date' => 'required',
             'diagnosis' => 'required',
             'prescription' => 'required',
@@ -72,6 +80,7 @@ class MedicalController extends Controller
         try {
             $medical = Medical::findOrFail($id);
             $medical->patient_id = $request->patient_id;
+            $medical->doctor_id = $request->doctor_id;
             $medical->record_date = $request->record_date;
             $medical->diagnosis = $request->diagnosis;
             $medical->prescription = $request->prescription;

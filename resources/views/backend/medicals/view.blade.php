@@ -38,23 +38,23 @@
                                     <div class="form-group">
                                         <label for="fname">Full Names</label>
                                         <input type="text" class="form-control"
-                                            value="{{ $appointment->patient->fname ?? '' }} {{ $appointment->patient->lname ?? '' }}" placeholder="First Name" readonly>
+                                            value="{{ $medical_record->patient->fname ?? '' }} {{ $medical_record->patient->lname ?? '' }}" readonly>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="phone_number">Phone Number</label>
-                                        <input type="text" class="form-control" value="{{ $appointment->patient->phone_number ?? '' }}"
+                                        <input type="text" class="form-control" value="{{ $medical_record->patient->phone_number ?? '' }}"
                                             placeholder="Phone No." readonly>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                                <!-- <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="doctor">Doctor</label>
-                                        <input type="text" class="form-control" value="{{ $appointment->doctor->fname ?? '' }} {{ $appointment->doctor->lname ?? '' }}"
+                                        <input type="text" class="form-control" value="{{ $medical_record->patient->user->fname ?? '' }} {{ $appointment->doctor->lname ?? '' }}"
                                             placeholder="Enter Your Doctor" readonly>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -77,7 +77,7 @@
                                         <div class="form-group">
                                             <label for="patient_id">Patient ID</label>
                                             <input type="text" class="form-control" name="patient_id"
-                                                value="{{ $appointment->id }}" placeholder="Patient ID" readonly>
+                                                value="{{ $medical_record->patient->id }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">

@@ -101,8 +101,8 @@
                         <div class="fcard contact links">
                             <h5 class="title">Contact Details</h5>
                             <ul class="list-unstyled">
-                                <li><i class="zmdi zmdi-pin"></i>Park Drive, Varick Str NY 10012, USA</li>
-                                <li><i class="zmdi zmdi-email"></i>Getwell@Oreo.com</li>
+                                <li><i class="zmdi zmdi-pin"></i>Park Drive, 15th st LS 10012, Nairobi</li>
+                                <li><i class="zmdi zmdi-email"></i>okwach@Oreo.com</li>
                                 <li><i class="zmdi zmdi-phone"></i>(+254) 728-745303</li>
                                 <li><i class="zmdi zmdi-time"></i>Mon-Friday: 9am to 18pm</li>
                                 <li><i class="zmdi zmdi-time"></i>Sat-Sunday: 10am to 16pm</li>

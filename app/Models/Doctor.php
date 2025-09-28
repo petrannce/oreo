@@ -12,17 +12,24 @@ class Doctor extends Model
     protected $table = 'doctors';
 
     protected $fillable = [
-        'fname',
-        'lname',
-        'email',
-        'speciality',
+        'user_id',
         'department',
+        'speciality',
         'employment_type',
-        'description',
+        'license_number',
+        'bio',
     ];
+
+    
+
+    public function user() 
+    { 
+        return $this->belongsTo(User::class); 
+    }
 
     public function profile()
     {
         return $this->hasOne(Profile::class);
     }
+
 }

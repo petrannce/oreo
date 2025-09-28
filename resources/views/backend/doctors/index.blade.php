@@ -41,8 +41,8 @@
                                     <tr>
                                         <th>*</th>
                                         <th>Full Name</th>
-                                        <th>Email</th>
-                                        <th>Phone Number</th>
+                                        <th>License Number</th>
+                                        <th>Deparment</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -53,10 +53,10 @@
 
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
-                                            <td>{{$doctor->fname}} {{$doctor->lname}}</td>
-                                            <td>{{$doctor->email}}</td>
-                                            <td>{{$doctor->profile->phone_number ?? 'No Phone Number'}}</td>
-                                            <td>{{$doctor->profile?->status ?? 'No Status'}}</td>
+                                            <td>{{$doctor->user->fname}} {{$doctor->user->lname}}</td>
+                                            <td>{{$doctor->license_number  }}</td>
+                                            <td>{{$doctor->department}}</td>
+                                            <td>{{$doctor->user->profile?->status ?? 'No Status'}}</td>
                                             <td>
                                                 <!-- Edit Button -->
                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"

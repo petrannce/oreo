@@ -36,6 +36,11 @@
                                 <input type="text" class="form-control" name="patient_id" value="{{$medical_record->patient_id}}" readonly>
                             </div>
                             <div class="mb-3">
+                                <label for="doctor" class="form-label">Doctor</label>
+                                <input name="doctor_id" type="hidden" value="{{ auth()->id() }}">
+                                <input type="text" class="form-control" value="{{auth()->user()->fname}} {{auth()->user()->lname}}"  readonly/>
+                            </div>
+                            <div class="mb-3">
                                 <label for="record_date" class="form-label">Record Date</label>
                                 <input type="date" class="form-control" name="record_date"
                                     placeholder="Enter Record Date" value="{{$medical_record->record_date}}" min="{{date('Y-m-d')}}" readonly/>

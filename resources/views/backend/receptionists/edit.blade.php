@@ -34,21 +34,25 @@
                         <div class="body">
                             <form action="{{route('receptionists.update', $receptionist->id)}}" method="POST">
                                 @csrf
+                                @method('PUT')
 
                                 <div class="row clearfix">
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="Full Name" class="form-label">Full Name</label>
-                                            <input type="text" name="user_id" class="form-control"
+                                            <input type="text" class="form-control"
                                                 value="{{ $receptionist->user->fname }} {{ $receptionist->user->lname }}"
                                                 readonly>
+
+                                            <input type="hidden" name="user_id" class="form-control"
+                                                value="{{ $receptionist->user->id }}">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="department" class="form-label">Department</label>
                                             <select class="form-control show-tick" name="department">
-                                                <option value="" selected disabled>Select Department</option>
+                                                <option value="" disabled {{ $receptionist->department ? '' : 'selected' }}>Select Department</option>
                                                 @foreach ($departments as $department)
                                                     <option
                                                         value="{{$department->name}}

@@ -57,8 +57,8 @@
                                 <tbody>
                                      @foreach ($patients as $patient)
                                      <tr>
-                                        <td>{{$patient->city}}</td>
-                                        <td>{{$patient->gender}}<i class="zmdi zmdi-trending-up m-l-10"></i></td>
+                                        <td>{{$patient->user->city}}</td>
+                                        <td>{{$patient->user->gender}}<i class="zmdi zmdi-trending-up m-l-10"></i></td>
                                     </tr> 
                                      @endforeach                                 
                                 </tbody>
@@ -233,7 +233,6 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Address</th>
-                                        <th>Diseases</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -242,9 +241,9 @@
 
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$patient->fname}} {{$patient->lname}}</td>
-                                        <td>{{$patient->email}}</td>
-                                        <td>{{$patient->address}} </td>
+                                        <td>{{$patient->user->fname}} {{$patient->user->lname}}</td>
+                                        <td>{{$patient->user->email ?? 'No Email'}}</td>
+                                        <td>{{$patient->user->address ?? 'No Address'}} </td>
                                     </tr>
                                     
                                     @endforeach

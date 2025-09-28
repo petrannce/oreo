@@ -52,8 +52,14 @@ class User extends Authenticatable
     { 
         return $this->hasOne(Receptionist::class); 
     }
-    public function doctor() { return $this->hasOne(Doctor::class); }
-    public function patient() { return $this->hasOne(Patient::class); }
+    public function doctor() 
+    { 
+        return $this->hasOne(Doctor::class); 
+    }
+    public function patient() 
+    { 
+        return $this->hasOne(Patient::class); 
+    }
 
     // convenience: get profile for current role
     public function profileForRole()
@@ -68,5 +74,6 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
+
 
 }

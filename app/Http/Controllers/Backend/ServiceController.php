@@ -15,14 +15,17 @@ class ServiceController extends Controller
         return view('backend.services.index', compact('services'));
     }
 
-    public function create(){
-        return view('backend.services.create');
+    public function create()
+    {
+        $departments = DB::table('departments')->get();
+        return view('backend.services.create', compact('departments'));
     }
 
     public function store(Request $request){
         
         $request->validate([
             'name' => 'required',
+            'department' => 'required',
             'description' => 'required',
         ]);
 
@@ -39,6 +42,7 @@ class ServiceController extends Controller
     
             $service = new Service();
             $service->name = $request->name;
+            $service->department = $request->department;
             $service->description = $request->description;
             $service->image = $image_name;
             $service->save();
@@ -59,6 +63,7 @@ class ServiceController extends Controller
     public function update(Request $request, $id){
         $request->validate([
             'name' => 'required',
+            'department' => 'required',
             'description' => 'required',
         ]);
 
@@ -78,6 +83,7 @@ class ServiceController extends Controller
     
             $service = Service::find($id);
             $service->name = $request->name;
+            $service->department = $request->department;
             $service->description = $request->description;
             $service->image = $image_name;
             $service->save();

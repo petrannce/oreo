@@ -35,11 +35,16 @@
                                 <select class="form-control show-tick" name="patient_id">
                                     <option value="">-- Select Patient --</option>
                                     @foreach ($patients as $patient)
-                                        <option value="{{$patient->id}}">{{$patient->fname}} {{$patient->lname}}
+                                        <option value="{{$patient->user->id}}">{{$patient->user->fname}} {{$patient->user->lname}}
                                         </option>
                                     @endforeach
 
                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="doctor" class="form-label">Doctor</label>
+                                <input name="doctor_id" type="hidden" value="{{ auth()->id() }}">
+                                <input type="text" class="form-control" value="{{auth()->user()->fname}} {{auth()->user()->lname}}"  readonly/>
                             </div>
                             <div class="mb-3">
                                 <label for="record_date" class="form-label">Record Date</label>
@@ -58,7 +63,7 @@
                                     placeholder="Please type your prescription..."></textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="record_dianose" class="form-label">Notes</label>
+                                <label for="notes" class="form-label">Notes</label>
                                 <textarea rows="3" class="form-control no-resize" name="notes"
                                     placeholder="Please type your notes..."></textarea>
                             </div>

@@ -91,7 +91,7 @@ class UserController extends Controller
     public function updateRole($id, $role)
     {
         $user = User::findOrFail($id);
-        $validRoles = ['admin', 'patient', 'receptionist'];
+        $validRoles = ['admin', 'patient', 'receptionist', 'doctor'];
 
         if (!in_array($role, $validRoles)) {
             return redirect()->back()->with('error', 'Invalid role selected');

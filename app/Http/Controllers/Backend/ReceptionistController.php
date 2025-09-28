@@ -85,15 +85,12 @@ class ReceptionistController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required',
-            'phone' => 'required',
-            'password' => 'nullable',
+            'user_id' => 'required',
             'employee_code' => 'required|unique:receptionists,employee_code,' . $id,
-            'department' => 'nullable|string',
-            'hire_date' => 'nullable|date',
+            'department' => 'required|string',
+            'hire_date' => 'required|date',
         ]);
 
         DB::beginTransaction();
@@ -101,17 +98,9 @@ class ReceptionistController extends Controller
         try {
             $receptionist = Receptionist::findOrFail($id);
 
-            // Update user
-            $receptionist->user->update([
-                'fname' => $request->fname,
-                'lname' => $request->lname,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'password' => $request->password ? Hash::make($request->password) : $receptionist->user->password,
-            ]);
-
             // Update receptionist
             $receptionist->update([
+                'user_id' => $request->user_id,
                 'employee_code' => $request->employee_code,
                 'department' => $request->department,
                 'hire_date' => $request->hire_date,

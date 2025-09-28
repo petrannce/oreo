@@ -57,8 +57,8 @@
                                 <tbody>
                                     @foreach ($patients as $patient)
                                     <tr>
-                                        <td>{{$patient->city}}</td>
-                                        <td>{{$patient->gender}}<i class="zmdi zmdi-trending-up m-l-10"></i></td>
+                                        <td>{{$patient->user->city ?? 'No City'}}</td>
+                                        <td>{{$patient->user->gender ?? 'No Gender'}}<i class="zmdi zmdi-trending-up m-l-10"></i></td>
                                     </tr> 
                                     @endforeach                                 
                                 </tbody>
@@ -230,10 +230,10 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
+                                        <th>Full Name</th>
+                                        <th>Patient ID</th>
                                         <th>Email</th>
                                         <th>Address</th>
-                                        <th>Diseases</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -242,9 +242,10 @@
 
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$patient->fname}} {{$patient->lname}}</td>
-                                        <td>{{$patient->email}}</td>
-                                        <td>{{$patient->address}} </td>
+                                        <td>{{$patient->user->fname}} {{$patient->user->lname}}</td>
+                                        <td>{{$patient->id}}</td>
+                                        <td>{{$patient->user->email ?? 'No Email'}}</td>
+                                        <td>{{$patient->user->address ?? 'No Address'}} </td>
                                     </tr>
                                     
                                     @endforeach

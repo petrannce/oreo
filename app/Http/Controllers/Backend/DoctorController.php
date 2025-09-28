@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Doctor;
 use DB;
@@ -12,58 +13,45 @@ class DoctorController extends Controller
 {
     public function index()
     {
-        $doctors = Doctor::all();
-        $doctors->load('profile');
+        $doctors = Doctor::with('user')->get();
         return view('backend.doctors.index', compact('doctors'));
     }
 
     public function create()
     {
+        $users = User::where('role', 'doctor')
+        ->whereDoesntHave('receptionist')
+        ->get();
         $departments = DB::table('departments')->get();
-        return view('backend.doctors.create', compact('departments'));
+        return view('backend.doctors.create', compact('users', 'departments'));
     }
 
     public function store(Request $request)
     {
 
-        // Validate incoming request data
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required|email|unique:doctors,email', // Ensure unique email for doctors
-            'speciality' => 'required',
+            'user_id' => 'required',
             'department' => 'required',
+            'speciality' => 'required',
             'employment_type' => 'required',
-            'description' => 'required',
+            'license_number' => 'required',
+            'bio' => 'required',
         ]);
 
         DB::beginTransaction();
+
         try {
 
             // Create the doctor
-            $doctor = Doctor::create([
-                'fname' => $request->fname,
-                'lname' => $request->lname,
-                'email' => $request->email,
-                'speciality' => $request->speciality,
+            Doctor::create([
+                'user_id' => $request->user_id,
                 'department' => $request->department,
+                'speciality' => $request->speciality,
                 'employment_type' => $request->employment_type,
-                'description' => $request->description,
+                'license_number' => $request->license_number,
+                'bio' => $request->bio,
             ]);
-            //dd($doctor);    
-
-            $doctor->profile()->create([ // Using the relationship to create the profile
-                'doctor_id' => $doctor->id,
-                'profile_type' => 'doctor',
-                'country' => $request->country,
-                'city' => $request->city,
-                'address' => $request->address,
-                'phone_number' => $request->phone_number,
-                'gender' => $request->gender,
-                'status' => 'active',
-            ]);
-
-            // Commit the transaction
+            
             DB::commit();
             return redirect()->route('doctors.index')->with('success', 'Doctor and profile created successfully');
         } catch (\Exception $e) {
@@ -84,59 +72,35 @@ class DoctorController extends Controller
     public function update(Request $request, $id)
     {
 
-        // Validate incoming request data
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required|email|unique:doctors,email,' . $id, // Ensure unique email for doctors
-            'speciality' => 'required',
+            'user_id' => 'required',
             'department' => 'required',
+            'speciality' => 'required',
             'employment_type' => 'required',
-            'description' => 'required',
+            'license_number' => 'required',
+            'bio' => 'required',
         ]);
 
         DB::beginTransaction();
+
         try {
-            // Find the doctor by ID
             $doctor = Doctor::findOrFail($id);
 
-            // Handle the image upload if a new one is provided
-            if ($request->hasFile('image')) {
-                // Delete the old image if it exists
-                if ($doctor->profile && $doctor->profile->image) {
-                    $oldImagePath = public_path('images/doctors/' . $doctor->profile->image);
-                    if (file_exists($oldImagePath)) {
-                        unlink($oldImagePath); // Delete the old image
-                    }
-                }
-
-                // Store the new image
-                $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/doctors'), $imageName);
-
-                // Update the doctor's profile image
-                $doctor->profile->image = $imageName;
-            }
-
-            // Update the doctor’s details
-            $doctor->fname = $request->fname;
-            $doctor->lname = $request->lname;
-            $doctor->email = $request->email;
-            $doctor->speciality = $request->speciality;
-            $doctor->department = $request->department;
-            $doctor->employment_type = $request->employment_type;
-            $doctor->description = $request->description;
-            $doctor->save();
-
-            // Commit the transaction
+            // Update doctor
+            $doctor->update([
+                'user_id' => $request->user_id,
+                'department' => $request->department,
+                'speciality' => $request->speciality,
+                'employment_type' => $request->employment_type,
+                'license_number' => $request->license_number,
+                'bio' => $request->bio,
+            ]);
+            
             DB::commit();
-
-            return redirect()->route('doctors.index')->with('success', 'Doctor and profile updated successfully');
+            return redirect()->route('doctors.index')->with('success', 'Doctor updated successfully');
         } catch (\Exception $e) {
-            // Rollback the transaction if anything fails
             DB::rollBack();
-            return redirect()->back()->with('error', 'Failed to update doctor and profile');
+            return redirect()->route('doctors.index')->with('error', 'Doctor update failed');
         }
     }
 

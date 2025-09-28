@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use DB;
@@ -11,46 +12,55 @@ class PatientController extends Controller
 {
     public function index()
     {
-        $patients = Patient::all();
+        $patients = Patient::with('user')->get();
         return view('backend.patients.index', compact('patients'));
     }
 
     public function create()
     {
-        return view('backend.patients.create');
+        $users = User::where('role', 'patient')
+        ->whereDoesntHave('patient')
+        ->get();
+        return view('backend.patients.create',compact('users'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'phone_number' => 'required',
-            'address' => 'required',
-            'city' => 'required',
-            'country' => 'required',
-            'gender' => 'required',
+            'user_id' => 'required',
             'dob' => 'required',
         ]);
-
-        //dd($request->all());
-
         DB::beginTransaction();
 
         try {
-            $patient = new Patient();
-            $patient->fname = $request->fname;
-            $patient->lname = $request->lname;
-            $patient->email = $request->email;
-            $patient->phone_number = $request->phone_number;
-            $patient->address = $request->address;
-            $patient->city = $request->city;
-            $patient->country = $request->country;
-            $patient->gender = $request->gender;
-            $patient->dob = $request->dob;
-            //dd($patient);
-            $patient->save();
+
+            // Get last patient entry
+            $lastPatient = Patient::whereNotNull('medical_record_number')
+                ->orderBy('id', 'desc')
+                ->select('medical_record_number')
+                ->first();
+
+            // Generate new employee code if not provided
+            if($lastPatient && preg_match('/(\d+)$/', $lastPatient->medical_record_number, $m)) {
+                $nextNumber = intval($m[1]) + 1;
+            } else {
+                $nextNumber = 1;
+            }
+
+            $medical_record_number = 'MRN' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+            while(Patient::where('medical_record_number', $medical_record_number)->exists()) {
+                $nextNumber++;
+                $medical_record_number = 'MRN' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            }
+
+            $finalcode = $request->medical_record_number ?? $medical_record_number;
+
+            Patient::create([
+                'user_id' => $request->user_id,
+                'medical_record_number' => $finalcode,
+                'dob' => $request->dob,
+            ]);
 
             DB::commit();
             return redirect()->route('patients')->with('success', 'Patient created successfully');
@@ -68,15 +78,10 @@ class PatientController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'phone_number' => 'required',
-            'address' => 'required',
-            'city' => 'required',
-            'country' => 'required',
-            'gender' => 'required',
+            'user_id' => 'required',
+            'medical_record_number' => 'required',
             'dob' => 'required',
         ]);
 
@@ -84,21 +89,18 @@ class PatientController extends Controller
 
         try {
             $patient = Patient::findOrFail($id);
-            $patient->fname = $request->fname;
-            $patient->lname = $request->lname;
-            $patient->email = $request->email;
-            $patient->phone_number = $request->phone_number;
-            $patient->address = $request->address;
-            $patient->city = $request->city;
-            $patient->country = $request->country;
-            $patient->gender = $request->gender;
-            $patient->DOB = $request->DOB;
+
+            $patient->user_id = $request->user_id;
+            $patient->medical_record_number = $request->medical_record_number;
+            $patient->dob = $request->dob;
+
             $patient->save();
             
             DB::commit();
             return redirect()->route('patients')->with('success', 'Patient updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
+            //dd($e->getMessage(), $e->getTraceAsString());
             return redirect()->route('patients')->with('error', 'Patient update failed');
         }
     }
