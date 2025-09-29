@@ -20,7 +20,6 @@ class Doctor extends Model
         'bio',
     ];
 
-    
 
     public function user() 
     { 

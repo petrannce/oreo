@@ -64,23 +64,19 @@
                                             <td>{{$loop->iteration}}</td>
                                             <td>{{$user->fname}} {{$user->lname}}</td>
                                             <td>{{$user->email}}</td>
-
                                             <td>
                                                 <div class="dropdown">
-                                                    <a href="#" class="btn btn-primary btn-sm btn-rounded dropdown-toggle"
-                                                        data-toggle="dropdown" aria-expanded="false">
-                                                        @if($user->role == 'admin')
-                                                            <i class="text-success"></i> Admin
-                                                        @elseif($user->role == 'patient')
-                                                            <i class="text-primary"></i> Patient
-                                                        @elseif($user->role == 'receptionist')
-                                                            <i class="text-info"></i> Receptionist
-                                                        @elseif($user->role == 'doctor')
-                                                            <i class="text-warning"></i> Doctor
+                                                    <a href="#" class="btn btn-sm btn-rounded dropdown-toggle
+                                                        @if($user->role == 'admin') btn-success
+                                                        @elseif($user->role == 'patient') btn-primary
+                                                        @elseif($user->role == 'receptionist') btn-info
+                                                        @elseif($user->role == 'doctor') btn-warning
                                                         @else
-                                                            <i class="text-danger"></i> No Role
-                                                        @endif
+                                                            btn-danger
+                                                        @endif" data-toggle="dropdown" aria-expanded="false">
+                                                        {{ ucfirst($user->role) }}
                                                     </a>
+                                                    @role('admin')
                                                     <div class="dropdown-menu">
                                                         <a class="dropdown-item"
                                                             href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'admin']) }}">
@@ -98,6 +94,7 @@
                                                             href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'doctor']) }}">
                                                             <i class="text-warning"></i> Doctor
                                                     </div>
+                                                    @endrole
                                                 </div>
                                             </td>
 
@@ -119,7 +116,7 @@
                                                     onclick="editUsers({{ $user->id }})">
                                                     <i class="zmdi zmdi-edit"></i>
                                                 </button>
-
+                                            @role('admin')
                                                 <!-- Delete Button -->
                                                 <form action="{{ route('users.destroy', $user->id) }}" method="POST"
                                                     style="display:inline;">
@@ -130,6 +127,7 @@
                                                         <i class="zmdi zmdi-delete"></i>
                                                     </button>
                                                 </form>
+                                            @endrole
                                             </td>
                                         </tr>
 

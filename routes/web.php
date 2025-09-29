@@ -139,6 +139,7 @@ Route::middleware(['auth', 'role.records'])->controller(PatientController::class
     Route::put('/patients/{id}', 'update')->name('patients.update');
     Route::get('/patients/{id}', 'show')->name('patients.show');
     Route::delete('/patients/{id}', 'destroy')->name('patients.destroy');
+    Route::get('/patients/search', 'search')->name('patients.search');
 });
 
 //Receptionists

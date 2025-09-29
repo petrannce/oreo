@@ -49,13 +49,12 @@
                                     <thead>
                                         <tr>
                                             <th>*</th>
-                                            <th>Patient ID</th>
+                                            <th>Patient Name</th>
                                             <th>Date</th>
                                             <th>Time</th>
                                             <th>Service</th>
                                             <th>Doctor</th>
                                             <th>Status</th>
-                                            <th>Medical Records</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -72,15 +71,14 @@
                                                 <td>{{ $appointment->doctor->fname }} {{ $appointment->doctor->lname }}</td>
                                                 <td>
                                                     <div class="dropdown">
-                                                        <a href="#" 
-                                                        class="btn btn-sm btn-rounded dropdown-toggle
-                                                            @if($appointment->status == 'approved') btn-success
-                                                            @elseif($appointment->status == 'pending') btn-primary
-                                                            @elseif($appointment->status == 'cancelled') btn-info
-                                                            @else
-                                                            btn-danger
-                                                            @endif"
-                                                            data-toggle="dropdown" aria-expanded="false">
+                                                        <a href="#" class="btn btn-sm btn-rounded dropdown-toggle
+                                                                                            @if($appointment->status == 'approved') btn-success
+                                                                                            @elseif($appointment->status == 'pending') btn-primary
+                                                                                            @elseif($appointment->status == 'cancelled') btn-info
+                                                                                            @else 
+                                                                                                btn-danger
+                                                                                            @endif " data-toggle="dropdown"
+                                                            aria-expanded="false">
                                                             {{ ucfirst($appointment->status) }}
                                                         </a>
                                                         @role('admin|doctor')
@@ -97,12 +95,14 @@
                                                                 href="{{ route('appointment.updateStatus', ['id' => $appointment->id, 'status' => 'cancelled']) }}">
                                                                 <i class="text-info"></i> Cancelled
                                                             </a>
+                                                            <a class="dropdown-item"
+                                                                href="{{ route('appointment.updateStatus', ['id' => $appointment->id, 'status' => 'rejected']) }}">
+                                                                <i class="text-danger"></i> Rejected
+                                                            </a>
                                                         </div>
                                                         @endrole
                                                     </div>
                                                 </td>
-                                                <td><button class="btn btn-primary"><a
-                                                            href="{{ route('medicals') }}">Medical</a></button></td>
                                                 <td>
                                                     <!-- View Button -->
                                                     <button class="btn btn-icon btn-neutral btn-icon-mini"
@@ -150,7 +150,9 @@
 <script>
 
     function viewAppointment(appointmentId) {
-        window.location.href = `/admin/appointments/${appointmentId}`;
+        let url = "{{ route('appointments.show', ':id') }}";
+        url = url.replace(':id', appointmentId);
+        window.location.href = url;
     }
 
 </script>

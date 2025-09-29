@@ -109,7 +109,7 @@ class AppointmentController extends Controller
 
     public function show($id)
     {
-        $appointment = Appointment::with(['patient', 'doctor'])->findOrFail($id);
+        $appointment = Appointment::findOrFail($id);
         return view('backend.appointments.view', compact('appointment'));
     }
 
@@ -122,7 +122,7 @@ class AppointmentController extends Controller
     public function updateStatus($id, $status)
     {
         $appointment = Appointment::findOrFail($id);
-        $validStatuses = ['approved', 'pending', 'cancelled'];
+        $validStatuses = ['approved', 'pending', 'cancelled', 'rejected'];
 
         if (!in_array($status, $validStatuses)) {
             return redirect()->back()->with('error', 'Invalid status selected');

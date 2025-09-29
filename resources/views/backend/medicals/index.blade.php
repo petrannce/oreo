@@ -78,7 +78,7 @@
                                                         onclick="editMedical({{ $medical_record->id }})">
                                                         <i class="zmdi zmdi-edit"></i>
                                                     </button>
-
+                                                    @role('admin')
                                                     <!-- Delete Button -->
                                                     <form action="{{ route('medicals.destroy', $medical_record->id) }}"
                                                         method="POST" style="display:inline;">
@@ -89,6 +89,7 @@
                                                             <i class="zmdi zmdi-delete"></i>
                                                         </button>
                                                     </form>
+                                                    @endrole
                                                     @endrole
                                                 </td>
 

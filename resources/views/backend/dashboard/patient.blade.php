@@ -23,9 +23,9 @@
                         </h3>
                         <p class="text-muted">Appointments</p>
                         <div class="progress">
-                            <div class="progress-bar l-blush" role="progressbar" style="width: 68%;"></div>
+                            <div class="progress-bar l-blush" role="progressbar" style="width: 100%;"></div>
                         </div>
-                        <small>Change 15%</small>
+                        <small>Total appointments in the system</small>
                     </div>
                 </div>
             </div>
@@ -33,84 +33,185 @@
             <div class="col-lg-4 col-md-6">
                 <div class="card">
                     <div class="body">
-                        <h3 class="number count-to m-b-0" data-from="0" data-to="{{ $appointments->count()}}"
+                        <h3 class="number count-to m-b-0" data-from="0" data-to="{{ $appointments->where('status', 'pending')->count()}}"
                             data-speed="2500" data-fresh-interval="1000">
-                            {{  $appointments->count() }} <i class="zmdi zmdi-trending-up float-right"></i>
+                            {{  $appointments->where('status', 'pending')->count() }} <i class="zmdi zmdi-trending-up float-right"></i>
                         </h3>
                         <p class="text-muted">Pending Appointments</p>
                         <div class="progress">
-                            <div class="progress-bar l-green" role="progressbar" style="width: 68%;"></div>
+                            <div class="progress-bar l-green" role="progressbar" style="width: 100%;"></div>
                         </div>
-                        <small>Change 23%</small>
+                        <small>Currently waiting approval</small>
                     </div>
                 </div>
             </div>
+
+              <!-- Approved Appointments -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card">
+            <div class="body">
+                <h3 class="number count-to m-b-0"
+                    data-from="0"
+                    data-to="{{ $appointments->where('status', 'approved')->count() }}"
+                    data-speed="2000"
+                    data-fresh-interval="700">
+                    {{ $appointments->where('status', 'approved')->count() }}
+                    <i class="zmdi zmdi-check-circle text-success float-right"></i>
+                </h3>
+                <p class="text-muted">Approved Appointments</p>
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%;"></div>
+                </div>
+                <small>Confirmed & assigned</small>
+            </div>
+        </div>
+    </div>
         </div>
 
         <div class="row clearfix">
-            <div class="col-lg-4 col-md-12">
-                <div class="card">
+  
+
+    <!-- Rejected Appointments -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card">
+            <div class="body">
+                <h3 class="number count-to m-b-0"
+                    data-from="0"
+                    data-to="{{ $appointments->where('status', 'rejected')->count() }}"
+                    data-speed="2000"
+                    data-fresh-interval="700">
+                    {{ $appointments->where('status', 'rejected')->count() }}
+                    <i class="zmdi zmdi-close-circle text-danger float-right"></i>
+                </h3>
+                <p class="text-muted">Rejected Appointments</p>
+                <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;"></div>
+                </div>
+                <small>Declined requests</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancelled Appointments -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card">
+            <div class="body">
+                <h3 class="number count-to m-b-0"
+                    data-from="0"
+                    data-to="{{ $appointments->where('status', 'cancelled')->count() }}"
+                    data-speed="2000"
+                    data-fresh-interval="700">
+                    {{ $appointments->where('status', 'cancelled')->count() }}
+                    <i class="zmdi zmdi-alert-circle text-warning float-right"></i>
+                </h3>
+                <p class="text-muted">Cancelled Appointments</p>
+                <div class="progress">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 100%;"></div>
+                </div>
+                <small>Cancelled by patient or doctor</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medical Records -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card">
+            <div class="body">
+                <h3 class="number count-to m-b-0"
+                    data-from="0"
+                    data-to="{{ $medical_records->count() }}"
+                    data-speed="2000"
+                    data-fresh-interval="700">
+                    {{ $medical_records->count() }}
+                    <i class="zmdi zmdi-file-text text-info float-right"></i>
+                </h3>
+                <p class="text-muted">Medical Records</p>
+                <div class="progress">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 100%;"></div>
+                </div>
+                <small>All records stored in the system</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <div class="row clearfix">
+    <div class="col-lg-6 col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2><strong>{{ ucfirst(auth()->user()->role) }}</strong> Timeline</h2>
+                <ul class="header-dropdown">
+                    <li class="remove">
+                        <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="body">
+                <div class="new_timeline">
                     <div class="header">
-                        <h2><strong>Dr.</strong> Timeline</h2>
-                        <ul class="header-dropdown">
-                            <li class="remove">
-                                <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="body">
-                        <div class="new_timeline">
-                            <div class="header">
-                                <div class="color-overlay">
-                                    <div class="day-number">8</div>
-                                    <div class="date-right">
-                                        <div class="day-name">Monday</div>
-                                        <div class="month">February 2018</div>
-                                    </div>
-                                </div>
+                        <div class="color-overlay">
+                            <div class="day-number">{{ now()->format('d') }}</div>
+                            <div class="date-right">
+                                <div class="day-name">{{ now()->format('l') }}</div>
+                                <div class="month">{{ now()->format('F Y') }}</div>
                             </div>
-                            <ul>
-                                <li>
-                                    <div class="bullet pink"></div>
-                                    <div class="time">5pm</div>
-                                    <div class="desc">
-                                        <h3>New Icon</h3>
-                                        <h4>Mobile App</h4>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="bullet green"></div>
-                                    <div class="time">3 - 4pm</div>
-                                    <div class="desc">
-                                        <h3>Design Stand Up</h3>
-                                        <h4>Hangouts</h4>
-                                        <ul class="list-unstyled team-info margin-0 p-t-5">
-                                            <li><img src="http://via.placeholder.com/35x35" alt="Avatar"></li>
-                                            <li><img src="http://via.placeholder.com/35x35" alt="Avatar"></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="bullet orange"></div>
-                                    <div class="time">12pm</div>
-                                    <div class="desc">
-                                        <h3>Lunch Break</h3>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="bullet green"></div>
-                                    <div class="time">9 - 11am</div>
-                                    <div class="desc">
-                                        <h3>Finish Home Screen</h3>
-                                        <h4>Web App</h4>
-                                    </div>
-                                </li>
-                            </ul>
                         </div>
                     </div>
+                    <ul>
+                        @if(auth()->user()->role === 'doctor')
+                            @foreach($appointments->take(5) as $appt)
+                                <li>
+                                    <div class="bullet {{ $appt->status == 'approved' ? 'green' : ($appt->status == 'pending' ? 'orange' : 'pink') }}"></div>
+                                    <div class="time">{{ \Carbon\Carbon::parse($appt->time)->format('h:i A') }}</div>
+                                    <div class="desc">
+                                        <h3>{{ ucfirst($appt->status) }} Appointment</h3>
+                                        <h4>Patient: {{ $appt->patient->fname }} {{ $appt->patient->lname }}</h4>
+                                    </div>
+                                </li>
+                            @endforeach
+                        @elseif(auth()->user()->role === 'patient')
+                            @foreach($appointments->take(5) as $appt)
+                                <li>
+                                    <div class="bullet {{ $appt->status == 'approved' ? 'green' : ($appt->status == 'pending' ? 'orange' : 'pink') }}"></div>
+                                    <div class="time">{{ \Carbon\Carbon::parse($appt->time)->format('h:i A') }}</div>
+                                    <div class="desc">
+                                        <h3>{{ ucfirst($appt->status) }} Appointment</h3>
+                                        <h4>Doctor: Dr. {{ $appt->doctor->fname }} {{ $appt->doctor->lname }}</h4>
+                                    </div>
+                                </li>
+                            @endforeach
+                        @elseif(auth()->user()->role === 'admin')
+                            <li>
+                                <div class="bullet green"></div>
+                                <div class="time">{{ now()->subMinutes(10)->format('h:i A') }}</div>
+                                <div class="desc">
+                                    <h3>{{ $appointments->count() }} Total Appointments</h3>
+                                    <h4>System Overview</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="bullet blue"></div>
+                                <div class="time">{{ now()->subHours(1)->format('h:i A') }}</div>
+                                <div class="desc">
+                                    <h3>{{ $medical_records->count() }} Medical Records</h3>
+                                    <h4>Data in System</h4>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="bullet orange"></div>
+                                <div class="time">{{ now()->subHours(2)->format('h:i A') }}</div>
+                                <div class="desc">
+                                    <h3>{{ \App\Models\User::count() }} Users Registered</h3>
+                                    <h4>Doctors | Patients | Admins</h4>
+                                </div>
+                            </li>
+                        @endif
+                    </ul>
                 </div>
             </div>
         </div>
+    </div>
+</div>
         <div class="row clearfix">
             <div class="col-lg-4 col-md-12">
                 <div class="card">

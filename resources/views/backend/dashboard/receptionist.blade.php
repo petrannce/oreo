@@ -4,260 +4,142 @@
 
 <section class="content home">
     <div class="block-header">
-        <div class="row">
-            <div class="col-lg-5 col-md-5 col-sm-12">
-                <h2>Dashboard
-                <small>Welcome to Oreo</small>
-                </h2>
-            </div>  
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <h2>Reception Dashboard</h2>
+                <small class="text-muted">Welcome back, {{ Auth::user()->fname ?? 'Receptionist' }}</small>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 text-right">
+                <a href="{{ route('appointments.create') }}" class="btn btn-primary btn-sm"><i class="zmdi zmdi-plus"></i> New Appointment</a>
+                <a href="{{ route('users.create') }}" class="btn btn-success btn-sm"><i class="zmdi zmdi-accounts"></i> Register Patient</a>
+            </div>
         </div>
     </div>
+
     <div class="container-fluid">
+        <!-- Quick Stats -->
         <div class="row clearfix">
-            <div class="col-lg-4 col-md-6">
-                <div class="card">
+            <div class="col-lg-3 col-md-6">
+                <div class="card top_counter">
                     <div class="body">
-                        <h3 class="number count-to m-b-0" data-from="0" data-to="{{ $appointments->count() }}" data-speed="2500" data-fresh-interval="700">{{ $appointments->count() }} <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                        <p class="text-muted">Appointments</p>
-                        <div class="progress">
-                            <div class="progress-bar l-blush" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
+                        <div class="icon bg-info"><i class="zmdi zmdi-calendar"></i></div>
+                        <div class="content">
+                            <div class="text">Today’s Appointments</div>
+                            <h5 class="number">{{ $appointments->where('date', today())->count() }}</h5>
                         </div>
-                        <small>Change 15%</small>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card">
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card top_counter">
                     <div class="body">
-                        <h3 class="number count-to m-b-0" data-from="0" data-to="{{ $appointments->where('status', 'pending')->count() }}" data-speed="2500" data-fresh-interval="1000">{{ $appointments->where('status', 'pending')->count() }} <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                        <p class="text-muted">Pending Appointments</p>
-                        <div class="progress">
-                            <div class="progress-bar l-green" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
+                        <div class="icon bg-warning"><i class="zmdi zmdi-time"></i></div>
+                        <div class="content">
+                            <div class="text">Pending Check-ins</div>
+                            <h5 class="number">{{ $appointments->where('status','pending')->count() }}</h5>
                         </div>
-                        <small>Change 23%</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card top_counter">
+                    <div class="body">
+                        <div class="icon bg-success"><i class="zmdi zmdi-accounts"></i></div>
+                        <div class="content">
+                            <div class="text">New Patients</div>
+                            <h5 class="number">{{ $patients->where('created_at','>=',now()->startOfMonth())->count() }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card top_counter">
+                    <div class="body">
+                        <div class="icon bg-danger"><i class="zmdi zmdi-hospital"></i></div>
+                        <div class="content">
+                            <div class="text">Available Doctors</div>
+                            <h5 class="number">{{ $doctors->where('status','available')->count() }}</h5>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row clearfix">
-            <div class="col-lg-12 col-md-12">
-                <div class="card">
-                    <div class="body">
-                        <div class="sparkline m-b-10" data-type="bar" data-width="97%" data-height="38px" data-bar-Width="2" data-bar-Spacing="6" data-bar-Color="#555555">2,8,5,3,1,7,9,5,6,4,2,3,1,2,8,5,3,1,7,9,5,6,4,2,3,1</div>
-                        <h6 class="text-center m-b-15">Total New Patient</h6>
-                        <div id="world-map-markers2" style="height:125px;"></div>
-                        <div class="table-responsive m-t-20">
-                            <table class="table table-striped m-b-0">
-                                <thead>
-                                    <tr>
-                                        <th>City</th>                                        
-                                        <th>Count</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($patients as $patient)
-                                    <tr>
-                                        <td>{{$patient->user->city ?? 'No City'}}</td>
-                                        <td>{{$patient->user->gender ?? 'No Gender'}}<i class="zmdi zmdi-trending-up m-l-10"></i></td>
-                                    </tr> 
-                                    @endforeach                                 
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>         
+
+        <!-- Appointments Timeline -->
         <div class="row clearfix">
             <div class="col-lg-8 col-md-12">
-                <div class="row clearfix">
-                    <div class="col-lg-4 col-md-8">
-                        <div class="card top_counter">
-                            <div class="body">
-                                <div class="icon xl-slategray"><i class="zmdi zmdi-account"></i> </div>
-                                <div class="content">
-                                    <div class="text">New Patient</div>
-                                    <h5 class="number">{{ $patients->count() }}</h5>
-                                </div>
-                            </div>                    
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-12">
-                        <div class="card top_counter">
-                            <div class="body">
-                                <div class="icon xl-slategray"><i class="zmdi zmdi-account"></i> </div>
-                                <div class="content">
-                                    <div class="text">Doctors</div>
-                                    <h5 class="number">{{ $doctors->count() }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card visitors-map">
+                <div class="card">
                     <div class="header">
-                        <h2><strong>Our</strong> Location <small>Contrary to popular belief, Lorem Ipsum is not simply random text</small></h2>
-                        <ul class="header-dropdown">
-                            <li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="zmdi zmdi-more"></i> </a>
-                                <ul class="dropdown-menu dropdown-menu-right slideUp">
-                                    <li><a href="javascript:void(0);">Action</a></li>
-                                    <li><a href="javascript:void(0);">Another action</a></li>
-                                    <li><a href="javascript:void(0);">Something else</a></li>
-                                </ul>
+                        <h2><strong>Today’s Appointments</strong> Timeline</h2>
+                    </div>
+                    <div class="body">
+                        <ul class="timeline list-unstyled">
+                            @forelse($appointments->where('date', today())->sortBy('time') as $appointment)
+                            <li>
+                                <span class="time">{{ \Carbon\Carbon::parse($appointment->time)->format('h:i A') }}</span>
+                                <div class="content">
+                                    <h4>{{ $appointment->patient->user->fname ?? 'Unknown' }} {{ $appointment->patient->user->lname ?? '' }}</h4>
+                                    <p>Doctor: <strong>{{ $appointment->doctor->user->fname ?? 'TBD' }}</strong></p>
+                                    <span class="badge badge-{{ $appointment->status == 'pending' ? 'warning' : 'success' }}">
+                                        {{ ucfirst($appointment->status) }}
+                                    </span>
+                                </div>
                             </li>
-                            <li class="remove">
-                                <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
-                            </li>
+                            @empty
+                            <p class="text-muted">No appointments scheduled today.</p>
+                            @endforelse
                         </ul>
                     </div>
-                    <div class="body">
-                        <div class="row">
-                            <div class="col-lg-6 col-md-12">
-                                <div id="world-map-markers" style="height:280px;"></div>
-                            </div>
-                            <div class="col-lg-6 col-md-12">
-                                <div class="body">
-                                    <ul class="row location_list list-unstyled">
-                                        <li class="col-lg-4 col-md-4 col-6">
-                                            <div class="body xl-turquoise">
-                                                <i class="zmdi zmdi-pin"></i>
-                                                <h4 class="number count-to" data-from="0" data-to="453" data-speed="2500" data-fresh-interval="700">453</h4>
-                                                <span>America</span>
-                                            </div>
-                                        </li>
-                                        <li class="col-lg-4 col-md-4 col-6">
-                                            <div class="body xl-khaki">
-                                                <i class="zmdi zmdi-pin"></i>
-                                                <h4 class="number count-to" data-from="0" data-to="124" data-speed="2500" data-fresh-interval="700">124</h4>
-                                                <span>Australia</span>
-                                            </div>
-                                        </li>
-                                        <li class="col-lg-4 col-md-4 col-6">
-                                            <div class="body xl-parpl">
-                                                <i class="zmdi zmdi-pin"></i>
-                                                <h4 class="number count-to" data-from="0" data-to="215" data-speed="2500" data-fresh-interval="700">215</h4>
-                                                <span>Canada</span>
-                                            </div>
-                                        </li>
-                                        <li class="col-lg-4 col-md-4 col-6">
-                                            <div class="body xl-salmon">
-                                                <i class="zmdi zmdi-pin"></i>
-                                                <h4 class="number count-to" data-from="0" data-to="155" data-speed="2500" data-fresh-interval="700">155</h4>
-                                                <span>India</span>
-                                            </div>
-                                        </li>
-                                        <li class="col-lg-4 col-md-4 col-6">
-                                            <div class="body xl-blue">
-                                                <i class="zmdi zmdi-pin"></i>
-                                                <h4 class="number count-to" data-from="0" data-to="78" data-speed="2500" data-fresh-interval="700">78</h4>
-                                                <span>UK</span>
-                                            </div>
-                                        </li>
-                                        <li class="col-lg-4 col-md-4 col-6">
-                                            <div class="body xl-slategray">
-                                                <i class="zmdi zmdi-pin"></i>
-                                                <h4 class="number count-to" data-from="0" data-to="55" data-speed="2500" data-fresh-interval="700">55</h4>
-                                                <span>Other</span>
-                                            </div>
-                                        </li>                      
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>                
-            </div>           
-        </div>        
+                </div>
+            </div>
+
+        <!-- Patient List -->
         <div class="row clearfix">
-            <div class="col-lg-4 col-md-12">
-                <div class="card">
-                    <div class="header">
-                        <h2><strong>Heart</strong> Surgeries <small>18% High then last month</small></h2>
-                    </div>
-                    <div class="body">
-                        <div class="sparkline" data-type="line" data-spot-Radius="1" data-highlight-Spot-Color="rgb(233, 30, 99)" data-highlight-Line-Color="#222"
-                            data-min-Spot-Color="rgb(233, 30, 99)" data-max-Spot-Color="rgb(96, 125, 139)" data-spot-Color="rgb(96, 125, 139, 0.7)"
-                            data-offset="90" data-width="100%" data-height="50px" data-line-Width="1" data-line-Color="rgb(96, 125, 139, 0.7)"
-                            data-fill-Color="rgba(96, 125, 139, 0.3)"> 6,4,7,8,4,3,2,2,5,6,7,4,1,5,7,9,9,8,7,6 </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-12">
-                <div class="card">
-                    <div class="header">
-                        <h2><strong>Medical</strong> Treatment <small>18% High then last month</small></h2>
-                    </div>
-                    <div class="body">
-                        <div class="sparkline" data-type="line" data-spot-Radius="1" data-highlight-Spot-Color="rgb(233, 30, 99)" data-highlight-Line-Color="#222"
-                            data-min-Spot-Color="rgb(233, 30, 99)" data-max-Spot-Color="rgb(120, 184, 62)" data-spot-Color="rgb(120, 184, 62, 0.7)"
-                            data-offset="90" data-width="100%" data-height="50px" data-line-Width="1" data-line-Color="rgb(120, 184, 62, 0.7)"
-                            data-fill-Color="rgba(120, 184, 62, 0.3)"> 6,4,7,6,9,3,3,5,7,4,2,3,7,6 </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-12">
-                <div class="card">
-                    <div class="header">
-                        <h2><strong>New</strong> Patient <small >18% High then last month</small></h2>                        
-                    </div>
-                    <div class="body">                        
-                        <div class="sparkline" data-type="bar" data-width="97%" data-height="50px" data-bar-Width="4" data-bar-Spacing="10" data-bar-Color="#00ced1">2,8,5,3,1,7,9,5,6,4,2,3,1</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row clearfix">
-            <div class="col-lg-8 col-md-12">
+            <div class="col-lg-12">
                 <div class="card patient_list">
                     <div class="header">
-                        <h2><strong>New</strong> Patient List</h2>                        
-                        <ul class="header-dropdown">
-                            <li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="zmdi zmdi-more"></i> </a>
-                                <ul class="dropdown-menu dropdown-menu-right slideUp">
-                                    <li><a href="javascript:void(0);">2017 Year</a></li>
-                                    <li><a href="javascript:void(0);">2016 Year</a></li>
-                                    <li><a href="javascript:void(0);">2015 Year</a></li>
-                                </ul>
-                            </li>
-                            <li class="remove">
-                                <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
-                            </li>
-                        </ul>
+                        <h2><strong>Recently Registered Patients</strong></h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-striped m-b-0">
+                            <table class="table table-hover table-striped m-b-0">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Full Name</th>
                                         <th>Patient ID</th>
                                         <th>Email</th>
-                                        <th>Address</th>
+                                        <th>Phone</th>
+                                        <th>Registered On</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-
-                                    @foreach ($patients as $patient)
-
+                                    @foreach($patients->sortByDesc('created_at')->take(5) as $patient)
                                     <tr>
-                                        <td>{{$loop->iteration}}</td>
-                                        <td>{{$patient->user->fname}} {{$patient->user->lname}}</td>
-                                        <td>{{$patient->id}}</td>
-                                        <td>{{$patient->user->email ?? 'No Email'}}</td>
-                                        <td>{{$patient->user->address ?? 'No Address'}} </td>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $patient->user->fname ?? '' }} {{ $patient->user->lname ?? '' }}</td>
+                                        <td>{{ $patient->id }}</td>
+                                        <td>{{ $patient->user->email ?? 'No Email' }}</td>
+                                        <td>{{ $patient->user->phone ?? 'No Phone' }}</td>
+                                        <td>{{ $patient->created_at->format('d M Y') }}</td>
                                     </tr>
-                                    
                                     @endforeach
-                                   
+                                    @if($patients->isEmpty())
+                                    <tr><td colspan="6" class="text-center text-muted">No patients registered yet.</td></tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
+                        <a href="{{ route('patients') }}" class="btn btn-sm btn-outline-primary m-t-10 float-right">View All Patients</a>
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
     </div>
 </section>
+
 
 @endsection

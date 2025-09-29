@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use App\Models\Appointment;
 use App\Models\Medical;
+use App\Models\Patient;
+use App\Models\Doctor;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,59 +22,74 @@ class RoleBasedRecords
         $user = auth()->user();
 
         view()->composer('*', function ($view) use ($user) {
-    if (!$user) {
-        // Guest → no data
-        $view->with('medical_records', collect());
-        $view->with('appointments', collect());
-        return;
-    }
+            if (!$user) {
+                // Guest → no data
+                $view->with('medical_records', collect());
+                $view->with('appointments', collect());
+                return;
+            }
 
-    // --------------------------
-    // PATIENT
-    // --------------------------
-    if ($user->role === 'patient') {
-        $view->with('medical_records', Medical::with('doctor') // assuming you add doctor_id later
-            ->where('patient_id', $user->id)
-            ->latest()
-            ->get());
+            // --------------------------
+            // PATIENT
+            // --------------------------
+            if ($user->role === 'patient') {
+                $view->with('medical_records', Medical::with('doctor')
+                    ->where('patient_id', $user->id)
+                    ->latest()
+                    ->get());
 
-        $view->with('appointments', Appointment::with('doctor')
-            ->where('patient_id', $user->id)
-            ->latest()
-            ->get());
-    }
+                $view->with('appointments', Appointment::with('doctor')
+                    ->where('patient_id', $user->id)
+                    ->latest()
+                    ->get());
+            }
 
-    // --------------------------
-    // DOCTOR
-    // --------------------------
-    elseif ($user->role === 'doctor') {
-        $view->with('medical_records', Medical::with('patient')
-            ->where('doctor_id', $user->id) // you’ll need doctor_id column in medical_records
-            ->latest()
-            ->get());
+            // --------------------------
+            // DOCTOR
+            // --------------------------
+            elseif ($user->role === 'doctor') {
+                $view->with('medical_records', Medical::with('patient')
+                    ->where('doctor_id', $user->id)
+                    ->latest()
+                    ->get());
 
-        $view->with('appointments', Appointment::with('patient')
-            ->where('doctor_id', $user->id)
-            ->latest()
-            ->get());
-    }
+                $view->with('appointments', Appointment::with('patient')
+                    ->where('doctor_id', $user->id)
+                    ->latest()
+                    ->get());
+            }
 
-    // --------------------------
-    // ADMIN
-    // --------------------------
-    elseif ($user->role === 'admin') {
-        $view->with('medical_records', Medical::with(['patient', 'doctor'])->latest()->get());
-        $view->with('appointments', Appointment::with(['patient', 'doctor'])->latest()->get());
-    }
+            // --------------------------
+            // RECEPTIONIST
+            // --------------------------
+            elseif ($user->role === 'receptionist') {
+                // Receptionists can see all appointments
+                $view->with('appointments', Appointment::with(['patient', 'doctor'])
+                    ->latest()
+                    ->get());
 
-    // --------------------------
-    // FALLBACK
-    // --------------------------
-    else {
-        $view->with('medical_records', collect());
-        $view->with('appointments', collect());
-    }
-});
+                // Usually, receptionists don’t access full medical records.
+                // But if needed, you can include limited info.
+                $view->with('medical_records', collect());
+                
+            }
+
+            // --------------------------
+            // ADMIN
+            // --------------------------
+            elseif ($user->role === 'admin') {
+                $view->with('medical_records', Medical::with(['patient', 'doctor'])->latest()->get());
+                $view->with('appointments', Appointment::with(['patient', 'doctor'])->latest()->get());
+            }
+
+            // --------------------------
+            // FALLBACK
+            // --------------------------
+            else {
+                $view->with('medical_records', collect());
+                $view->with('appointments', collect());
+            }
+        });
 
         return $next($request);
     }

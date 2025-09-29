@@ -20,7 +20,7 @@ class DoctorController extends Controller
     public function create()
     {
         $users = User::where('role', 'doctor')
-        ->whereDoesntHave('receptionist')
+        ->whereDoesntHave('doctor')
         ->get();
         $departments = DB::table('departments')->get();
         return view('backend.doctors.create', compact('users', 'departments'));

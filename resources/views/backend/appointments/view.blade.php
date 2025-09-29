@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" value="{{ $appointment->service }}"
+                                        <input type="text" class="form-control" value="{{ $appointment->service->name ?? '' }}"
                                             placeholder="Enter Your Service" readonly>
                                     </div>
                                 </div>
@@ -98,8 +98,6 @@
                             </ul>
                         </div>
                         <div class="body">
-                            <form action="{{ route('medicals.store') }}" method="POST">
-                                @csrf
 
                                 <div class="row clearfix">
                                     <div class="col-sm-6">
@@ -110,8 +108,9 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input type="date" class="form-control" name="record_date"
-                                                placeholder="Record Date" min="{{ date('Y-m-d') }}">
+                                            <input type="text" class="form-control" name="record_date"
+                                            value="{{ $medical_record->record_date ?? date('Y-m-d') }}"
+                                                placeholder="Record Date" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -119,24 +118,20 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <textarea rows="4" class="form-control no-resize" name="diagnosis"
-                                                placeholder="Diagnosis"></textarea>
+                                                placeholder="Diagnosis" readonly>{{ $medical_record->diagnosis ?? 'No Diagnosis' }}</textarea>
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <textarea rows="4" class="form-control no-resize" name="prescription"
-                                                placeholder="Prescription"></textarea>
+                                                placeholder="Prescription" readonly>{{ $medical_record->prescription ?? 'No Prescription' }}</textarea>
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <textarea rows="4" class="form-control no-resize" name="notes"
-                                                placeholder="Notes"></textarea>
+                                                placeholder="Notes" readonly>{{ $medical_record->notes ?? 'No Notes' }}</textarea>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-primary btn-round">Submit</button>
-                                        <button type="submit" class="btn btn-default btn-round btn-simple">Cancel</button>
                                     </div>
                                 </div>
                             </form>
