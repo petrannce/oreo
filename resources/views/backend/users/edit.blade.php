@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input type="text" name="email" value="{{$user->email}}" class="form-control" placeholder="Enter Your Email">
+                                            <input type="email" name="email" value="{{$user->email}}" class="form-control" placeholder="Enter Your Email">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\NurseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeController;
@@ -61,6 +62,7 @@ Route::middleware(['auth', 'role.records'])->controller(HomeController::class)->
     Route::get('/dashboard/doctors', 'doctors')->name('dashboard.doctors');
     Route::get('/dashboard/receptionists', 'receptionists')->name('dashboard.receptionists');
     Route::get('/dashboard/patients', 'patients')->name('dashboard.patients');
+    Route::get('/dashboard/nurses', 'nurses')->name('dashboard.nurses');
     Route::get('/subscribers', 'subscribers')->name('subscribers');
     Route::delete('/subscribers/{id}', 'subscribersDestroy')->name('subscribers.destroy');
 });
@@ -117,6 +119,16 @@ Route::middleware(['auth', 'role.records'])->controller(DoctorController::class)
     Route::delete('/doctors/{id}', 'destroy')->name('doctors.destroy');
     Route::get('/doctors/{id}/profile', 'profile')->name('doctors.profile');
     Route::put('/doctors/{id}/profile', 'updateProfile')->name('updateProfile');
+});
+
+//nurses
+Route::middleware(['auth', 'role.records'])->controller(NurseController::class)->prefix('admin')->group(function () {
+    Route::get('/nurses', 'index')->name('nurses');
+    Route::get('/nurses/create', 'create')->name('nurses.create');
+    Route::post('/nurses', 'store')->name('nurses.store');
+    Route::get('/nurses/{id}/edit', 'edit')->name('nurses.edit');
+    Route::put('/nurses/{id}', 'update')->name('nurses.update');
+    Route::delete('/nurses/{id}', 'destroy')->name('nurses.destroy');
 });
 
 //medical records
@@ -200,6 +212,7 @@ Route::controller(UserController::class)->prefix('admin')->group(function () {
     Route::post('/users', 'store')->name('users.store');
     Route::get('/users/{id}/edit', 'edit')->name('users.edit');
     Route::put('/users/{id}', 'update')->name('users.update');
+    Route::get('/users/{id}', 'show')->name('users.show');
     Route::delete('/users/{id}', 'destroy')->name('users.destroy');
     Route::get('/user/update-role/{id}/{role}', 'updateRole')->name('user.updateRole');
 });

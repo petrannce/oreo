@@ -11,8 +11,19 @@
                     @if(Auth::check())
                         <li>
                             <div class="user-info">
-                                <div class="image"><a href="profile.html"><img
-                                            src="{{asset('../assets/images/profile_av.jpg')}}" alt="User"></a></div>
+                                <div class="image"><a href="{{route('users.show', Auth::user()->id)}}">
+                                    @if (Auth::user()->role == 'doctor')
+                                         <img src="{{asset('../assets/images/profile_av.jpg')}}" alt="Doctor"></a>
+                                    @elseif (Auth::user()->role == 'patient')
+                                         <img src="{{asset('../assets/images/patient.webp')}}" alt="Patient"></a>
+                                    @elseif (Auth::user()->role == 'receptionist')
+                                         <img src="{{asset('../assets/images/receptionist.png')}}" alt="Receptionist"></a>
+                                    @elseif (Auth::user()->role == 'admin')
+                                         <img src="{{asset('../assets/images/admin.webp')}}" alt="Admin"></a>
+                                    @else
+                                         <img src="{{asset('../assets/images/login.jpg')}}" alt="User"></a>
+                                    @endif
+                                </div>
                                 <div class="detail">
                                     <h4>{{Auth::user()->fname}} {{Auth::user()->lname}}</h4>
                                     <small>{{Auth::user()->username}}</small> | <small>{{Auth::user()->role}}</small>
@@ -79,23 +90,6 @@
                     </li>
                     @endrole
 
-                    @role('admin')
-                    <li><a href="javascript:void(0);" class="menu-toggle"><i
-                                class="zmdi zmdi-account-add"></i><span>Doctors</span> </a>
-                        <ul class="ml-menu">
-                            <li class="{{ Request::route()->getName() == 'doctors.index' ? 'active' : 'inactive' }}">
-                                <a href="{{route('doctors.index')}}">All Doctors</a>
-                            </li>
-                            <li class="{{ Request::route()->getName() == 'doctors.create' ? 'active' : 'inactive' }}">
-                                <a href="{{route('doctors.create')}}">Add Doctor</a>
-                            </li>
-                            <li class="{{ Request::route()->getName() == 'doctors.profile' ? 'active' : 'inactive' }}">
-                                <a href="{{route('doctors.profile', Auth::user()->id)}}">Doctor Profile</a>
-                            </li>
-                        </ul>
-                    </li>
-                    @endrole
-
                     @role('admin|doctor')
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-add"></i><span>Medical Records</span> </a>
@@ -105,40 +99,6 @@
                             </li>
                             <li class="{{ Request::route()->getName() == 'doctors.create' ? 'active' : 'inactive' }}">
                                 <a href="{{route('medicals.create')}}">Add Record</a>
-                            </li>
-                        </ul>
-                    </li>
-                    @endrole
-
-                    @role('admin|receptionist')
-                    <li><a href="javascript:void(0);" class="menu-toggle"><i
-                                class="zmdi zmdi-account-o"></i><span>Patients</span> </a>
-                        <ul class="ml-menu">
-                            <li class="{{ Request::route()->getName() == 'patients' ? 'active' : 'inactive' }}">
-                                <a href="{{route('patients')}}">All Patients</a>
-                            </li>
-                            <li class="{{ Request::route()->getName() == 'patient.create' ? 'active' : 'inactive' }}">
-                                <a href="{{route('patient.create')}}">Add Patient</a>
-                            </li>
-                            @role('admin')
-                            <li class="{{ Request::route()->getName() == 'patient-profile' ? 'active' : 'inactive' }}">
-                                <a href="{{route('patients.show', Auth::user()->id) }}">Patient Profile</a>
-                            </li>
-                            @endrole
-                        </ul>
-                    </li>
-                    @endrole
-
-                    @role('admin')
-                    <li><a href="javascript:void(0);" class="menu-toggle"><i
-                                class="zmdi zmdi-account-o"></i><span>Receptionists</span> </a>
-                        <ul class="ml-menu">
-                            <li class="{{ Request::route()->getName() == 'receptionists' ? 'active' : 'inactive' }}">
-                                <a href="{{route('receptionists')}}">All Receptionists</a>
-                            </li>
-                            <li
-                                class="{{ Request::route()->getName() == 'receptionist.create' ? 'active' : 'inactive' }}">
-                                <a href="{{route('receptionists.create')}}">Add Receptionist</a>
                             </li>
                         </ul>
                     </li>
@@ -170,6 +130,107 @@
                                 <a href="{{route('resources.create')}}">Add Resource</a>
                             </li>
                         </ul>
+                    </li>
+                    @endrole
+
+                    <li class="header">Users</li>
+                    @role('admin')
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i
+                                class="zmdi zmdi-account-o"></i><span>Nurses</span> </a>
+                        <ul class="ml-menu">
+                            <li class="{{ Request::route()->getName() == 'receptionists' ? 'active' : 'inactive' }}">
+                                <a href="{{route('nurses')}}">All Nurses</a>
+                            </li>
+                            <li
+                                class="{{ Request::route()->getName() == 'receptionist.create' ? 'active' : 'inactive' }}">
+                                <a href="{{route('nurses.create')}}">Add Nurses</a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endrole
+
+                     @role('admin')
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i
+                                class="zmdi zmdi-account-add"></i><span>Doctors</span> </a>
+                        <ul class="ml-menu">
+                            <li class="{{ Request::route()->getName() == 'doctors.index' ? 'active' : 'inactive' }}">
+                                <a href="{{route('doctors.index')}}">All Doctors</a>
+                            </li>
+                            <li class="{{ Request::route()->getName() == 'doctors.create' ? 'active' : 'inactive' }}">
+                                <a href="{{route('doctors.create')}}">Add Doctor</a>
+                            </li>
+                            <li class="{{ Request::route()->getName() == 'doctors.profile' ? 'active' : 'inactive' }}">
+                                <a href="{{route('doctors.profile', Auth::user()->id)}}">Doctor Profile</a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endrole
+
+                    @role('admin|receptionist')
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i
+                                class="zmdi zmdi-account-o"></i><span>Patients</span> </a>
+                        <ul class="ml-menu">
+                            <li class="{{ Request::route()->getName() == 'patients' ? 'active' : 'inactive' }}">
+                                <a href="{{route('patients')}}">All Patients</a>
+                            </li>
+                            <li class="{{ Request::route()->getName() == 'patient.create' ? 'active' : 'inactive' }}">
+                                <a href="{{route('patient.create')}}">Add Patient</a>
+                            </li>
+                            @role('admin')
+                            <li class="{{ Request::route()->getName() == 'patient-profile' ? 'active' : 'inactive' }}">
+                                <a href="{{route('patients.show', Auth::user()->id) }}">Patient Profile</a>
+                            </li>
+                            @endrole
+                        </ul>
+                    </li>
+                    @endrole
+
+                    
+                    @role('admin')
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i
+                                class="zmdi zmdi-account-o"></i><span>Receptionists</span> </a>
+                        <ul class="ml-menu">
+                            <li class="{{ Request::route()->getName() == 'receptionists' ? 'active' : 'inactive' }}">
+                                <a href="{{route('receptionists')}}">All Receptionists</a>
+                            </li>
+                            <li
+                                class="{{ Request::route()->getName() == 'receptionist.create' ? 'active' : 'inactive' }}">
+                                <a href="{{route('receptionists.create')}}">Add Receptionist</a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endrole
+
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i
+                                class="zmdi zmdi-account-o"></i><span>Lab Technicians</span> </a>
+                        <ul class="ml-menu">
+                            <li class="{{ Request::route()->getName() == 'receptionists' ? 'active' : 'inactive' }}">
+                                <a href="{{route('receptionists')}}">Lab Technicians</a>
+                            </li>
+                            <li
+                                class="{{ Request::route()->getName() == 'receptionist.create' ? 'active' : 'inactive' }}">
+                                <a href="{{route('receptionists.create')}}">Add Lab Technician</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i
+                                class="zmdi zmdi-account-o"></i><span>Pharmacist</span> </a>
+                        <ul class="ml-menu">
+                            <li class="{{ Request::route()->getName() == 'receptionists' ? 'active' : 'inactive' }}">
+                                <a href="{{route('receptionists')}}">Pharmacist</a>
+                            </li>
+                            <li
+                                class="{{ Request::route()->getName() == 'receptionist.create' ? 'active' : 'inactive' }}">
+                                <a href="{{route('receptionists.create')}}">Add Pharmacist</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    @role('admin|receptionist')
+                    <li class="{{ Request::route()->getName() == 'users' ? 'active' : 'inactive' }}">
+                        <a href="{{route('users')}}"><i class="zmdi zmdi-home"></i><span>Users</span>
+                        </a>
                     </li>
                     @endrole
 
@@ -210,13 +271,7 @@
                         </a>
                     </li>
                     @endrole
-
-                    @role('admin|receptionist')
-                    <li class="{{ Request::route()->getName() == 'users' ? 'active' : 'inactive' }}">
-                        <a href="{{route('users')}}"><i class="zmdi zmdi-home"></i><span>Users</span>
-                        </a>
-                    </li>
-                    @endrole
+                    
                     @endrole
 
                 </ul>
