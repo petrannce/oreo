@@ -12,8 +12,24 @@ class PatientController extends Controller
 {
     public function index()
     {
-        $patients = Patient::with('user')->latest()->get();
-        return view('backend.patients.index', compact('patients'));
+        // Start query — don't call get() yet
+        $query = Patient::with(['user']);
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $patients = $query->latest()->paginate(10);
+
+        return view('backend.patients.index', [
+            'patients' => $patients,
+            'canExport' => true
+        ]);
     }
 
     public function create()

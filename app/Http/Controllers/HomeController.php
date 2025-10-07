@@ -63,6 +63,24 @@ class HomeController extends Controller
         return view('backend.dashboard.patient', compact( 'appointments', 'patients'));
     }
 
+    public function nurses()
+    {
+        $triages = DB::table('triages')->get();
+        return view('backend.dashboard.nurse', compact('triages'));
+    }
+
+    public function pharmacists()
+    {
+        $pharmacy_order_items = DB::table('pharmacy_order_items')->get(); //pharmacy_order_items
+        return view('backend.dashboard.pharmacist', compact('pharmacy_order_items'));
+    }
+
+    public function lab_technicians()
+    {
+        $lab_tests = DB::table('lab_tests')->get();
+        return view('backend.dashboard.lab_technician', compact('lab_tests'));
+    }
+
     public function subscribers()
     {
         $subscribers = Subscriber::all();

@@ -7,89 +7,159 @@
         <div class="row">
             <div class="col-lg-7 col-md-5 col-sm-12">
                 <h2>Add User
-                    <small>Welcome to Oreo</small>
+                    <small class="text-muted">Welcome to Oreo</small>
                 </h2>
             </div>
             <div class="col-lg-5 col-md-7 col-sm-12">
                 <ul class="breadcrumb float-md-right">
-                    <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Oreo</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a></li>
                     <li class="breadcrumb-item"><a href="{{route('users')}}">Users</a></li>
-                    <li class="breadcrumb-item active">Add</li>
+                    <li class="breadcrumb-item active">Create</li>
                 </ul>
             </div>
         </div>
     </div>
+
     <div class="container-fluid">
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <form action="{{route('users.store')}}" method="POST">
+
+                <form action="{{ route('users.store') }}" method="POST" id="createUserForm">
                     @csrf
 
                     <div class="card">
                         <div class="header">
-                            <h2><strong>Add</strong> User </h2>
-                            <ul class="header-dropdown">
-                                <li class="remove">
-                                    <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
-                                </li>
-                            </ul>
+                            <h2><strong>Create</strong> User</h2>
                         </div>
-                        <div class="body">
-                            <form action="{{route('users.store')}}" method="POST">
-                                @csrf
 
-                                <div class="row clearfix">
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input type="text" name="fname" class="form-control"
-                                                placeholder="First Name">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input type="text" name="lname" class="form-control"
-                                                placeholder="Last Name">
-                                        </div>
+                        <div class="body">
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input type="text" name="fname" class="form-control" value="{{ old('fname') }}" placeholder="First Name" required>
+                                        @error('fname') <small class="text-danger">{{ $message }}</small> @enderror
                                     </div>
                                 </div>
-                                <div class="row clearfix">
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input type="text" name="username" class="form-control"
-                                                placeholder=" Enter Your Username">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input type="email" name="email" class="form-control" placeholder="Enter Your Email">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <span>The default password is 12345678</span>
-                                        <div class="form-group">
-                                            <input type="password" name="password" class="form-control"
-                                                placeholder="Password" minlength="8" value="12345678">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input type="password" name="confirm_password" class="form-control"
-                                                placeholder="Confirm Password" minlength="8" value="12345678">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-primary btn-round">Submit</button>
-                                        <button type="submit"
-                                            class="btn btn-default btn-round btn-simple">Cancel</button>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input type="text" name="lname" class="form-control" value="{{ old('lname') }}" placeholder="Last Name" required>
+                                        @error('lname') <small class="text-danger">{{ $message }}</small> @enderror
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <div class="form-group position-relative">
+                                        <input type="text" id="username" name="username" class="form-control" value="{{ old('username') }}" placeholder="Enter Username" required>
+                                        <small id="username-feedback" class="form-text"></small>
+                                        @error('username') <small class="text-danger">{{ $message }}</small> @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group position-relative">
+                                        <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="Enter Email" required>
+                                        <small id="email-feedback" class="form-text"></small>
+                                        @error('email') <small class="text-danger">{{ $message }}</small> @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <span class="text-muted">Default password is 12345678</span>
+                                        <input type="password" name="password" class="form-control" value="12345678" minlength="8" required>
+                                        @error('password') <small class="text-danger">{{ $message }}</small> @enderror
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input type="password" name="confirm_password" class="form-control" value="12345678" minlength="8" required>
+                                        @error('confirm_password') <small class="text-danger">{{ $message }}</small> @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <button type="submit" id="submitBtn" class="btn btn-primary btn-round">Submit</button>
+                                <a href="{{ route('users') }}" class="btn btn-default btn-round btn-simple">Cancel</a>
+                            </div>
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
 </section>
 
 @endsection
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(function() {
+    const usernameField = $('#username');
+    const emailField = $('#email');
+    const submitBtn = $('#submitBtn');
+    const usernameFeedback = $('#username-feedback');
+    const emailFeedback = $('#email-feedback');
+
+    let usernameValid = true;
+    let emailValid = true;
+
+    // Function to control the submit button
+    function toggleSubmit() {
+        if (usernameValid && emailValid) {
+            submitBtn.prop('disabled', false);
+        } else {
+            submitBtn.prop('disabled', true);
+        }
+    }
+
+    // Check username availability
+    usernameField.on('blur keyup', function() {
+        const username = $(this).val().trim();
+        if (username.length > 0) {
+            $.get('{{ route('check.username') }}', { username: username }, function(data) {
+                if (data.exists) {
+                    usernameFeedback.text('This username is already taken.').removeClass('text-success').addClass('text-danger');
+                    usernameValid = false;
+                } else {
+                    usernameFeedback.text('Username is available.').removeClass('text-danger').addClass('text-success');
+                    usernameValid = true;
+                }
+                toggleSubmit();
+            });
+        } else {
+            usernameFeedback.text('');
+            usernameValid = true;
+            toggleSubmit();
+        }
+    });
+
+    // Check email availability
+    emailField.on('blur keyup', function() {
+        const email = $(this).val().trim();
+        if (email.length > 0) {
+            $.get('{{ route('check.email') }}', { email: email }, function(data) {
+                if (data.exists) {
+                    emailFeedback.text('This email is already registered.').removeClass('text-success').addClass('text-danger');
+                    emailValid = false;
+                } else {
+                    emailFeedback.text('Email is available.').removeClass('text-danger').addClass('text-success');
+                    emailValid = true;
+                }
+                toggleSubmit();
+            });
+        } else {
+            emailFeedback.text('');
+            emailValid = true;
+            toggleSubmit();
+        }
+    });
+});
+</script>
+@endpush

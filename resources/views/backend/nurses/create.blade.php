@@ -12,7 +12,8 @@
                 </div>
                 <div class="col-lg-5 col-md-7 col-sm-12">
                     <ul class="breadcrumb float-md-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard.nurses') }}"><i class="zmdi zmdi-home"></i> Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard.nurses') }}"><i class="zmdi zmdi-home"></i>
+                                Dashboard</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('nurses') }}">Nurses</a></li>
                         <li class="breadcrumb-item active">Add</li>
                     </ul>
@@ -40,7 +41,7 @@
                                 <div class="row clearfix">
 
                                     {{-- Select User --}}
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for="user_id" class="form-label">Select User</label>
                                             <select class="form-control show-tick" name="user_id" id="user_id" required>
@@ -54,8 +55,22 @@
                                         </div>
                                     </div>
 
+                                    {{-- Department --}}
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="department" class="form-label">Department</label>
+                                            <select class="form-control show-tick" name="department" id="department"
+                                                required>
+                                                <option value="" selected disabled>-- Select Department --</option>
+                                                @foreach($departments as $department)
+                                                    <option value="{{ $department->name }}">{{ $department->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
                                     {{-- Employment Type --}}
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for="employment_type" class="form-label">Employment Type</label>
                                             <select class="form-control show-tick" name="employment_type" required>
@@ -71,56 +86,54 @@
                                 </div>
 
                                 <div class="row clearfix">
-                                    {{-- Department --}}
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="department" class="form-label">Department</label>
-                                            <select class="form-control show-tick" name="department" id="department" required>
-                                                <option value="" selected disabled>-- Select Department --</option>
-                                                @foreach($departments as $department)
-                                                    <option value="{{ $department->name }}">{{ $department->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    {{-- Speciality --}}
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="speciality" class="form-label">Specialization</label>
-                                            <input type="text" name="speciality" class="form-control" placeholder="e.g. Pediatrics, ICU" required>
-                                        </div>
-                                    </div>
 
                                     {{-- License --}}
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for="license_number" class="form-label">Nursing License Number</label>
-                                            <input type="text" name="license_number" class="form-control" placeholder="e.g. NRN12345" required>
+                                            <input type="text" name="license_number" class="form-control"
+                                                placeholder="e.g. NRN12345" required>
+                                        </div>
+                                    </div>
+
+
+                                    {{-- Employee Code --}}
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="speciality" class="form-label">Employee Code</label>
+                                            <input type="text" name="employee_code" class="form-control"
+                                                placeholder="Employee Code" required>
+                                        </div>
+                                    </div>
+
+                                    {{-- Hire Date --}}
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="hire_date" class="form-label">Hire Date</label>
+                                            <input type="date" name="hire_date" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
 
                                 {{-- Bio --}}
-                                <div class="row clearfix">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label for="bio" class="form-label">Bio</label>
-                                            <textarea rows="4" name="bio" class="form-control no-resize" placeholder="Brief background, training, experience..."></textarea>
-                                        </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="bio" class="form-label">Bio</label>
+                                        <textarea rows="4" name="bio" class="form-control no-resize"
+                                            placeholder="Brief background, training, experience..."></textarea>
                                     </div>
                                 </div>
+
 
                                 {{-- Submit --}}
-                                <div class="row clearfix">
-                                    <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-primary btn-round">Submit</button>
-                                        <a href="{{ route('nurses.index') }}" class="btn btn-default btn-round btn-simple">Cancel</a>
-                                    </div>
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-primary btn-round">Submit</button>
+                                    <a href="{{ route('nurses') }}" class="btn btn-default btn-round btn-simple">Cancel</a>
                                 </div>
 
-                            </form>
                         </div>
+
+                        </form>
                     </div>
                 </div>
             </div>

@@ -37,6 +37,14 @@
                             </ul>
                             @endrole
                         </div>
+
+                        @include('layouts.partials.filter',[
+                            'filterRoute' => route('medicals'),
+                            'reportRoute' => route('reports.generate'),
+                            'extraFilters' => [],
+                            'type' => 'medicals',
+                            ])
+
                         <div class="body">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover js-basic-example dataTable">

@@ -13,8 +13,24 @@ class ReceptionistController extends Controller
 {
     public function index()
     {
-        $receptionists = Receptionist::with('user')->get();
-        return view('backend.receptionists.index', compact('receptionists'));
+        // Start query — don't call get() yet
+        $query = Receptionist::with(['user']);
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $receptionists = $query->latest()->paginate(10);
+
+        return view('backend.receptionists.index', [
+            'receptionists' => $receptionists,
+            'canExport' => true
+        ]);
     }
 
     public function create()

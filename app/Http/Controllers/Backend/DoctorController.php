@@ -13,8 +13,24 @@ class DoctorController extends Controller
 {
     public function index()
     {
-        $doctors = Doctor::with('user')->get();
-        return view('backend.doctors.index', compact('doctors'));
+        // Start query — don't call get() yet
+        $query = Doctor::with(['user']);
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $doctors = $query->latest()->paginate(10);
+
+        return view('backend.doctors.index', [
+            'doctors' => $doctors,
+            'canExport' => true
+        ]);
     }
 
     public function create()

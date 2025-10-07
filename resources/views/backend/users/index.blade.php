@@ -42,6 +42,13 @@
                         <div class="alert alert-danger">{{ session('error') }}</div>
                     @endif
 
+                    @include('layouts.partials.filter',[
+                            'filterRoute' => route('users'),
+                            'reportRoute' => route('reports.generate'),
+                            'extraFilters' => [],
+                            'type' => 'users',
+                            ])
+
                     <div class="body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
@@ -62,7 +69,9 @@
 
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
-                                            <td>{{$user->fname}} {{$user->lname}}</td>
+                                            <td>
+                                                <a href="{{ route('users.show', $user->id) }}">{{$user->fname}} {{$user->lname}}</a>
+                                            </td>
                                             <td>{{$user->email}}</td>
                                             <td>
                                                 <div class="dropdown">
@@ -71,6 +80,9 @@
                                                         @elseif($user->role == 'patient') btn-primary
                                                         @elseif($user->role == 'receptionist') btn-info
                                                         @elseif($user->role == 'doctor') btn-warning
+                                                        @elseif($user->role == 'pharmacist') btn-danger
+                                                        @elseif($user->role == 'nurse') btn-secondary
+                                                        @elseif($user->role == 'lab_technician') btn-dark
                                                         @else
                                                             btn-danger
                                                         @endif" data-toggle="dropdown" aria-expanded="false">
@@ -93,6 +105,19 @@
                                                         <a class="dropdown-item"
                                                             href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'doctor']) }}">
                                                             <i class="text-warning"></i> Doctor
+                                                        </a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'pharmacist']) }}">
+                                                            <i class="text-danger"></i> Pharmacist
+                                                        </a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'nurse']) }}">
+                                                            <i class="text-secondary"></i> Nurse
+                                                        </a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'lab_technician']) }}">
+                                                            <i class="text-dark"></i> Lab Technician
+                                                        </a>
                                                     </div>
                                                     @endrole
                                                 </div>
@@ -101,13 +126,30 @@
 
                                             <td>{{$user->profile->phone_number ?? 'No Phone Number'}}</td>
 
-                                            @if (isset($user->profile) && $user->profile->status === 'active')
-                                                <td><span class="badge badge-success">Active</span></td>
-                                            @elseif (isset($user->profile) && $user->profile->status === 'inactive')
-                                                <td><span class="badge badge-danger">Inactive</span></td>
-                                            @else
-                                                <td><span class="badge badge-warning">No Status</span></td>
-                                            @endif
+                                            <td>
+                                            <div class="dropdown">
+                                                <a href="#" class="btn btn-sm btn-rounded dropdown-toggle 
+                                                    @if(isset($user->profile) && $user->profile->status === 'active') btn-success
+                                                    @elseif(isset($user->profile) && $user->profile->status === 'inactive') btn-danger
+                                                    @else btn-warning @endif"
+                                                    data-toggle="dropdown" aria-expanded="false">
+                                                    {{ ucfirst($user->profile->status ?? 'No Status') }}
+                                                </a>
+
+                                                @role('admin')
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" 
+                                                        href="{{ route('user.updateStatus', ['id' => $user->id, 'status' => 'active']) }}">
+                                                        <i class="text-success"></i> Active
+                                                    </a>
+                                                    <a class="dropdown-item" 
+                                                        href="{{ route('user.updateStatus', ['id' => $user->id, 'status' => 'inactive']) }}">
+                                                        <i class="text-danger"></i> Inactive
+                                                    </a>
+                                                </div>
+                                                @endrole
+                                            </div>
+                                        </td>
 
 
                                             <td>

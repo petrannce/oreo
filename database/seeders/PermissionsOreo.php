@@ -45,6 +45,15 @@ class PermissionsOreo extends Seeder
         $patient = Role::firstOrCreate(['name' => 'patient']);
         $patient->syncPermissions('manage appointments');
 
+        $pharmacist = Role::firstOrCreate(['name' => 'pharmacist']);
+        $pharmacist->syncPermissions('manage prescriptions');
+
+        $nurse = Role::firstOrCreate(['name' => 'nurse']);
+        $nurse->syncPermissions('manage prescriptions');
+
+        $lab_technician = Role::firstOrCreate(['name' => 'lab_technician']);
+        $lab_technician->syncPermissions('manage prescriptions');
+
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $admin->syncPermissions(['manage appointments', 'manage services', 'manage doctors', 'manage patients', 'manage departments', 'manage resources', 'manage blogs', 'manage users']);
 
@@ -77,14 +86,14 @@ class PermissionsOreo extends Seeder
 
         // Assign roles to existing users based on their current role in the database
         $users = User::all();
-        
+
         foreach ($users as $user) {
-            
+
             if ($user->role && in_array($user->role, ['admin', 'doctor', 'receptionist', 'patient'])) {
                 $user->syncRoles([$user->role]);
-            }            else {
+            } else {
                 $user->syncRoles(['patient']); // Default role for new users
-            }           
+            }
         }
 
         // clear cache again after seeding

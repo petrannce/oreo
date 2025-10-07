@@ -47,37 +47,50 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-     // relationships
-    public function receptionist() 
-    { 
-        return $this->hasOne(Receptionist::class); 
+    // relationships
+    public function receptionist()
+    {
+        return $this->hasOne(Receptionist::class);
     }
-    public function doctor() 
-    { 
-        return $this->hasOne(Doctor::class); 
+    public function doctor()
+    {
+        return $this->hasOne(Doctor::class);
     }
 
-    public function nurse() 
-    { 
-        return $this->hasOne(Nurse::class); 
+    public function nurse()
+    {
+        return $this->hasOne(Nurse::class);
     }
-    public function patient() 
-    { 
-        return $this->hasOne(Patient::class); 
+
+    public function lab_technician()
+    {
+        return $this->hasOne(LabTechnician::class);
+    }
+    public function patient()
+    {
+        return $this->hasOne(Patient::class);
     }
 
     // convenience: get profile for current role
     public function profileForRole()
     {
-        if ($this->hasRole('doctor')) return $this->doctor;
-        if ($this->hasRole('receptionist')) return $this->receptionist;
-        if ($this->hasRole('patient')) return $this->patient;
+        if ($this->hasRole('doctor'))
+            return $this->doctor;
+        if ($this->hasRole('receptionist'))
+            return $this->receptionist;
+        if ($this->hasRole('patient'))
+            return $this->patient;
         return null;
     }
 
     public function profile()
     {
         return $this->hasOne(Profile::class);
+    }
+
+    public function getNameAttribute()
+    {
+        return trim("{$this->fname} {$this->lname}");
     }
 
 

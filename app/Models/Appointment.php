@@ -40,4 +40,29 @@ class Appointment extends Model
         return $this->belongsTo(Service::class,'service_id'); 
     }
 
+    public function nurse() 
+    { 
+        return $this->belongsTo(Nurse::class); 
+    }
+
+    public function scopeVisibleToRole($query, $role)
+{
+    $permissions = [
+        'receptionist' => ['reception', 'triage', 'cancelled'],
+        'nurse' => ['triage', 'doctor_consult'],
+        'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing', 'completed'],
+        'lab_technician' => ['lab'],
+        'pharmacist' => ['pharmacy', 'billing', 'completed'],
+        'admin' => ['reception', 'triage', 'doctor_consult', 'lab', 'pharmacy', 'billing', 'completed', 'cancelled'],
+    ];
+
+    $allowedStages = $permissions[$role] ?? [];
+
+    if ($role !== 'admin') {
+        $query->whereIn('process_stage', $allowedStages);
+    }
+
+    return $query;
+}
+
 }

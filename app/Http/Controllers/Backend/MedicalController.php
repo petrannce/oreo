@@ -14,8 +14,24 @@ class MedicalController extends Controller
 {
     public function index()
     {
-        $medical_records = Medical::with('patient')->latest()->get();
-        return view('backend.medicals.index', compact('medical_records'));
+        // Start query — don't call get() yet
+        $query = Medical::with(['patient', 'doctor']);
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $medical_records = $query->latest()->paginate(10);
+
+        return view('backend.medicals.index', [
+            'medical_records' => $medical_records,
+            'canExport' => true
+        ]);
     }
 
     public function create()

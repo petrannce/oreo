@@ -32,8 +32,8 @@
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
-            <div class="m-t-30"><img class="zmdi-hc-spin" src="{{asset('images/loader.svg')}}" width="48"
-                    height="48" alt="Oreo"></div>
+            <div class="m-t-30"><img class="zmdi-hc-spin" src="{{asset('images/loader.svg')}}" width="48" height="48"
+                    alt="Oreo"></div>
             <p>Please wait...</p>
         </div>
     </div>
@@ -202,6 +202,16 @@
         $.fn.selectpicker.Constructor.DEFAULTS.iconBase = 'zmdi';
         $.fn.selectpicker.Constructor.DEFAULTS.tickIcon = 'zmdi-check';
     </script>
+
+    <!-- <script>
+        $('.js-basic-example').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true
+        });
+
+
+    </script> -->
 </body>
 
 </html>

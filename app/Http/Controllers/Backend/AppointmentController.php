@@ -3,29 +3,53 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Patient;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
 use DB;
 use App\Models\Service;
-use App\Models\Doctor;
 use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
-    public function index()
-    {
-        $appointments = Appointment::with(['patient', 'doctor', 'service'])->get();
-        return view('backend.appointments.index', compact('appointments'));
-    }
+    public function index(Request $request)
+{
+    $user = Auth::user();
+    $userRole = $user->getRoleNames()->first(); // Spatie role
+
+    $appointments = Appointment::with(['patient', 'doctor', 'service'])
+        ->visibleToRole($userRole)
+        ->when($request->from_date, fn($query) => $query->whereDate('date', '>=', $request->from_date))
+        ->when($request->to_date, fn($query) => $query->whereDate('date', '<=', $request->to_date))
+        ->when($request->status, fn($query) => $query->where('status', $request->status))
+        ->latest()
+        ->get();
+
+    // Optional: expose allowed stages to the view if needed
+    $rolePermissions = [
+        'receptionist' => ['reception', 'triage', 'cancelled'],
+        'nurse' => ['triage', 'doctor_consult'],
+        'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing', 'completed'],
+        'lab_technician' => ['lab'],
+        'pharmacist' => ['pharmacy', 'billing', 'completed'],
+        'admin' => ['reception', 'triage', 'doctor_consult', 'lab', 'pharmacy', 'billing', 'completed', 'cancelled'],
+    ];
+    $allowedStages = $rolePermissions[$userRole] ?? [];
+
+    return view('backend.appointments.index', [
+        'appointments' => $appointments,
+        'allowedStages' => $allowedStages,
+        'canExport' => true
+    ]);
+}
 
     public function create()
     {
         $patients = User::where('role', 'patient')->get();
         $services = Service::all();
         $doctors = User::where('role', 'doctor')->get();
-        return view('backend.appointments.create',compact('patients','services','doctors'));
+        return view('backend.appointments.create', compact('patients', 'services', 'doctors'));
     }
 
     public function store(Request $request)
@@ -52,15 +76,15 @@ class AppointmentController extends Controller
             $appointment->date = $request->date;
             $appointment->time = $request->time;
             $appointment->status = 'pending';
-            
+
             $appointment->save();
-            
+
             DB::commit();
             return redirect()->route('appointments')->with('success', 'Appointment created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             // Log the error
-        //dd($e->getMessage(), $e->getTraceAsString());
+            //dd($e->getMessage(), $e->getTraceAsString());
             return redirect()->back()->with('error', 'Appointment creation failed');
         }
     }
@@ -83,7 +107,7 @@ class AppointmentController extends Controller
             'booked_by' => 'required',
             'date' => 'required',
             'time' => 'required',
-            
+
         ]);
 
         DB::beginTransaction();
@@ -97,7 +121,7 @@ class AppointmentController extends Controller
             $appointment->time = $request->time;
             $appointment->status = 'pending';
             $appointment->save();
-            
+
             DB::commit();
             return redirect()->route('appointments')->with('success', 'Appointment updated successfully');
         } catch (\Exception $e) {
@@ -133,4 +157,59 @@ class AppointmentController extends Controller
 
         return redirect()->back()->with('success', 'Status updated successfully!');
     }
+    public function updateStage($id, $stage)
+    {
+        $appointment = Appointment::findOrFail($id);
+
+        // All valid stages in your workflow
+        $validStages = [
+            'reception',        // Appointment booked / pending check-in
+            'triage',           // Nurse evaluating vitals
+            'doctor_consult',   // Doctor consultation
+            'lab',              // Lab tests ordered
+            'pharmacy',         // Pharmacy dispensing
+            'billing',          // Billing/payment processing
+            'completed',        // Fully completed process
+            'cancelled',        // Cancelled appointment
+        ];
+
+        if (!in_array($stage, $validStages)) {
+            return back()->with('error', 'Invalid stage selected.');
+        }
+
+        // Get logged-in user’s role
+        $user = Auth::user();
+        $userRole = $user->role ?? null;
+
+        // Define role-based permissions
+        $rolePermissions = [
+            'receptionist' => ['reception', 'triage', 'cancelled'],
+            'nurse' => ['triage', 'doctor_consult'],
+            'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing', 'completed'],
+            'lab_technician' => ['lab'],
+            'pharmacist' => ['pharmacy', 'billing', 'completed'],
+            'admin' => $validStages,
+        ];
+
+        // Permission check
+        if (!isset($rolePermissions[$userRole]) || !in_array($stage, $rolePermissions[$userRole])) {
+            return back()->with('error', 'You do not have permission to move a patient to this stage.');
+        }
+
+        // Check if already in the desired stage
+        if ($appointment->process_stage === $stage) {
+            return back()->with('info', 'Patient is already in this stage.');
+        }
+
+        // Update stage
+        $appointment->process_stage = $stage;
+        $appointment->save();
+
+        // Dynamic user-friendly message
+        $message = 'Patient moved to ' . ucfirst(str_replace('_', ' ', $stage)) . ' stage successfully.';
+
+        return back()->with('success', $message);
+    }
+
+
 }

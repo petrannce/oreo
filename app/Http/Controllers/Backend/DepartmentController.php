@@ -9,10 +9,26 @@ use DB;
 
 class DepartmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $departments = Department::all();
-        return view('backend.departments.index', compact('departments'));
+         // Start query — don't call get() yet
+        $query = Department::query();
+
+        // Apply filters
+        if ($request->from_date) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->to_date) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $departments = $query->latest()->paginate(10);
+
+        return view('backend.departments.index', [
+            'departments' => $departments,
+            'canExport' => true
+        ]);
     }
 
     public function create()

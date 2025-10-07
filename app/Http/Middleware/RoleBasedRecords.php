@@ -4,8 +4,6 @@ namespace App\Http\Middleware;
 
 use App\Models\Appointment;
 use App\Models\Medical;
-use App\Models\Patient;
-use App\Models\Doctor;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -72,6 +70,22 @@ class RoleBasedRecords
                 // But if needed, you can include limited info.
                 $view->with('medical_records', collect());
                 
+            }
+
+            // --------------------------
+            // LAB_TECHNICIAN
+            // --------------------------
+            elseif ($user->role === 'lab_technician') {
+                $view->with('appointments', Appointment::with(['patient', 'doctor'])->latest()->get());
+                $view->with('medical_records', collect());
+            }
+
+            // --------------------------
+            // NURSE
+            // --------------------------
+            elseif ($user->role === 'nurse') {
+                $view->with('appointments', Appointment::with(['patient', 'doctor'])->latest()->get());
+                $view->with('medical_records', collect());
             }
 
             // --------------------------

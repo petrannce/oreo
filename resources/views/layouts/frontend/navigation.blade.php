@@ -22,22 +22,37 @@
 
                                 @if(Auth::check())
 
-                                <!-- Check if user has role -->
+                                    <!-- Check if user has role -->
 
                                     @if (Auth::user()->role == 'admin')
                                         <li>
-                                            <a href="{{ route('admin') }}" class="btn btn-link" target="_blank">Admin Dashboard</a>
+                                            <a href="{{ route('admin') }}" class="btn btn-link" target="_blank">Admin
+                                                Dashboard</a>
                                     @elseif(Auth::user()->role == 'doctor')
-                                            <a href="{{ route('dashboard.doctors') }}" class="btn btn-link" target="_blank">Doctor's Dashboard</a>
-                                    @elseif(Auth::user()->role == 'patient')
-                                            <a href="{{ route('dashboard.patients') }}" class="btn btn-link" target="_blank">Patient's Dashboard</a>
-                                    @elseif(Auth::user()->role == 'receptionist')
-                                            <a href="{{ route('dashboard.receptionists') }}" class="btn btn-link" target="_blank">Receptionist's Dashboard</a>
-                                    @endif
+                                            <a href="{{ route('dashboard.doctors') }}" class="btn btn-link"
+                                                target="_blank">Doctor's Dashboard</a>
+                                        @elseif(Auth::user()->role == 'patient')
+                                            <a href="{{ route('dashboard.patients') }}" class="btn btn-link"
+                                                target="_blank">Patient's Dashboard</a>
+                                        @elseif(Auth::user()->role == 'receptionist')
+                                            <a href="{{ route('dashboard.receptionists') }}" class="btn btn-link"
+                                                target="_blank">Receptionist's Dashboard</a>
+                                        @elseif(Auth::user()->role == 'lab_technician')
+                                            <a href="{{ route('dashboard.lab_technicians') }}" class="btn btn-link"
+                                                target="_blank">Lab Technician's Dashboard</a>
+                                        @elseif(Auth::user()->role == 'nurse')
+                                            <a href="{{ route('dashboard.nurses') }}" class="btn btn-link"
+                                                target="_blank">Nurse's Dashboard</a>
+                                        @elseif(Auth::user()->role == 'pharmacist')
+                                            <a href="{{ route('dashboard.pharmacist') }}" class="btn btn-link"
+                                                target="_blank">Pharmacist's Dashboard</a>
+                                        @else
+                                            //
+                                        @endif
 
-                                    <span>|</span>
+                                        <span>|</span>
 
-                                    <!-- Logout -->
+                                        <!-- Logout -->
 
                                         <a href="{{ route('logout') }}" class="btn btn-link"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -49,7 +64,7 @@
                                     </li>
                                 @else
 
-                                <!-- Sign in and Sign up -->
+                                    <!-- Sign in and Sign up -->
 
                                     <li>
                                         <a href="{{ route('login') }}" class="btn btn-link">Sign in</a>
