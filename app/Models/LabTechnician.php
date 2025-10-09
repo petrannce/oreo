@@ -23,4 +23,14 @@ class LabTechnician extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function labTests()
+    {
+        return $this->hasMany(LabTest::class);
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
 }

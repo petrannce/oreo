@@ -42,6 +42,13 @@
                         <div class="alert alert-danger">{{ session('error') }}</div>
                     @endif
 
+                    @include('layouts.partials.filter',[
+                            'filterRoute' => route('users'),
+                            'reportRoute' => route('reports.generate'),
+                            'extraFilters' => [],
+                            'type' => 'users',
+                            ])
+
                     <div class="body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">

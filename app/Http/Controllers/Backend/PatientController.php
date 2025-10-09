@@ -12,23 +12,10 @@ class PatientController extends Controller
 {
     public function index()
     {
-        // Start query — don't call get() yet
-        $query = Patient::with(['user']);
-
-        // Apply filters
-        if (request()->from_date) {
-            $query->whereDate('created_at', '>=', request()->from_date);
-        }
-
-        if (request()->to_date) {
-            $query->whereDate('created_at', '<=', request()->to_date);
-        }
-
-        $patients = $query->latest()->paginate(10);
+        $patients = Patient::all();
 
         return view('backend.patients.index', [
             'patients' => $patients,
-            'canExport' => true
         ]);
     }
 
@@ -131,6 +118,28 @@ class PatientController extends Controller
     {
         DB::table('patients')->where('id', $id)->delete();
         return redirect()->route('patients')->with('success', 'Patient deleted successfully');
+    }
+
+    public function report()
+    {
+        // Start query — don't call get() yet
+        $query = Patient::with(['user']);
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $patients = $query->latest()->paginate(10);
+
+        return view('backend.patients.reports', [
+            'patients' => $patients,
+            'canExport' => true
+        ]);
     }
 
 

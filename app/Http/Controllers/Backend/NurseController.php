@@ -13,23 +13,10 @@ class NurseController extends Controller
 {
     public function index()
     {
-        // Start query — don't call get() yet
-        $query = Nurse::with(['user']);
-
-        // Apply filters
-        if (request()->from_date) {
-            $query->whereDate('created_at', '>=', request()->from_date);
-        }
-
-        if (request()->to_date) {
-            $query->whereDate('created_at', '<=', request()->to_date);
-        }
-
-        $nurses = $query->latest()->paginate(10);
+        $nurses = Nurse::all();
 
         return view('backend.nurses.index', [
             'nurses' => $nurses,
-            'canExport' => true
         ]);
     }
  
@@ -143,5 +130,27 @@ class NurseController extends Controller
     {
         DB::table('nurses')->where('id', $id)->delete();
         return redirect()->route('nurses')->with('success', 'Nurse deleted successfully');
+    }
+
+    public function report()
+    {
+        // Start query — don't call get() yet
+        $query = Nurse::with(['user']);
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $nurses = $query->latest()->get();
+
+        return view('backend.nurses.reports', [
+            'nurses' => $nurses,
+            'canExport' => true
+        ]);
     }
 }

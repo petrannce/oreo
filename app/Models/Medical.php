@@ -12,6 +12,7 @@ class Medical extends Model
     protected $table = 'medical_records';
 
     protected $fillable = [
+        'appointment_id',
         'patient_id',
         'doctor_id',
         'record_date',
@@ -29,5 +30,11 @@ class Medical extends Model
     {
         return $this->belongsTo(User::class, 'doctor_id');
     }
+
+    public function appointment()
+    {
+        return $this->belongsTo(Appointment::class, 'appointment_id');
+    }
+
 
 }

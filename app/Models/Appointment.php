@@ -21,48 +21,60 @@ class Appointment extends Model
         'status'
     ];
 
-    public function patient() 
-    { 
-        return $this->belongsTo(User::class,'patient_id'); 
+    public function patient()
+    {
+        return $this->belongsTo(User::class, 'patient_id');
     }
-    public function doctor()  
-    { 
-        return $this->belongsTo(User::class,'doctor_id'); 
-    }
-
-    public function bookedBy() 
-    { 
-        return $this->belongsTo(User::class,'booked_by'); 
+    public function doctor()
+    {
+        return $this->belongsTo(User::class, 'doctor_id');
     }
 
-    public function service() 
-    { 
-        return $this->belongsTo(Service::class,'service_id'); 
+    public function bookedBy()
+    {
+        return $this->belongsTo(User::class, 'booked_by');
     }
 
-    public function nurse() 
-    { 
-        return $this->belongsTo(Nurse::class); 
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id');
     }
 
-    public function scopeVisibleToRole($query, $role)
-{
-    $permissions = [
-        'receptionist' => ['reception', 'triage', 'cancelled'],
-        'nurse' => ['triage', 'doctor_consult'],
-        'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing', 'completed'],
-        'lab_technician' => ['lab'],
-        'pharmacist' => ['pharmacy', 'billing', 'completed'],
-        'admin' => ['reception', 'triage', 'doctor_consult', 'lab', 'pharmacy', 'billing', 'completed', 'cancelled'],
-    ];
-
-    $allowedStages = $permissions[$role] ?? [];
-
-    if ($role !== 'admin') {
-        $query->whereIn('process_stage', $allowedStages);
+    public function nurse()
+    {
+        return $this->belongsTo(Nurse::class);
     }
 
-    return $query;
-}
+    public function lab_technician()
+    {
+        return $this->belongsTo(LabTechnician::class);
+    }
+
+    public function labTests()
+    {
+        return $this->hasMany(LabTest::class);
+    }
+
+    public function triage()
+    {
+        return $this->hasOne(Triage::class);
+    }
+
+    public function labTest()
+    {
+        return $this->hasOne(LabTest::class);
+    }
+
+    public function pharmacyOrder()
+    {
+        return $this->hasOne(PharmacyOrder::class);
+    }
+
+    public function billing()
+    {
+        return $this->hasOne(Billing::class);
+    }
+
+
 
 }

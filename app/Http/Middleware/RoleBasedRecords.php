@@ -69,7 +69,7 @@ class RoleBasedRecords
                 // Usually, receptionists don’t access full medical records.
                 // But if needed, you can include limited info.
                 $view->with('medical_records', collect());
-                
+
             }
 
             // --------------------------
@@ -85,6 +85,17 @@ class RoleBasedRecords
             // --------------------------
             elseif ($user->role === 'nurse') {
                 $view->with('appointments', Appointment::with(['patient', 'doctor'])->latest()->get());
+                $view->with('medical_records', collect());
+            }
+
+            // --------------------------
+            // PHARMACIST
+            // --------------------------
+            elseif ($user->role === 'pharmacist') {
+                // Pharmacists should see appointments linked to prescriptions or medical records
+                $view->with('appointments', Appointment::with(['patient', 'doctor'])->latest()->get());
+
+                // Pharmacists don’t usually see all medical records, but you can limit it
                 $view->with('medical_records', collect());
             }
 

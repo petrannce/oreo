@@ -24,4 +24,14 @@ class Triage extends Model
     {
         return $this->belongsTo(Patient::class);
     }
+
+    public function appointment()
+    {
+        return $this->belongsTo(Appointment::class);
+    }
+
+    public function nurse()
+    {
+        return $this->belongsTo(Nurse::class);
+    }
 }

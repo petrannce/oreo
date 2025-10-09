@@ -17,12 +17,26 @@ class PharmacyOrder extends Model
     ];
 
     // relationships
-    public function patient() 
-    { 
-        return $this->belongsTo(Patient::class); 
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
     }
-    public function doctor() 
-    { 
-        return $this->belongsTo(Doctor::class); 
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class);
     }
+
+    public function pharmacyOrder()
+    {
+        // Appointment → Medical → Pharmacy
+        return $this->hasOneThrough(
+            PharmacyOrder::class,
+            Medical::class,
+            'appointment_id',   // Foreign key on medical_records table
+            'medical_record_id',// Foreign key on pharmacy_orders table
+            'id',               // Local key on appointments table
+            'id'                // Local key on medical_records table
+        );
+    }
+
 }

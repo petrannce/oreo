@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Doctor;
-     use App\Models\LabTechnician;
+use App\Models\Appointment;
 use App\Models\LabTest;
-use App\Models\Patient;
+use App\Models\User;
 use Illuminate\Http\Request;
 use DB;
 
@@ -14,66 +13,115 @@ class LabTestController extends Controller
 {
     public function index()
     {
-        // Start query — don't call get() yet
-        $query = LabTest::with(['patient', 'doctor', 'lab_technician', 'appointment']);
 
-        // Apply filters
-        if (request()->from_date) {
-            $query->whereDate('created_at', '>=', request()->from_date);
-        }
-
-        if (request()->to_date) {
-            $query->whereDate('created_at', '<=', request()->to_date);
-        }
-
-        $lab_tests = $query->latest()->paginate(10);
+        $lab_tests = LabTest::with(['patient', 'doctor', 'lab_technician', 'appointment'])->latest()->get();
 
         return view('backend.lab_tests.index', [
             'lab_tests' => $lab_tests,
-            'canExport' => true
         ]);
     }
 
-    public function create()
+    public function create($appointment_id = null)
     {
-        $patients = Patient::all();
-        $doctors = Doctor::all();
-        $lab_technicians = LabTechnician::all();
-        return view('backend.lab_tests.create', compact('patients', 'doctors', 'lab_technicians'));
+        $user = auth()->user();
+        $selectedAppointment = null;
+
+        if ($appointment_id) {
+            // load appointment with patient/doctor
+            $selectedAppointment = Appointment::with(['patient', 'doctor'])->find($appointment_id);
+            if (!$selectedAppointment) {
+                return redirect()->route('lab_tests.create')->with('error', 'Appointment not found.');
+            }
+        }
+
+        // Role-based lists (kept broad so prefill always shows correct record)
+        if ($user->role === 'admin') {
+            $patients = User::where('role', 'patient')->get();
+            $doctors = User::where('role', 'doctor')->get();
+            $lab_technicians = User::where('role', 'lab_technician')->get();
+            $appointments = Appointment::with(['patient', 'doctor'])->latest()->get();
+        } elseif ($user->role === 'lab_technician') {
+            // lab tech sees all patients/doctors but technician field will auto-assign to auth
+            $patients = User::where('role', 'patient')->get();
+            $doctors = User::where('role', 'doctor')->get();
+            $lab_technicians = collect([$user]); // only themselves
+            $appointments = Appointment::with(['patient', 'doctor'])->latest()->get();
+        } elseif ($user->role === 'doctor') {
+            $patients = User::whereHas('appointments', function ($q) use ($user) {
+                $q->where('doctor_id', $user->id);
+            })->get();
+            $doctors = collect([$user]);
+            $lab_technicians = User::where('role', 'lab_technician')->get();
+            $appointments = Appointment::where('doctor_id', $user->id)->with('patient')->latest()->get();
+        } else {
+            $patients = collect();
+            $doctors = collect();
+            $lab_technicians = collect();
+            $appointments = collect();
+        }
+
+        // Ensure selected patient/doctor are present in the collections so dropdowns can use them if needed
+        if ($selectedAppointment) {
+            if ($patients->isEmpty() || !$patients->contains('id', $selectedAppointment->patient_id)) {
+                $patients->push($selectedAppointment->patient);
+            }
+            if ($doctors->isEmpty() || !$doctors->contains('id', $selectedAppointment->doctor_id)) {
+                $doctors->push($selectedAppointment->doctor);
+            }
+        }
+
+        return view('backend.lab_tests.create', compact(
+            'patients',
+            'doctors',
+            'lab_technicians',
+            'appointments',
+            'selectedAppointment'
+        ));
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-                'patient_id' => 'required|exists:patients,id',
-                'doctor_id' => 'required|exists:doctors,id',
-                'lab_technician_id' => 'required|exists:lab_technicians,id',
-                'appointment_id' => 'required|exists:appointments,id',
-                'test_name' => 'required|string|max:255',
-                'results' => 'nullable|string',
-                'status' => 'required|string',
+{
+    $request->validate([
+        'patient_id' => 'required|exists:users,id',
+        'doctor_id' => 'required|exists:users,id',
+        'lab_technician_id' => 'nullable|exists:users,id',
+        'appointment_id' => 'nullable|exists:appointments,id',
+        'test_name' => 'required|string|max:255',
+        'results' => 'nullable|string',
+        'status' => 'required|in:requested,in_progress,completed',
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        LabTest::create([
+            'patient_id' => $request->patient_id,
+            'doctor_id' => $request->doctor_id,
+            'lab_technician_id' => $request->lab_technician_id ?? auth()->id(), // auto-assign logged-in tech
+            'appointment_id' => $request->appointment_id,
+            'test_name' => $request->test_name,
+            'results' => $request->results,
+            'status' => $request->status,
         ]);
 
-        DB::beginTransaction();
-
-        try {
-            LabTest::create([
-                'patient_id' => $request->patient_id,
-                'doctor_id' => $request->doctor_id,
-                'lab_technician_id' => $request->lab_technician_id,
-                'appointment_id' => $request->appointment_id,
-                'test_name' => $request->test_name,
-                'results' => $request->results,
-                'status' => $request->status,
-            ]);
-
-            DB::commit();
-            return redirect()->route('lab_tests')->with('success', 'Lab Test created successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('lab_tests')->with('error', 'Lab Test creation failed');
+        // Optional: update appointment process stage to 'lab' if linked
+        if ($request->filled('appointment_id')) {
+            \App\Models\Appointment::where('id', $request->appointment_id)
+                ->update(['process_stage' => 'lab']);
         }
+
+        DB::commit();
+
+        return redirect()->route('appointments')
+            ->with('success', 'Lab Test created successfully');
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        return redirect()->route('lab_tests')
+            ->with('error', 'Lab Test creation failed: ' . $e->getMessage());
     }
+}
+
 
     public function edit($id)
     {
@@ -84,13 +132,13 @@ class LabTestController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-                'patient_id' => 'required|exists:patients,id',
-                'doctor_id' => 'required|exists:doctors,id',
-                'lab_technician_id' => 'required|exists:lab_technicians,id',
-                'appointment_id' => 'required|exists:appointments,id',
-                'test_name' => 'required|string|max:255',
-                'results' => 'nullable|string',
-                'status' => 'required|string',
+            'patient_id' => 'required|exists:patients,id',
+            'doctor_id' => 'required|exists:doctors,id',
+            'lab_technician_id' => 'required|exists:lab_technicians,id',
+            'appointment_id' => 'required|exists:appointments,id',
+            'test_name' => 'required|string|max:255',
+            'results' => 'nullable|string',
+            'status' => 'required|string',
         ]);
 
         DB::beginTransaction();
@@ -119,5 +167,27 @@ class LabTestController extends Controller
     {
         DB::table('lab_tests')->where('id', $id)->delete();
         return redirect()->route('lab_tests')->with('success', 'Lab Test deleted successfully');
+    }
+
+    public function report()
+    {
+        // Start query — don't call get() yet
+        $query = LabTest::with(['patient', 'doctor', 'lab_technician', 'appointment']);
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $lab_tests = $query->latest()->get();
+
+        return view('backend.lab_tests.reports', [
+            'lab_tests' => $lab_tests,
+            'canExport' => true
+        ]);
     }
 }

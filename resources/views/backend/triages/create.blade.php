@@ -15,9 +15,7 @@
                     <li class="breadcrumb-item">
                         <a href="{{ route('admin') }}"><i class="zmdi zmdi-home"></i> Oreo</a>
                     </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('triages') }}">Triages</a>
-                    </li>
+                    <li class="breadcrumb-item"><a href="{{ route('triages') }}">Triages</a></li>
                     <li class="breadcrumb-item active">Create Triage</li>
                 </ul>
             </div>
@@ -31,47 +29,81 @@
                     <div class="header">
                         <h2><strong>Add New</strong> Triage</h2>
                     </div>
+
                     <div class="body">
                         <form action="{{ route('triages.store') }}" method="POST">
                             @csrf
 
-                            {{-- Pre-filled Patient --}}
+                            {{-- Hidden Fields --}}
                             <input type="hidden" name="patient_id" value="{{ $appointment->patient->id }}">
-
-                            {{-- Pre-filled Appointment --}}
                             <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
+                            <input type="hidden" name="nurse_id" value="{{ $loggedInNurseId }}">
 
-                            {{-- Hidden Nurse ID (logged in) --}}
-                            <input type="hidden" name="nurse_id" id="nurse_id" value="{{ $loggedInNurseId }}">
-
-                            {{-- Vitals & Notes --}}
-                            <div class="form-group">
-                                <label for="temperature">Temperature (°C)</label>
-                                <input type="number" step="0.01" name="temperature" id="temperature" class="form-control">
+                            {{-- Read-Only Appointment Info --}}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Patient</label>
+                                    <input type="text" class="form-control" 
+                                           value="{{ $appointment->patient->fname }} {{ $appointment->patient->lname }}" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Appointment Date</label>
+                                    <input type="text" class="form-control" 
+                                           value="{{ $appointment->date }}" readonly>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="heart_rate">Heart Rate (bpm)</label>
-                                <input type="text" name="heart_rate" id="heart_rate" class="form-control">
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <label>Doctor</label>
+                                    <input type="text" class="form-control" 
+                                           value="{{ $appointment->doctor->fname }} {{ $appointment->doctor->lname }}" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Service</label>
+                                    <input type="text" class="form-control" 
+                                           value="{{ $appointment->service->name }}" readonly>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="blood_pressure">Blood Pressure (mmHg)</label>
-                                <input type="text" name="blood_pressure" id="blood_pressure" class="form-control">
+                            <hr>
+
+                            {{-- Triage Vitals --}}
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <label for="temperature">Temperature (°C)</label>
+                                    <input type="number" step="0.01" name="temperature" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="heart_rate">Heart Rate (bpm)</label>
+                                    <input type="text" name="heart_rate" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="blood_pressure">Blood Pressure (mmHg)</label>
+                                    <input type="text" name="blood_pressure" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="weight">Weight (kg)</label>
+                                    <input type="number" step="0.01" name="weight" class="form-control">
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="weight">Weight (kg)</label>
-                                <input type="number" step="0.01" name="weight" id="weight" class="form-control">
-                            </div>
-
-                            <div class="form-group">
+                            {{-- Notes --}}
+                            <div class="form-group mt-3">
                                 <label for="notes">Notes</label>
-                                <textarea name="notes" id="notes" class="form-control"></textarea>
+                                <textarea name="notes" id="notes" class="form-control" rows="3"></textarea>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Save Triage</button>
-                            <a href="{{ route('triages') }}" class="btn btn-secondary">Cancel</a>
+                            {{-- Buttons --}}
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="zmdi zmdi-save"></i> Save Triage
+                                </button>
+                                <a href="{{ route('triages') }}" class="btn btn-secondary">
+                                    <i class="zmdi zmdi-arrow-left"></i> Cancel
+                                </a>
+                            </div>
+
                         </form>
                     </div>
                 </div>

@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Medical;
-use App\Models\Patient;
-use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
 
@@ -14,65 +12,50 @@ class MedicalController extends Controller
 {
     public function index()
     {
-        // Start query — don't call get() yet
-        $query = Medical::with(['patient', 'doctor']);
-
-        // Apply filters
-        if (request()->from_date) {
-            $query->whereDate('created_at', '>=', request()->from_date);
-        }
-
-        if (request()->to_date) {
-            $query->whereDate('created_at', '<=', request()->to_date);
-        }
-
-        $medical_records = $query->latest()->paginate(10);
+        $medical_records = Medical::with('patient', 'doctor')->get();
 
         return view('backend.medicals.index', [
             'medical_records' => $medical_records,
-            'canExport' => true
         ]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $patients = Patient::with('user')->get();
-        return view('backend.medicals.create', compact('patients'));
+        $appointmentId = $request->get('appointment_id');
+        $appointment = null;
+
+        if ($appointmentId) {
+            $appointment = Appointment::with('patient', 'doctor')->findOrFail($appointmentId);
+        }
+
+        $patients = Appointment::with('patient')->whereNotNull('patient_id')->get();
+
+        return view('backend.medicals.create', compact('patients', 'appointment'));
     }
+
 
     public function store(Request $request)
     {
-        
-        $request->validate([
-            'patient_id' => 'required',
-            'doctor_id' => 'required',
-            'record_date' => 'required',
-            'diagnosis' => 'required',
-            'prescription' => 'required',
-            'notes' => 'required',
+        $validated = $request->validate([
+            'patient_id' => 'required|exists:users,id',
+            'doctor_id' => 'required|exists:users,id',
+            'record_date' => 'required|date',
+            'diagnosis' => 'nullable|string',
+            'prescription' => 'nullable|string',
+            'notes' => 'nullable|string',
+            'appointment_id' => 'nullable|exists:appointments,id',
         ]);
 
-        DB::beginTransaction();
-        
-        try {
-            $medical = new Medical();
-            $medical->patient_id = $request->patient_id;
-            $medical->doctor_id = $request->doctor_id;
-            $medical->record_date = $request->record_date;
-            $medical->diagnosis = $request->diagnosis;
-            $medical->prescription = $request->prescription;
-            $medical->notes = $request->notes;
+        $medicalRecord = Medical::create($validated);
 
-            $medical->save();
-
-            DB::commit();
-            return redirect()->route('medicals')->with('success', 'Medical record created successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-           dd($e->getMessage(), $e->getTraceAsString());
-            return redirect()->route('medicals')->with('error', 'Medical record creation failed');
+        // Optionally update appointment stage
+        if ($medicalRecord->appointment_id) {
+            $medicalRecord->appointment->update(['process_stage' => 'lab']);
         }
+
+        return redirect()->route('medicals')->with('success', 'Medical record created successfully!');
     }
+
 
     public function edit($id)
     {
@@ -92,7 +75,7 @@ class MedicalController extends Controller
         ]);
 
         DB::beginTransaction();
-        
+
         try {
             $medical = Medical::findOrFail($id);
             $medical->patient_id = $request->patient_id;
@@ -121,5 +104,27 @@ class MedicalController extends Controller
     {
         DB::table('medical_records')->where('id', $id)->delete();
         return redirect()->route('medicals')->with('success', 'Medical record deleted successfully');
+    }
+
+    public function report()
+    {
+        // Start query — don't call get() yet
+        $query = Medical::with(['patient', 'doctor']);
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $medical_records = $query->latest()->paginate(10);
+
+        return view('backend.medicals.reports', [
+            'medical_records' => $medical_records,
+            'canExport' => true
+        ]);
     }
 }

@@ -93,5 +93,20 @@ class User extends Authenticatable
         return trim("{$this->fname} {$this->lname}");
     }
 
+    public function labTests()
+    {
+        return $this->hasMany(LabTest::class, 'patient_id');
+    }
+
+    public function labTestsRequested()
+    {
+        return $this->hasMany(LabTest::class, 'doctor_id');
+    }
+
+    public function labTestsAssigned()
+    {
+        return $this->hasMany(LabTest::class, 'lab_technician_id');
+    }
+
 
 }

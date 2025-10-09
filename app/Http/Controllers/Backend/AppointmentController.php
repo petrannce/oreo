@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
 use DB;
@@ -13,36 +12,15 @@ use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
-    public function index(Request $request)
-{
-    $user = Auth::user();
-    $userRole = $user->getRoleNames()->first(); // Spatie role
+    public function index()
+    {
+        
+        $appointments = Appointment::with('patient', 'doctor', 'service')->get();
 
-    $appointments = Appointment::with(['patient', 'doctor', 'service'])
-        ->visibleToRole($userRole)
-        ->when($request->from_date, fn($query) => $query->whereDate('date', '>=', $request->from_date))
-        ->when($request->to_date, fn($query) => $query->whereDate('date', '<=', $request->to_date))
-        ->when($request->status, fn($query) => $query->where('status', $request->status))
-        ->latest()
-        ->get();
-
-    // Optional: expose allowed stages to the view if needed
-    $rolePermissions = [
-        'receptionist' => ['reception', 'triage', 'cancelled'],
-        'nurse' => ['triage', 'doctor_consult'],
-        'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing', 'completed'],
-        'lab_technician' => ['lab'],
-        'pharmacist' => ['pharmacy', 'billing', 'completed'],
-        'admin' => ['reception', 'triage', 'doctor_consult', 'lab', 'pharmacy', 'billing', 'completed', 'cancelled'],
-    ];
-    $allowedStages = $rolePermissions[$userRole] ?? [];
-
-    return view('backend.appointments.index', [
-        'appointments' => $appointments,
-        'allowedStages' => $allowedStages,
-        'canExport' => true
-    ]);
-}
+        return view('backend.appointments.index', [
+            'appointments' => $appointments,
+        ]);
+    }
 
     public function create()
     {
@@ -209,6 +187,36 @@ class AppointmentController extends Controller
         $message = 'Patient moved to ' . ucfirst(str_replace('_', ' ', $stage)) . ' stage successfully.';
 
         return back()->with('success', $message);
+    }
+
+    public function report(Request $request)
+    {
+        $user = Auth::user();
+        $userRole = $user->getRoleNames()->first(); // Spatie role
+
+        $appointments = Appointment::with(['patient', 'doctor', 'service', 'triage', 'labTest'])
+            ->when($request->from_date, fn($query) => $query->whereDate('date', '>=', $request->from_date))
+            ->when($request->to_date, fn($query) => $query->whereDate('date', '<=', $request->to_date))
+            ->when($request->status, fn($query) => $query->where('status', $request->status))
+            ->latest()
+            ->get();
+
+        // Optional: expose allowed stages to the view if needed
+        $rolePermissions = [
+            'receptionist' => ['reception', 'triage', 'cancelled'],
+            'nurse' => ['triage', 'doctor_consult'],
+            'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing', 'completed'],
+            'lab_technician' => ['lab'],
+            'pharmacist' => ['pharmacy', 'billing', 'completed'],
+            'admin' => ['reception', 'triage', 'doctor_consult', 'lab', 'pharmacy', 'billing', 'completed', 'cancelled'],
+        ];
+        $allowedStages = $rolePermissions[$userRole] ?? [];
+
+        return view('backend.appointments.reports', [
+            'appointments' => $appointments,
+            'allowedStages' => $allowedStages,
+            'canExport' => true
+        ]);
     }
 
 

@@ -15,21 +15,8 @@ class UserController extends Controller
 {
     public function index()
     {
-        // Start query — don't call get() yet
-        $users = User::query();
-
-        // Add filters
-        if (request('search')) {
-            $users->where(function ($query) {
-                $query->where('fname', 'like', '%' . request('search') . '%')
-                    ->orWhere('lname', 'like', '%' . request('search') . '%')
-                    ->orWhere('email', 'like', '%' . request('search') . '%')
-                    ->orWhere('username', 'like', '%' . request('search') . '%');
-            });
-        }
-
         // Get the results and return them as a collection
-        $users = $users->latest()->get();
+        $users = User::with('profile')->get();
 
         return view('backend.users.index', compact('users'));
     }
@@ -250,6 +237,27 @@ class UserController extends Controller
         $exists = User::where('email', $request->email)->exists();
 
         return response()->json(['exists' => $exists]);
+    }
+
+    public function report()
+    {
+        // Start query — don't call get() yet
+        $users = User::query();
+
+        // Add filters
+        if (request('search')) {
+            $users->where(function ($query) {
+                $query->where('fname', 'like', '%' . request('search') . '%')
+                    ->orWhere('lname', 'like', '%' . request('search') . '%')
+                    ->orWhere('email', 'like', '%' . request('search') . '%')
+                    ->orWhere('username', 'like', '%' . request('search') . '%');
+            });
+        }
+
+        // Get the results and return them as a collection
+        $users = $users->latest()->get();
+
+        return view('backend.users.reports', compact('users'));
     }
 
 

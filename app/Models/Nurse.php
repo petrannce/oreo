@@ -29,4 +29,11 @@ class Nurse extends Model
         return $this->hasMany(Appointment::class);
     }
 
+/*************  ✨ Windsurf Command ⭐  *************/
+/*******  7c397e54-2569-4acc-9ae6-f296642b16d0  *******/
+    public function triages()
+    {
+        return $this->hasMany(Triage::class);
+    }
+
 }

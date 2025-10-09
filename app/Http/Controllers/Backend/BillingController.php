@@ -4,72 +4,86 @@ namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Billing;
-use App\Models\Patient;
 use Illuminate\Http\Request;
 use DB;
 
 class BillingController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $billings = Billing::all();
-        //start query - don't call get() yet
-        $query = Billing::with(['patient']);
-
-        // Apply filters
-        if ($request->from_date) {
-            $query->whereDate('created_at', '>=', $request->from_date);
-        }
-
-        if ($request->to_date) {
-            $query->whereDate('created_at', '<=', $request->to_date);
-        }
-
-        $billings = $query->latest()->paginate(10);
 
         return view('backend.billings.index', [
             'billings' => $billings,
-            'canExport' => true
         ]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $patients = Patient::all();
-        return view('backend.billings.create', compact('patients'));
-    }
+         $patients = \App\Models\User::where('role', 'patient')->get();
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'billable_type' => 'required|string',
-            'billable_id' => 'required|integer',
-            'amount' => 'required|numeric',
-            'payment_method' => 'required|string',
-            'status' => 'required|string',
-        ]);
+    // Optional context from GET params
+    $billableType = $request->get('billable_type');
+    $billableId = $request->get('billable_id');
+    $billableItem = null;
+    $amount = null;
 
-        DB::beginTransaction();
+    if ($billableType && $billableId) {
+        $modelClass = urldecode($billableType);
+        if (class_exists($modelClass)) {
+            $billableItem = $modelClass::find($billableId);
 
-        try {
-            
-            Billing::create([
-                'patient_id' => $request->patient_id,
-                'billable_type' => $request->billable_type,
-                'billable_id' => $request->billable_id,
-                'amount' => $request->amount,
-                'payment_method' => $request->payment_method,
-                'status' => $request->status,
-            ]);
-
-            DB::commit();
-            return redirect()->route('billings')->with('success', 'Billing created successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('billings')->with('error', 'Billing creation failed');
+            if ($billableItem) {
+                // Estimate or fetch amount dynamically based on type
+                if ($billableItem instanceof \App\Models\PharmacyOrder) {
+                    $amount = $billableItem->total ?? 0;
+                } elseif ($billableItem instanceof \App\Models\LabTest) {
+                    $amount = 1500; // Example lab test charge
+                } elseif ($billableItem instanceof \App\Models\Consultation) {
+                    $amount = 1000; // Example consultation fee
+                }
+            }
         }
     }
+        return view('backend.billings.create', [
+            'patients' => $patients,
+            'billableItem' => $billableItem,
+            'billableType' => $billableType,
+            'billableId' => $billableId,
+            'amount' => $amount
+        ]);
+    }
+
+   public function store(Request $request)
+{
+    $request->validate([
+        'patient_id' => 'required|exists:users,id',
+        'billable_type' => 'required|string',
+        'billable_id' => 'required|integer',
+        'amount' => 'required|numeric|min:0',
+        'payment_method' => 'required|string',
+        'status' => 'required|string',
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        Billing::create([
+            'patient_id' => $request->patient_id,
+            'billable_type' => $request->billable_type,
+            'billable_id' => $request->billable_id,
+            'amount' => $request->amount,
+            'payment_method' => $request->payment_method,
+            'status' => $request->status,
+        ]);
+
+        DB::commit();
+        return redirect()->route('billings')->with('success', 'Billing created successfully');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->route('billings.create')->with('error', 'Billing creation failed: ' . $e->getMessage());
+    }
+}
 
     public function edit($id)
     {
@@ -114,5 +128,28 @@ class BillingController extends Controller
     {
         DB::table('billings')->where('id', $id)->delete();
         return redirect()->route('billings')->with('success', 'Billing deleted successfully');
+    }
+
+    public function report(Request $request)
+    {
+        $billings = Billing::all();
+        //start query - don't call get() yet
+        $query = Billing::with(['patient']);
+
+        // Apply filters
+        if ($request->from_date) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->to_date) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $billings = $query->latest()->paginate(10);
+
+        return view('backend.billings.reports', [
+            'billings' => $billings,
+            'canExport' => true
+        ]);
     }
 }

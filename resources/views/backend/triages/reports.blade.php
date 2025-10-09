@@ -12,7 +12,13 @@
                     <div class="header">
                         <h2><strong>All Triages</strong></h2>
                     </div>
-                    
+                    @include('layouts.partials.filter',[
+                            'filterRoute' => route('triages'),
+                            'reportRoute' => route('reports.generate'),
+                            'extraFilters' => [],
+                            'type' => 'triages',
+                            ])
+
                             @if($errors->any())
     <div class="alert alert-danger">
         <ul class="mb-0">

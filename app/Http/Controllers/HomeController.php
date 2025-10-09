@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\LabTest;
+use App\Models\Triage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +22,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-       $this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -53,20 +55,25 @@ class HomeController extends Controller
         $appointments = DB::table('appointments')->get();
         $patients = Patient::with('user')->get();
         $contacts = DB::table('contacts')->get();
-        return view('backend.dashboard.receptionist', compact( 'appointments', 'contacts', 'doctors', 'patients'));
+        return view('backend.dashboard.receptionist', compact('appointments', 'contacts', 'doctors', 'patients'));
     }
 
     public function patients()
     {
         $appointments = DB::table('appointments')->get();
         $patients = DB::table('patients')->take(5)->get();
-        return view('backend.dashboard.patient', compact( 'appointments', 'patients'));
+        return view('backend.dashboard.patient', compact('appointments', 'patients'));
     }
 
     public function nurses()
     {
-        $triages = DB::table('triages')->get();
-        return view('backend.dashboard.nurse', compact('triages'));
+        $today = now()->toDateString();
+        return view('backend.dashboard.nurse', [
+            'pending_triages' => Triage::whereNull('temperature')->with('patient', 'appointment')->latest()->get(),
+            'pending_triages_count' => Triage::whereNull('temperature')->count(),
+            'today_triages_count' => Triage::whereDate('created_at', $today)->count(),
+            'completed_triages_count' => Triage::whereNotNull('temperature')->count(),
+        ]);
     }
 
     public function pharmacists()
@@ -77,8 +84,27 @@ class HomeController extends Controller
 
     public function lab_technicians()
     {
-        $lab_tests = DB::table('lab_tests')->get();
-        return view('backend.dashboard.lab_technician', compact('lab_tests'));
+        $userId = auth()->id();
+
+        $pending_tests = LabTest::where('lab_technician_id', $userId)
+            ->where('status', 'requested')
+            ->get();
+
+        $in_progress_tests = LabTest::where('lab_technician_id', $userId)
+            ->where('status', 'in_progress')
+            ->get();
+
+        $completed_tests = LabTest::where('lab_technician_id', $userId)
+            ->where('status', 'completed')
+            ->get();
+
+        $total_tests = LabTest::where('lab_technician_id', $userId)->get();
+        return view('backend.dashboard.lab_technician', [
+            'pending_tests' => $pending_tests,
+            'in_progress_tests' => $in_progress_tests,
+            'completed_tests' => $completed_tests,
+            'total_tests' => $total_tests
+        ]);
     }
 
     public function subscribers()

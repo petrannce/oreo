@@ -13,23 +13,10 @@ class ReceptionistController extends Controller
 {
     public function index()
     {
-        // Start query — don't call get() yet
-        $query = Receptionist::with(['user']);
-
-        // Apply filters
-        if (request()->from_date) {
-            $query->whereDate('created_at', '>=', request()->from_date);
-        }
-
-        if (request()->to_date) {
-            $query->whereDate('created_at', '<=', request()->to_date);
-        }
-
-        $receptionists = $query->latest()->paginate(10);
+        $receptionists = Receptionist::all();
 
         return view('backend.receptionists.index', [
             'receptionists' => $receptionists,
-            'canExport' => true
         ]);
     }
 
@@ -134,5 +121,27 @@ class ReceptionistController extends Controller
     {
         DB::table('receptionists')->where('id', $id)->delete();
         return redirect()->route('receptionists')->with('success', 'Receptionist deleted successfully');
+    }
+
+    public function report()
+    {
+        // Start query — don't call get() yet
+        $query = Receptionist::with(['user']);
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $receptionists = $query->latest()->paginate(10);
+
+        return view('backend.receptionists.reports', [
+            'receptionists' => $receptionists,
+            'canExport' => true
+        ]);
     }
 }

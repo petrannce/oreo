@@ -111,7 +111,7 @@ Route::middleware(['auth', 'role.records'])->controller(AppointmentController::c
     Route::delete('/appointment/{id}', 'destroy')->name('appointments.destroy');
     Route::get('/appointment/update-status/{id}/{status}', 'updateStatus')->name('appointment.updateStatus');
     Route::get('/appointments/update-stage/{id}/{stage}', 'updateStage')->name('appointment.updateStage');
-    Route::get('/appointment-report', 'report')->name('appointments.report');
+    Route::get('/appointments-report', 'report')->name('appointments.report');
 });
 
 //services
@@ -134,6 +134,7 @@ Route::middleware(['auth', 'role.records'])->controller(DoctorController::class)
     Route::delete('/doctors/{id}', 'destroy')->name('doctors.destroy');
     Route::get('/doctors/{id}/profile', 'profile')->name('doctors.profile');
     Route::put('/doctors/{id}/profile', 'updateProfile')->name('updateProfile');
+    Route::get('/doctors-report', 'report')->name('doctors.report');
 });
 
 //nurses
@@ -144,6 +145,7 @@ Route::middleware(['auth', 'role.records'])->controller(NurseController::class)-
     Route::get('/nurses/{id}/edit', 'edit')->name('nurses.edit');
     Route::put('/nurses/{id}', 'update')->name('nurses.update');
     Route::delete('/nurses/{id}', 'destroy')->name('nurses.destroy');
+    Route::get('/nurses-report', 'report')->name('nurses.report');
 });
 
 // Lab technicians
@@ -154,17 +156,19 @@ Route::middleware(['auth', 'role.records'])->controller(LabTechnicianController:
     Route::get('/lab-technicians/{id}/edit', 'edit')->name('lab_technicians.edit');
     Route::put('/lab-technicians/{id}', 'update')->name('lab_technicians.update');
     Route::delete('/lab-technicians/{id}', 'destroy')->name('lab_technicians.destroy');
+    Route::get('/lab-technicians-report', 'report')->name('lab_technicians.report');
 });
 
 // Lab Tests
 Route::middleware(['auth', 'role.records'])->controller(LabTestController::class)->prefix('admin')->group(function () {
     Route::get('/lab-tests', 'index')->name('lab_tests');
-    Route::get('/lab-tests/create', 'create')->name('lab_tests.create');
+    Route::get('/lab-tests/create/{appointment_id?}', 'create')->name('lab_tests.create');
     Route::post('/lab-tests', 'store')->name('lab_tests.store');
     Route::get('/lab-tests/{id}/edit', 'edit')->name('lab_tests.edit');
     Route::put('/lab-tests/{id}', 'update')->name('lab_tests.update');
     Route::get('/lab-tests/{id}', 'show')->name('lab_tests.show');
     Route::delete('/lab-tests/{id}', 'destroy')->name('lab_tests.destroy');
+    Route::get('/lab-tests-report', 'report')->name('lab_tests.report');
 });
 
 //medical records
@@ -176,12 +180,13 @@ Route::middleware(['auth', 'role.records'])->controller(MedicalController::class
     Route::put('/medical-records/{id}', 'update')->name('medicals.update');
     Route::get('/medical-records/{id}', 'show')->name('medicals.show');
     Route::delete('/medical-records/{id}', 'destroy')->name('medicals.destroy');
+    Route::get('/medical-records-report', 'report')->name('medicals.report');
 });
 
 // Triages
 Route::middleware(['auth', 'role.records'])->controller(TriageController::class)->prefix('admin')->group(function () {
     Route::get('/triages', 'index')->name('triages');
-    Route::get('/triages/create', 'create')->name('triages.create');
+    Route::get('/triages/create/{appointment_id}', [TriageController::class, 'create'])->name('triages.create');
     Route::post('/triages', 'store')->name('triages.store');
     Route::get('/triages/{id}/edit', 'edit')->name('triages.edit');
     Route::put('/triages/{id}', 'update')->name('triages.update');
@@ -199,7 +204,7 @@ Route::middleware(['auth', 'role.records'])->controller(PatientController::class
     Route::put('/patients/{id}', 'update')->name('patients.update');
     Route::get('/patients/{id}', 'show')->name('patients.show');
     Route::delete('/patients/{id}', 'destroy')->name('patients.destroy');
-    Route::get('/patients/search', 'search')->name('patients.search');
+    Route::get('/patients-report', 'report')->name('patients.report');
 });
 
 //Receptionists
@@ -210,6 +215,7 @@ Route::middleware(['auth', 'role.records'])->controller(ReceptionistController::
     Route::get('/receptionists/{id}/edit', 'edit')->name('receptionists.edit');
     Route::put('/receptionists/{id}', 'update')->name('receptionists.update');
     Route::delete('/receptionists/{id}', 'destroy')->name('receptionists.destroy');
+    Route::get('/receptionists-report', 'report')->name('receptionists.report');
 });
 
 //Departments
@@ -261,6 +267,7 @@ Route::middleware(['auth', 'role.records'])->controller(PharmacyOrderController:
     Route::get('/pharmacy_orders/{id}/edit', 'edit')->name('pharmacy_orders.edit');
     Route::put('/pharmacy_orders/{id}', 'update')->name('pharmacy_orders.update');
     Route::delete('/pharmacy_orders/{id}', 'destroy')->name('pharmacy_orders.destroy');
+    Route::get('/pharmacy_orders-report', 'report')->name('pharmacy_orders.report');
 });
 
 // Pharmacy Order Items
@@ -270,18 +277,20 @@ Route::controller(PharmacyOrderItemController::class)->prefix('admin')->group(fu
     Route::post('/pharmacy_orders_items', 'store')->name('pharmacy_orders_items.store');
     Route::get('/pharmacy_orders_items/{id}/edit', 'edit')->name('pharmacy_orders_items.edit');
     Route::put('/pharmacy_orders_items/{id}', 'update')->name('pharmacy_orders_items.update');
-    Route::delete('/pharmacy_orders_items/{id}', 'destroy')->name('pharmacyy_orders_items.destroy');
+    Route::delete('/pharmacy_orders_items/{id}', 'destroy')->name('pharmacy_orders_items.destroy');
+    Route::get('/pharmacy-orders-items-report', 'report')->name('pharmacy_orders_items.report');
 });
 
 //billings
 Route::controller(BillingController::class)->prefix('admin')->group(function () {
     Route::get('/billings', 'index')->name('billings');
-    Route::get('/billings/create', 'create')->name('billings.create');
+    Route::get('/billings/create/{appointment_id?}', 'create')->name('billings.create');
     Route::post('/billings', 'store')->name('billings.store');
     Route::get('/billings/{id}/edit', 'edit')->name('billings.edit');
     Route::put('/billings/{id}', 'update')->name('billings.update');
     Route::get('/billings/{id}', 'show')->name('billings.show');
     Route::delete('/billings/{id}', 'destroy')->name('billings.destroy');
+    Route::get('/billings-report', 'report')->name('billings.report');
 });
 
 //Users
@@ -297,6 +306,7 @@ Route::controller(UserController::class)->prefix('admin')->group(function () {
     Route::get('/user/update-status/{id}/{status}', 'updateStatus')->name('user.updateStatus');
     Route::get('/check-username', 'checkUsername')->name('check.username');
     Route::get('/check-email', 'checkEmail')->name('check.email');
+    Route::get('/users-report', 'report')->name('users.report');
 });
 
 

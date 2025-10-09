@@ -6,7 +6,7 @@
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-5 col-sm-12">
-                <h2>Doctors
+                <h2>Patients
                     <small class="text-muted">Welcome to Oreo</small>
                 </h2>
             </div>
@@ -14,8 +14,8 @@
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="{{route('doctors.index')}}">Doctors</a></li>
-                    <li class="breadcrumb-item active">Doctors</li>
+                    <li class="breadcrumb-item"><a href="{{route('patients')}}">Patients</a></li>
+                    <li class="breadcrumb-item active">Patients</li>
                 </ul>
             </div>
         </div>
@@ -26,14 +26,21 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="header">
-                        <h2><strong>All Doctors</strong> </h2>
+                        <h2><strong>All Patients</strong> </h2>
                         <ul class="header-dropdown">
                             <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('doctors.create')}}"
-                                    role="button">Create Doctor</a>
+                                <a class="btn btn-primary btn-lg" href="{{route('patient.create')}}"
+                                    role="button">Create Patient</a>
                             </li>
                         </ul>
                     </div>
+
+                    @include('layouts.partials.filter',[
+                            'filterRoute' => route('patients'),
+                            'reportRoute' => route('reports.generate'),
+                            'extraFilters' => [],
+                            'type' => 'patients',
+                            ])
 
                     <div class="body">
                         <div class="table-responsive">
@@ -42,36 +49,36 @@
                                     <tr>
                                         <th>*</th>
                                         <th>Full Name</th>
-                                        <th>License Number</th>
-                                        <th>Deparment</th>
-                                        <th>Status</th>
+                                        <th>Medical Record Number</th>
+                                        <th>Phone Number</th>
+                                        <th>Medical Records</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
-                                    @foreach($doctors as $doctor)
+                                    @foreach($patients as $patient)
 
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
-                                            <td>{{$doctor->user->fname}} {{$doctor->user->lname}}</td>
-                                            <td>{{$doctor->license_number  }}</td>
-                                            <td>{{$doctor->department}}</td>
-                                            <td>{{$doctor->user->profile?->status ?? 'No Status'}}</td>
+                                            <td>{{$patient->user->fname}} {{$patient->user->lname}}</td>
+                                            <td>{{$patient->medical_record_number }}</td>
+                                            <td>{{$patient->profile->phone_number ?? 'No Phone Number' }}</td>
+                                            <td><a href="{{ route('medicals.show', $patient->id) }}">All Records</a></td>
                                             <td>
                                                 <!-- Edit Button -->
                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"
-                                                    onclick="editDoctor({{ $doctor->id }})">
+                                                    onclick="editPatient({{ $patient->id }})">
                                                     <i class="zmdi zmdi-edit"></i>
                                                 </button>
 
                                                 <!-- Delete Button -->
-                                                <form action="{{ route('doctors.destroy', $doctor->id) }}" method="POST"
+                                                <form action="{{ route('patients.destroy', $patient->id) }}" method="POST"
                                                     style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-icon btn-neutral btn-icon-mini"
-                                                        onclick="return confirm('Are you sure you want to delete this doctor?');">
+                                                        onclick="return confirm('Are you sure you want to delete this patient?');">
                                                         <i class="zmdi zmdi-delete"></i>
                                                     </button>
                                                 </form>
@@ -92,7 +99,7 @@
 @endsection
 
 <script>
-    function editDoctor(doctorId) {
-        window.location.href = `/admin/doctors/${doctorId}/edit`;
+    function editPatient(patientId) {
+        window.location.href = `/admin/patients/${patientId}/edit`;
     }
 </script>

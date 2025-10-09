@@ -16,33 +16,25 @@ class TriageController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Triage::with(['patient', 'nurse', 'appointment']);
-
-        // Apply filters
-        if ($request->from_date) {
-            $query->whereDate('created_at', '>=', $request->from_date);
-        }
-        if ($request->to_date) {
-            $query->whereDate('created_at', '<=', $request->to_date);
-        }
-
-        $triages = $query->latest()->paginate(10);
+        $triages = Triage::all();
 
         return view('backend.triages.index', [
             'triages' => $triages,
-            'canExport' => true
         ]);
     }
 
-    public function create(Request $request)
+    public function create(Appointment $appointment, $appointment_id)
     {
-        $appointmentId = $request->query('appointment_id');
+        // Get the appointment and related patient
+        $appointment = Appointment::with('patient', 'doctor', 'service')->findOrFail($appointment_id);
 
-        // Fetch the appointment and its patient
-        $appointment = Appointment::with('patient')->findOrFail($appointmentId);
-
-        // Get the logged-in nurse
+        // Logged-in nurse ID (must be authenticated as nurse)
         $loggedInNurseId = auth()->id();
+
+        // Optionally, confirm the user has nurse role
+        if (!auth()->user()->hasAnyRole(['nurse', 'admin'])) {
+            abort(403, 'Unauthorized action.');
+        }
 
         return view('backend.triages.create', [
             'appointment' => $appointment,
@@ -52,37 +44,33 @@ class TriageController extends Controller
 
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'appointment_id' => 'required|exists:appointments,id',
-            'nurse_id' => 'required|exists:users,id',
-            'temperature' => 'required|numeric',
-            'heart_rate' => 'required|integer',
-            'blood_pressure' => 'required|string|max:255',
-            'weight' => 'required|numeric',
-            'notes' => 'nullable|string',
-        ]);
-
-        DB::beginTransaction();
-
-        try {
-            Triage::create([
-                'patient_id' => $request->patient_id,
-                'appointment_id' => $request->appointment_id,
-                'nurse_id' => $request->nurse_id,
-                'temperature' => $request->temperature,
-                'heart_rate' => $request->heart_rate,
-                'blood_pressure' => $request->blood_pressure,
-                'weight' => $request->weight,
-                'notes' => $request->notes,
+    { {
+            $request->validate([
+                'patient_id' => 'required|exists:users,id',
+                'appointment_id' => 'required|exists:appointments,id',
+                'nurse_id' => 'required|exists:users,id',
+                'temperature' => 'nullable|numeric',
+                'heart_rate' => 'nullable|string|max:255',
+                'blood_pressure' => 'nullable|string|max:255',
+                'weight' => 'nullable|numeric',
+                'notes' => 'nullable|string',
             ]);
 
-            DB::commit();
-            return redirect()->route('triages')->with('success', 'Triage record created successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('triages')->with('error', 'Triage record creation failed');
+            // Save Triage
+            $triage = Triage::create($request->only([
+                'patient_id',
+                'appointment_id',
+                'nurse_id',
+                'temperature',
+                'heart_rate',
+                'blood_pressure',
+                'weight',
+                'notes'
+            ]));
+
+            return redirect()->route('appointments')
+                ->with('triage', $triage)
+                ->with('success', 'Triage created successfully.');
         }
     }
 
@@ -140,11 +128,12 @@ class TriageController extends Controller
         return redirect()->route('triages')->with('success', 'Triage record deleted successfully');
     }
 
+
     public function report(Request $request)
     {
-        // Same query logic as index
         $query = Triage::with(['patient', 'nurse', 'appointment']);
 
+        // Apply filters
         if ($request->from_date) {
             $query->whereDate('created_at', '>=', $request->from_date);
         }
@@ -152,10 +141,11 @@ class TriageController extends Controller
             $query->whereDate('created_at', '<=', $request->to_date);
         }
 
-        $data = $query->get();
+        $triages = $query->latest()->paginate(10);
 
-        // Export as PDF (using dompdf / barryvdh/laravel-dompdf)
-        $pdf = Pdf::loadView('backend.reports.triages', compact('data'));
-        return $pdf->download('triages-report.pdf');
+        return view('backend.triages.reports', [
+            'triages' => $triages,
+            'canExport' => true
+        ]);
     }
 }

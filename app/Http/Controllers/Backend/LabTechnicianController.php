@@ -13,22 +13,10 @@ class LabTechnicianController extends Controller
 {
     public function index()
     {
-        $query = LabTechnician::with('user')->get();
-
-        // Apply filters
-        if (request()->from_date) {
-            $query->whereDate('created_at', '>=', request()->from_date);
-        }
-
-        if (request()->to_date) {
-            $query->whereDate('created_at', '<=', request()->to_date);
-        }
-
-        $lab_technicians = $query->latest()->paginate(10);
+        $lab_technicians = LabTechnician::all();
 
         return view('backend.lab_technicians.index', [
             'lab_technicians' => $lab_technicians,
-            'canExport' => true
         ]);
     }
 
@@ -138,5 +126,26 @@ class LabTechnicianController extends Controller
     {
         DB::table('lab_technicians')->where('id', $id)->delete();
         return redirect()->route('lab_technicians')->with('success', 'Lab Technician deleted successfully');
+    }
+
+    public function report()
+    {
+        $query = LabTechnician::with('user');
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $lab_technicians = $query->latest()->get();
+
+        return view('backend.lab_technicians.reports', [
+            'lab_technicians' => $lab_technicians,
+            'canExport' => true
+        ]);
     }
 }

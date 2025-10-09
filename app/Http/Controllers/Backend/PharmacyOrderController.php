@@ -13,23 +13,10 @@ class PharmacyOrderController extends Controller
 {
     public function index()
     {
-        // Start query — don't call get() yet
-        $query = PharmacyOrder::with(['patient', 'doctor']);
-
-        // Apply filters
-        if (request()->from_date) {
-            $query->whereDate('created_at', '>=', request()->from_date);
-        }
-
-        if (request()->to_date) {
-            $query->whereDate('created_at', '<=', request()->to_date);
-        }
-
-        $pharmacy_orders = $query->latest()->paginate(10);
+        $pharmacy_orders = PharmacyOrder::all();
 
         return view('backend.pharmacy_orders.index', [
             'pharmacy_orders' => $pharmacy_orders,
-            'canExport' => true
         ]);
     }
 
@@ -107,5 +94,27 @@ class PharmacyOrderController extends Controller
         DB::table('pharmacy_orders')->where('id', $id)->first();
         return redirect()->route('pharmacy_orders')->with('success', 'Pharmacy Order deleted successfully');
 
+    }
+
+    public function report()
+    {
+        // Start query — don't call get() yet
+        $query = PharmacyOrder::with(['patient', 'doctor']);
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $pharmacy_orders = $query->latest()->paginate(10);
+
+        return view('backend.pharmacy_orders.reports', [
+            'pharmacy_orders' => $pharmacy_orders,
+            'canExport' => true
+        ]);
     }
 }

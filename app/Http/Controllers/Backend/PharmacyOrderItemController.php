@@ -11,23 +11,10 @@ class PharmacyOrderItemController extends Controller
 {
     public function index()
     {
-        // Start query — don't call get() yet
-        $query = PharmacyOrderItem::with(['pharmacy_order']);
-
-        // Apply filters
-        if (request()->from_date) {
-            $query->whereDate('created_at', '>=', request()->from_date);
-        }
-
-        if (request()->to_date) {
-            $query->whereDate('created_at', '<=', request()->to_date);
-        }
-
-        $pharmacy_order_items = $query->latest()->paginate(10);
+        $pharmacy_order_items = PharmacyOrderItem::all();
 
         return view('backend.pharmacy_orders_items.index', [
             'pharmacy_order_items' => $pharmacy_order_items,
-            'canExport' => true
         ]);
     }
 
@@ -63,5 +50,67 @@ class PharmacyOrderItemController extends Controller
             return redirect()->back()->with('error', 'Failed to add pharmacy order item. Please try again.');
         }
 
+    }
+
+    public function edit($id)
+    {
+        $pharmacy_order_item = PharmacyOrderItem::findOrFail($id);
+        return view('backend.pharmacy_orders_items.edit', compact('pharmacy_order_item'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'pharmacy_order_id' => 'required|exists:pharmacy_orders,id',
+            'drug_name' => 'required|string|max:255',    
+            'quantity' => 'required|numeric',
+            'dosage' => 'nullable|string|max:255',
+            ]);
+
+        DB::beginTransaction();
+
+        try {
+            $pharmacy_order_item = PharmacyOrderItem::findOrFail($id);
+            $pharmacy_order_item->pharmacy_order_id = $request->pharmacy_order_id;
+            $pharmacy_order_item->drug_name = $request->drug_name;
+            $pharmacy_order_item->quantity = $request->quantity;
+            $pharmacy_order_item->dosage = $request->dosage;
+            $pharmacy_order_item->save();
+
+            DB::commit();
+            return redirect()->route('pharmacy_orders_items')->with('success', 'Pharmacy order item updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to update pharmacy order item. Please try again.');
+        }
+
+    }
+
+    public function destroy($id)
+    {
+        DB::table('pharmacy_order_items')->where('id', $id)->delete();
+        return redirect()->route('pharmacy_orders_items')->with('success', 'Pharmacy order item deleted successfully');
+    }
+
+    public function report()
+    {
+        // Start query — don't call get() yet
+        $query = PharmacyOrderItem::with(['pharmacy_order']);
+
+        // Apply filters
+        if (request()->from_date) {
+            $query->whereDate('created_at', '>=', request()->from_date);
+        }
+
+        if (request()->to_date) {
+            $query->whereDate('created_at', '<=', request()->to_date);
+        }
+
+        $pharmacy_order_items = $query->latest()->paginate(10);
+
+        return view('backend.pharmacy_orders_items.reports', [
+            'pharmacy_order_items' => $pharmacy_order_items,
+            'canExport' => true
+        ]);
     }
 }

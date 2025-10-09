@@ -35,13 +35,6 @@
                         </ul>
                     </div>
 
-                    @include('layouts.partials.filter',[
-                            'filterRoute' => route('pharmacy_orders'),
-                            'reportRoute' => route('reports.generate'),
-                            'extraFilters' => [],
-                            'type' => 'pharmacy_orders',
-                            ])
-
                     <div class="body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
