@@ -27,9 +27,6 @@
                     <div class="header">
                         <h2><strong>All Billings</strong></h2>
                         <ul class="header-dropdown">
-                            <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{ route('billings.create') }}" role="button">Add Billing</a>
-                            </li>
                         </ul>
                     </div>
 

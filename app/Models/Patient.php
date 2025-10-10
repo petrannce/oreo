@@ -12,9 +12,11 @@ class Patient extends Model
     protected $table = 'patients';
 
     protected $fillable = [
-        'user_id',
-        'medical_record_number',
-        'dob'
+        'medical_record_number', 'fname', 'lname', 'email',
+        'phone_number', 'gender', 'dob', 'national_id',
+        'country', 'city', 'address',
+        'emergency_contact_name', 'emergency_contact_phone',
+        'relationship_to_patient', 'created_by'
     ];
 
     public function user() 

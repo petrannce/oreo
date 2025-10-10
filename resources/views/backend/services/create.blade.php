@@ -51,7 +51,7 @@
                             <div class="mb-3">
                                 <label for="service_image" class="form-label">Image</label>
                                 <div class="fallback">
-                                    <input name="image" type="file" />
+                                    <input name="image" type="file" required/>
                                 </div>
                             </div>
                         </div>

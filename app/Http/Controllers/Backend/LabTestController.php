@@ -163,6 +163,12 @@ class LabTestController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $lab_test = LabTest::findOrFail($id);
+        return view('backend.lab_tests.view', compact('lab_test'));
+    }
+
     public function destroy($id)
     {
         DB::table('lab_tests')->where('id', $id)->delete();

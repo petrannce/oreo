@@ -28,12 +28,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="header d-flex justify-content-between align-items-center">
-                        <h2><strong>All Appointments</strong></h2>
-                        @role('admin|receptionist')
-                        <a href="{{ route('appointments.create') }}" class="btn btn-primary btn-lg">
-                            <i class="zmdi zmdi-plus"></i> Create Appointment
-                        </a>
-                        @endrole
+                        <h2><strong>All Appointments</strong></h2>=
                     </div>
 
                     {{-- Flash Messages --}}

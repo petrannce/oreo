@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,8 +12,9 @@ return new class extends Migration
     {
         Schema::create('billings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('users')->onDelete('cascade');
-            $table->morphs('billable'); // Polymorphic relation to various billable entities
+            $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
+            $table->morphs('billable');
+            $table->foreignId('hospital_service_id')->nullable()->constrained('hospital_services')->onDelete('set null');
             $table->decimal('amount', 10, 2);
             $table->string('payment_method')->nullable();
             $table->enum('status', ['unpaid', 'paid', 'cancelled'])->default('unpaid');

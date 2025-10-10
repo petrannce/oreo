@@ -9,25 +9,12 @@ use DB;
 
 class DepartmentController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-         // Start query — don't call get() yet
-        $query = Department::query();
-
-        // Apply filters
-        if ($request->from_date) {
-            $query->whereDate('created_at', '>=', $request->from_date);
-        }
-
-        if ($request->to_date) {
-            $query->whereDate('created_at', '<=', $request->to_date);
-        }
-
-        $departments = $query->latest()->paginate(10);
+         $departments = Department::latest()->get();
 
         return view('backend.departments.index', [
             'departments' => $departments,
-            'canExport' => true
         ]);
     }
 
@@ -109,5 +96,27 @@ class DepartmentController extends Controller
     {
         DB::table('departments')->where('id', $id)->delete();
         return redirect()->route('departments')->with('success', 'Department deleted successfully');
+    }
+
+    public function report(Request $request)
+    {
+         // Start query — don't call get() yet
+        $query = Department::query();
+
+        // Apply filters
+        if ($request->from_date) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->to_date) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $departments = $query->latest()->paginate(10);
+
+        return view('backend.departments.reports', [
+            'departments' => $departments,
+            'canExport' => true
+        ]);
     }
 }

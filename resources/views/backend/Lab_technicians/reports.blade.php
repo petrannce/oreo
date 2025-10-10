@@ -28,10 +28,6 @@
                     <div class="header">
                         <h2><strong>All Lab Technicians</strong> </h2>
                         <ul class="header-dropdown">
-                            <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('lab_technicians.create')}}"
-                                    role="button">Create Lab Technician</a>
-                            </li>
                         </ul>
                     </div>
 

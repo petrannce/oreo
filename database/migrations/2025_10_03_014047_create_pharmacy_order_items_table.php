@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pharmacy_order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pharmacy_order_id')->constrained()->onDelete('cascade');
-            $table->string('drug_name');
+            $table->foreignId('medicine_id')->constrained('medicines')->onDelete('cascade');
             $table->integer('quantity');
             $table->string('dosage')->nullable();
             $table->timestamps();

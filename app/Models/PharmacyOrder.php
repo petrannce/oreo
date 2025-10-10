@@ -10,6 +10,7 @@ class PharmacyOrder extends Model
     use HasFactory;
 
     protected $fillable = [
+        'appointment_id',
         'patient_id',
         'doctor_id',
         'medical_record_id',
@@ -17,13 +18,28 @@ class PharmacyOrder extends Model
     ];
 
     // relationships
+
+    public function appointment()
+    {
+        return $this->belongsTo(Appointment::class);
+    }
     public function patient()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class, 'patient_id');
     }
     public function doctor()
     {
-        return $this->belongsTo(Doctor::class);
+        return $this->belongsTo(Doctor::class, 'doctor_id');
+    }
+
+    public function appointmment()
+    {
+        return $this->belongsTo(Appointment::class, 'appointment_id');
+    }
+
+    public function medicalRecord()
+    {
+        return $this->belongsTo(Medical::class, 'medical_record_id');
     }
 
     public function pharmacyOrder()

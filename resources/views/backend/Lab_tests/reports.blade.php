@@ -13,9 +13,6 @@
                         <h2><strong>All Lab Tests</strong></h2>
                         @role('admin|lab_technician')
                         <ul class="header-dropdown">
-                            <li>
-                                <a href="{{ route('lab_tests.create') }}" class="btn btn-primary btn-lg">Create Lab Test</a>
-                            </li>
                         </ul>
                         @endrole
                     </div>

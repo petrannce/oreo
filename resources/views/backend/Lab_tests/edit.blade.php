@@ -99,7 +99,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-primary btn-round">Update</button>
-                            <a href="{{ route('lab_tests.index') }}" class="btn btn-default btn-round btn-simple">Cancel</a>
+                            <a href="{{ route('lab_tests') }}" class="btn btn-default btn-round btn-simple">Cancel</a>
                         </form>
                     </div>
                 </div>

@@ -29,7 +29,7 @@
                         <h2><strong>All Patients</strong> </h2>
                         <ul class="header-dropdown">
                             <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('patient.create')}}"
+                                <a class="btn btn-primary btn-lg" href="{{route('patients.create')}}"
                                     role="button">Create Patient</a>
                             </li>
                         </ul>
@@ -54,9 +54,9 @@
 
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
-                                            <td>{{$patient->user->fname}} {{$patient->user->lname}}</td>
+                                            <td>{{$patient->fname}} {{$patient->lname}}</td>
                                             <td>{{$patient->medical_record_number }}</td>
-                                            <td>{{$patient->profile->phone_number ?? 'No Phone Number' }}</td>
+                                            <td>{{$patient->phone_number ?? 'No Phone Number' }}</td>
                                             <td><a href="{{ route('medicals.show', $patient->id) }}">All Records</a></td>
                                             <td>
                                                 <!-- Edit Button -->

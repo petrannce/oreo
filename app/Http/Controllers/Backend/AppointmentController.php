@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
@@ -14,7 +15,7 @@ class AppointmentController extends Controller
 {
     public function index()
     {
-        
+
         $appointments = Appointment::with('patient', 'doctor', 'service')->get();
 
         return view('backend.appointments.index', [
@@ -24,10 +25,14 @@ class AppointmentController extends Controller
 
     public function create()
     {
-        $patients = User::where('role', 'patient')->get();
+        $patients = Patient::all();
         $services = Service::all();
         $doctors = User::where('role', 'doctor')->get();
-        return view('backend.appointments.create', compact('patients', 'services', 'doctors'));
+        return view('backend.appointments.create',[
+            'patients' => $patients,
+            'services' => $services,
+            'doctors' => $doctors
+        ]);
     }
 
     public function store(Request $request)

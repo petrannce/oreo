@@ -74,9 +74,9 @@ class ReportController extends Controller
                 'date_field' => 'created_at',
             ],
             'patients' => [
-                'model' => \App\Models\User::class,
-                'relations' => ['profile'],
-                'columns' => ['fname', 'lname', 'username', 'email', 'role', 'profile.status', 'created_at'],
+                'model' => \App\Models\Patient::class,
+                'relations' => ['appointments'],
+                'columns' => ['fname', 'lname', 'email', 'phone number', 'gender', 'country', 'created_at'],
                 'title' => 'Patients Report',
                 'date_field' => 'created_at',
             ],
@@ -99,6 +99,13 @@ class ReportController extends Controller
                 'relations' => ['user', 'appointments'],
                 'columns' => ['user.fname', 'user.lname', 'user.username', 'user.email', 'user.role', 'user.profile.status', 'created_at'],
                 'title' => 'Receptionists Report',
+                'date_field' => 'created_at',
+            ],
+            'departments' => [
+                'model' => \App\Models\Department::class,
+                'relations' => [],
+                'columns' => ['name', 'created_at'],
+                'title' => 'Departments Report',
                 'date_field' => 'created_at',
             ],
             'triages' => [

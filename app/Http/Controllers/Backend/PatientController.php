@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Patient;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
     public function index()
     {
-        $patients = Patient::all();
+        $patients = Patient::latest()->get();
 
         return view('backend.patients.index', [
             'patients' => $patients,
@@ -21,30 +22,31 @@ class PatientController extends Controller
 
     public function create()
     {
-        $users = User::where('role', 'patient')
-        ->whereDoesntHave('patient')
-        ->get();
-        return view('backend.patients.create',compact('users'));
+        // No need to fetch users since patients are not users
+        return view('backend.patients.create');
     }
 
     public function store(Request $request)
     {
+
         $request->validate([
-            'user_id' => 'required',
-            'dob' => 'required',
+            'fname' => 'required|string|max:255',
+            'lname' => 'required|string|max:255',
+            'dob' => 'nullable|date',
+            'email' => 'nullable|email|unique:patients,email',
+            'phone_number' => 'nullable|string|max:20',
         ]);
+
         DB::beginTransaction();
 
         try {
-
-            // Get last patient entry
+            // Get last MRN
             $lastPatient = Patient::whereNotNull('medical_record_number')
                 ->orderBy('id', 'desc')
                 ->select('medical_record_number')
                 ->first();
 
-            // Generate new employee code if not provided
-            if($lastPatient && preg_match('/(\d+)$/', $lastPatient->medical_record_number, $m)) {
+            if ($lastPatient && preg_match('/(\d+)$/', $lastPatient->medical_record_number, $m)) {
                 $nextNumber = intval($m[1]) + 1;
             } else {
                 $nextNumber = 1;
@@ -52,24 +54,37 @@ class PatientController extends Controller
 
             $medical_record_number = 'MRN' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
 
-            while(Patient::where('medical_record_number', $medical_record_number)->exists()) {
+            // Ensure MRN uniqueness
+            while (Patient::where('medical_record_number', $medical_record_number)->exists()) {
                 $nextNumber++;
                 $medical_record_number = 'MRN' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
             }
 
-            $finalcode = $request->medical_record_number ?? $medical_record_number;
-
+            // Create patient
             Patient::create([
-                'user_id' => $request->user_id,
-                'medical_record_number' => $finalcode,
+                'fname' => $request->fname,
+                'lname' => $request->lname,
+                'email' => $request->email,
+                'phone_number' => $request->phone_number,
+                'gender' => $request->gender,
                 'dob' => $request->dob,
+                'national_id' => $request->national_id,
+                'country' => $request->country,
+                'city' => $request->city,
+                'address' => $request->address,
+                'emergency_contact_name' => $request->emergency_contact_name,
+                'emergency_contact_phone' => $request->emergency_contact_phone,
+                'relationship_to_patient' => $request->relationship_to_patient,
+                'medical_record_number' => $medical_record_number,
+                'created_by' => Auth::id(),
             ]);
 
             DB::commit();
-            return redirect()->route('patients')->with('success', 'Patient created successfully');
+
+            return redirect()->route('patients')->with('success', 'Patient registered successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('patients')->with('error', 'Patient creation failed');
+            return redirect()->route('patients')->with('error', 'Failed to register patient: ' . $e->getMessage());
         }
     }
 
@@ -81,31 +96,34 @@ class PatientController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Fetch the patient
+        $patient = Patient::findOrFail($id);
 
-        $request->validate([
-            'user_id' => 'required',
-            'medical_record_number' => 'required',
-            'dob' => 'required',
+        // Validate incoming data
+        $validated = $request->validate([
+            'fname' => 'required|string|max:100',
+            'lname' => 'required|string|max:100',
+            'email' => 'nullable|email|max:150|unique:patients,email,' . $patient->id,
+            'phone_number' => 'nullable|string|max:20',
+            'gender' => 'nullable|in:male,female,other',
+            'dob' => 'nullable|date|before_or_equal:today',
+            'national_id' => 'nullable|string|max:50',
+            'country' => 'nullable|string|max:100',
+            'city' => 'nullable|string|max:100',
+            'address' => 'nullable|string|max:255',
+            'emergency_contact_name' => 'nullable|string|max:150',
+            'emergency_contact_phone' => 'nullable|string|max:20',
+            'relationship_to_patient' => 'nullable|string|max:100',
         ]);
 
-        DB::beginTransaction();
+        // Update the patient record
+        $patient->fill($validated);
 
-        try {
-            $patient = Patient::findOrFail($id);
+        $patient->save();
 
-            $patient->user_id = $request->user_id;
-            $patient->medical_record_number = $request->medical_record_number;
-            $patient->dob = $request->dob;
-
-            $patient->save();
-            
-            DB::commit();
-            return redirect()->route('patients')->with('success', 'Patient updated successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            //dd($e->getMessage(), $e->getTraceAsString());
-            return redirect()->route('patients')->with('error', 'Patient update failed');
-        }
+        return redirect()
+            ->route('patients')
+            ->with('success', 'Patient details updated successfully.');
     }
 
     public function show($id)
@@ -116,16 +134,14 @@ class PatientController extends Controller
 
     public function destroy($id)
     {
-        DB::table('patients')->where('id', $id)->delete();
-        return redirect()->route('patients')->with('success', 'Patient deleted successfully');
+        Patient::findOrFail($id)->delete();
+        return redirect()->route('patients')->with('success', 'Patient deleted successfully.');
     }
 
     public function report()
     {
-        // Start query — don't call get() yet
-        $query = Patient::with(['user']);
+        $query = Patient::query();
 
-        // Apply filters
         if (request()->from_date) {
             $query->whereDate('created_at', '>=', request()->from_date);
         }
@@ -138,9 +154,7 @@ class PatientController extends Controller
 
         return view('backend.patients.reports', [
             'patients' => $patients,
-            'canExport' => true
+            'canExport' => true,
         ]);
     }
-
-
 }

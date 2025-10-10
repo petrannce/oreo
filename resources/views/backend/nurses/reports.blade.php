@@ -28,10 +28,6 @@
                     <div class="header">
                         <h2><strong>All Nurses</strong> </h2>
                         <ul class="header-dropdown">
-                            <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('nurses.create')}}"
-                                    role="button">Create Nurse</a>
-                            </li>
                         </ul>
                     </div>
 

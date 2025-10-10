@@ -94,7 +94,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-primary btn-round">Update</button>
-                            <a href="{{ route('triages.index') }}" class="btn btn-default btn-round btn-simple">Cancel</a>
+                            <a href="{{ route('triages') }}" class="btn btn-default btn-round btn-simple">Cancel</a>
                         </form>
                     </div>
                 </div>

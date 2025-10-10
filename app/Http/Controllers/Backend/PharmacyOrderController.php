@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\PharmacyOrder;
@@ -13,44 +14,63 @@ class PharmacyOrderController extends Controller
 {
     public function index()
     {
-        $pharmacy_orders = PharmacyOrder::all();
+        $pharmacy_orders = PharmacyOrder::with(['doctor', 'patient'])->get();
 
         return view('backend.pharmacy_orders.index', [
             'pharmacy_orders' => $pharmacy_orders,
         ]);
     }
 
-    public function create()
+    public function create($appointment_id = null)
     {
-        $patients = Patient::all();
-        $doctors = Doctor::all();
-        return view('backend.pharmacy_orders.create', compact('patients', 'doctors'));
+        $appointment = null;
+
+        if ($appointment_id) {
+            $appointment = Appointment::with(['patient', 'doctor'])->find($appointment_id);
+        }
+
+        return view('backend.pharmacy_orders.create', [
+            'appointment' => $appointment,
+            'patients' => Patient::all(),
+            'doctors' => Doctor::all(),
+            'appointments' => Appointment::with(['patient'])->get(),
+        ]);
     }
+
 
     public function store(Request $request)
     {
         $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'doctor_id' => 'required|exists:doctors,id',
-            'medical_record_id' => 'required|string',
-            'status' => 'required|string',
+            'appointment_id' => 'required|exists:appointments,id',
+            'status' => 'required|in:pending,billed,dispensed',
         ]);
 
         DB::beginTransaction();
 
         try {
-            $pharmacy_order = new PharmacyOrder();
-            $pharmacy_order->patient_id = $request->patient_id;
-            $pharmacy_order->doctor_id = $request->doctor_id;
-            $pharmacy_order->medical_record_id = $request->medical_record_id;
-            $pharmacy_order->status = $request->status;
-            $pharmacy_order->save();
+            // Fetch related appointment
+            $appointment = Appointment::with(['patient', 'doctor', 'medicalRecord'])
+                ->findOrFail($request->appointment_id);
+
+            $order = new PharmacyOrder();
+            $order->appointment_id = $appointment->id;
+            $order->patient_id = $appointment->patient_id;
+            $order->doctor_id = $appointment->doctor_id;
+            $order->medical_record_id = $appointment->medicalRecord->id ?? null;
+            $order->status = $request->status ?? 'pending';
+
+            $order->save();
 
             DB::commit();
-            return redirect()->route('pharmacy_orders.index')->with('success', 'Pharmacy Order created successfully');
+
+            return redirect()
+                ->route('pharmacy_orders')
+                ->with('success', 'Pharmacy order created successfully.');
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('pharmacy_orders.index')->with('error', 'Failed to create Pharmacy Order');
+
+            return redirect()->back()->with('error', 'Error creating order: ' . $e->getMessage());
         }
     }
 
@@ -65,28 +85,43 @@ class PharmacyOrderController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'doctor_id' => 'required|exists:doctors,id',
-            'medical_record_id' => 'required|string',
-            'status' => 'required|string',
+            'appointment_id' => 'required|exists:appointments,id',
+            'status' => 'required|in:pending,billed,dispensed',
         ]);
 
         DB::beginTransaction();
 
         try {
-            $pharmacy_order = PharmacyOrder::findOrFail($id);
-            $pharmacy_order->patient_id = $request->patient_id;
-            $pharmacy_order->doctor_id = $request->doctor_id;
-            $pharmacy_order->medical_record_id = $request->medical_record_id;
-            $pharmacy_order->status = $request->status;
-            $pharmacy_order->save();
+            $order = PharmacyOrder::findOrFail($id);
+
+            $appointment = Appointment::with(['patient', 'doctor', 'medicalRecord'])
+                ->findOrFail($request->appointment_id);
+
+            $order->appointment_id = $appointment->id;
+            $order->patient_id = $appointment->patient_id;
+            $order->doctor_id = $appointment->doctor_id;
+            $order->medical_record_id = $appointment->medicalRecord->id ?? null;
+            $order->status = $request->status;
+
+            $order->save();
 
             DB::commit();
-            return redirect()->route('pharmacy_orders')->with('success', 'Pharmacy Order updated successfully');
+
+            return redirect()
+                ->route('pharmacy_orders')
+                ->with('success', 'Pharmacy order updated successfully.');
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('pharmacy_orders')->with('error', 'Failed to update Pharmacy Order');
+
+            return redirect()->back()->with('error', 'Error updating order: ' . $e->getMessage());
         }
+    }
+
+    public function show($id)
+    {
+        $pharmacy_order = PharmacyOrder::findOrFail($id);
+        return view('backend.pharmacy_orders.view', compact('pharmacy_order'));
     }
 
     public function destroy($id)

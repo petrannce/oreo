@@ -13,13 +13,40 @@ class Billing extends Model
         'patient_id',
         'billable_type',
         'billable_id',
+        'hospital_service_id',
         'amount',
         'payment_method',
         'status',
     ];
 
-    public function patient()
+     public function billable()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->morphTo();
     }
+
+    public function medicalRecords()
+    {
+        return $this->hasMany(Medical::class);
+    }
+
+    public function labTests()
+    {
+        return $this->hasMany(LabTest::class);
+    }
+
+    public function consultations()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(BillingItem::class);
+    }
+
+    public function getTotalAttribute()
+    {
+        return $this->items->sum('subtotal');
+    }
+
 }

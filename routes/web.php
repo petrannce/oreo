@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\backend\BillingController;
+use App\Http\Controllers\Backend\HospitalDetailsController;
+use App\Http\Controllers\Backend\HospitalServiceController;
 use App\Http\Controllers\backend\LabTechnicianController;
 use App\Http\Controllers\backend\LabTestController;
 use App\Http\Controllers\Backend\NurseController;
@@ -174,7 +176,7 @@ Route::middleware(['auth', 'role.records'])->controller(LabTestController::class
 //medical records
 Route::middleware(['auth', 'role.records'])->controller(MedicalController::class)->prefix('admin')->group(function () {
     Route::get('/medical-records', 'index')->name('medicals');
-    Route::get('/medical-records/create', 'create')->name('medicals.create');
+    Route::get('/medical-records/create/{appointment_id?}', 'create')->name('medicals.create');
     Route::post('/medical-records', 'store')->name('medicals.store');
     Route::get('/medical-records/{id}/edit', 'edit')->name('medicals.edit');
     Route::put('/medical-records/{id}', 'update')->name('medicals.update');
@@ -198,7 +200,7 @@ Route::middleware(['auth', 'role.records'])->controller(TriageController::class)
 //Patients
 Route::middleware(['auth', 'role.records'])->controller(PatientController::class)->prefix('admin')->group(function () {
     Route::get('/patients', 'index')->name('patients');
-    Route::get('/patients/create', 'create')->name('patient.create');
+    Route::get('/patients/create', 'create')->name('patients.create');
     Route::post('/patients', 'store')->name('patients.store');
     Route::get('/patients/{id}/edit', 'edit')->name('patients.edit');
     Route::put('/patients/{id}', 'update')->name('patients.update');
@@ -226,6 +228,7 @@ Route::controller(DepartmentController::class)->prefix('admin')->group(function 
     Route::get('/departments/{id}/edit', 'edit')->name('departments.edit');
     Route::put('/departments/{id}', 'update')->name('departments.update');
     Route::delete('/departments/{id}', 'destroy')->name('departments.destroy');
+    Route::get('/departments-report', 'report')->name('departments.report');
 });
 
 //Tags
@@ -262,10 +265,11 @@ Route::controller(ResourceController::class)->prefix('admin')->group(function ()
 // Pharmacy Orders
 Route::middleware(['auth', 'role.records'])->controller(PharmacyOrderController::class)->prefix('admin')->group(function () {
     Route::get('/pharmacy_orders', 'index')->name('pharmacy_orders');
-    Route::get('/pharmacy_orders/create', 'create')->name('pharmacy_orders.create');
+    Route::get('/pharmacy_orders/create/{appointment_id?}', 'create')->name('pharmacy_orders.create');
     Route::post('/pharmacy_orders', 'store')->name('pharmacy_orders.store');
     Route::get('/pharmacy_orders/{id}/edit', 'edit')->name('pharmacy_orders.edit');
     Route::put('/pharmacy_orders/{id}', 'update')->name('pharmacy_orders.update');
+    Route::get('/pharmacy_orders/{id}', 'show')->name('pharmacy_orders.show');
     Route::delete('/pharmacy_orders/{id}', 'destroy')->name('pharmacy_orders.destroy');
     Route::get('/pharmacy_orders-report', 'report')->name('pharmacy_orders.report');
 });
@@ -291,6 +295,31 @@ Route::controller(BillingController::class)->prefix('admin')->group(function () 
     Route::get('/billings/{id}', 'show')->name('billings.show');
     Route::delete('/billings/{id}', 'destroy')->name('billings.destroy');
     Route::get('/billings-report', 'report')->name('billings.report');
+    Route::get('/billings/fetch-patient-services/{patient}', 'fetchPatientServices')
+    ->name('billings.fetch-patient-services');
+
+});
+
+// Hospital Services
+Route::controller(HospitalServiceController::class)->prefix('admin')->group(function () {
+    Route::get('/hospital_services', 'index')->name('hospital_services');
+    Route::get('/hospital_services/create', 'create')->name('hospital_services.create');
+    Route::post('/hospital_services', 'store')->name('hospital_services.store');
+    Route::get('/hospital_services/{id}/edit', 'edit')->name('hospital_services.edit');
+    Route::put('/hospital_services/{id}', 'update')->name('hospital_services.update');
+    Route::delete('/hospital_services/{id}', 'destroy')->name('hospital_services.destroy');
+    Route::get('/hospital_services-report', 'report')->name('hospital_services.report');
+});
+
+// Hospital details
+Route::controller(HospitalDetailsController::class)->prefix('admin')->group(function () {
+    Route::get('/hospital_details', 'index')->name('hospital_details');
+    Route::get('/hospital_details/create', 'create')->name('hospital_details.create');
+    Route::post('/hospital_details', 'store')->name('hospital_details.store');
+    Route::get('/hospital_details/{id}/edit', 'edit')->name('hospital_details.edit');
+    Route::put('/hospital_details/{id}', 'update')->name('hospital_details.update');
+    Route::delete('/hospital_details/{id}', 'destroy')->name('hospital_details.destroy');
+    Route::get('/hospital_details-report', 'report')->name('hospital_details.report');
 });
 
 //Users

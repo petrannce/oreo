@@ -139,8 +139,8 @@
                                     @foreach ($patients->take(10) as $patient)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $patient->user->fname }} {{ $patient->user->lname }}</td>
-                                            <td>{{ $patient->user->email ?? 'N/A' }}</td>
+                                            <td>{{ $patient->fname }} {{ $patient->lname }}</td>
+                                            <td>{{ $patient->email ?? 'N/A' }}</td>
                                             <td>
                                                 {{ optional($patient->appointments->last())->record_date 
                                                     ? optional($patient->appointments->last())->record_date->format('d M Y') 

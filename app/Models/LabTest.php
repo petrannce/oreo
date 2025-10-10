@@ -22,7 +22,7 @@ class LabTest extends Model
 
     public function patient()
     {
-        return $this->belongsTo(User::class, 'patient_id');
+        return $this->belongsTo(Patient::class);
     }
 
     public function doctor()

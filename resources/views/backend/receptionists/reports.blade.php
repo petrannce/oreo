@@ -27,9 +27,6 @@
                     <div class="header">
                         <h2><strong>All Receptionists</strong> </h2>
                         <ul class="header-dropdown">
-                            <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('receptionists.create')}}" role="button">Create Receptionist</a>
-                            </li>
                         </ul>
                     </div>
 

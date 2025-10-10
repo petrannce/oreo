@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\LabTest;
 use App\Models\Medical;
 use DB;
 use Illuminate\Http\Request;
@@ -19,19 +20,18 @@ class MedicalController extends Controller
         ]);
     }
 
-    public function create(Request $request)
-    {
-        $appointmentId = $request->get('appointment_id');
-        $appointment = null;
+ public function create($appointment_id = null)
+{
+    $appointment = null;
 
-        if ($appointmentId) {
-            $appointment = Appointment::with('patient', 'doctor')->findOrFail($appointmentId);
-        }
-
-        $patients = Appointment::with('patient')->whereNotNull('patient_id')->get();
-
-        return view('backend.medicals.create', compact('patients', 'appointment'));
+    if ($appointment_id) {
+        $appointment = Appointment::with('patient')->find($appointment_id);
     }
+
+    $lab_tests = LabTest::all();
+
+    return view('backend.medicals.create', compact('appointment', 'lab_tests'));
+}
 
 
     public function store(Request $request)
@@ -53,7 +53,7 @@ class MedicalController extends Controller
             $medicalRecord->appointment->update(['process_stage' => 'lab']);
         }
 
-        return redirect()->route('medicals')->with('success', 'Medical record created successfully!');
+        return redirect()->route('appointments')->with('success', 'Medical record created successfully!');
     }
 
 

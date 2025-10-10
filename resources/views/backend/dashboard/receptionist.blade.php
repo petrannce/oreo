@@ -11,7 +11,7 @@
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 text-right">
                 <a href="{{ route('appointments.create') }}" class="btn btn-primary btn-sm"><i class="zmdi zmdi-plus"></i> New Appointment</a>
-                <a href="{{ route('users.create') }}" class="btn btn-success btn-sm"><i class="zmdi zmdi-accounts"></i> Register Patient</a>
+                <a href="{{ route('patients.create') }}" class="btn btn-success btn-sm"><i class="zmdi zmdi-accounts"></i> Register Patient</a>
             </div>
         </div>
     </div>

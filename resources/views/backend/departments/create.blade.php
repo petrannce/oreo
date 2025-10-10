@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="fallback">
-                                        <input name="image" type="file" multiple />
+                                        <input name="image" type="file" multiple  required/>
                                     </div>
                                 </div>
                             </div>

@@ -23,7 +23,7 @@ class Appointment extends Model
 
     public function patient()
     {
-        return $this->belongsTo(User::class, 'patient_id');
+        return $this->belongsTo(Patient::class);
     }
     public function doctor()
     {
@@ -65,10 +65,22 @@ class Appointment extends Model
         return $this->hasOne(LabTest::class);
     }
 
+    public function medicalRecord()
+{
+    return $this->hasOne(Medical::class);
+}
+
     public function pharmacyOrder()
-    {
-        return $this->hasOne(PharmacyOrder::class);
-    }
+{
+    return $this->hasOneThrough(
+        PharmacyOrder::class,
+        Medical::class,
+        'appointment_id',  // Foreign key on medical_records
+        'medical_record_id',  // Foreign key on pharmacy_orders
+        'id',  // Local key on appointments
+        'id'   // Local key on medical_records
+    );
+}
 
     public function billing()
     {

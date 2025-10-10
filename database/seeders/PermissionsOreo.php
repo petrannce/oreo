@@ -29,6 +29,7 @@ class PermissionsOreo extends Seeder
             'manage resources',
             'manage blogs',
             'manage users',
+            'manage prescriptions',
         ];
 
         foreach ($permissions as $permission) {

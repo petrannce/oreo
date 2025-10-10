@@ -68,11 +68,21 @@ class HomeController extends Controller
     public function nurses()
     {
         $today = now()->toDateString();
+        $today_triages_count = Triage::whereDate('created_at', $today)->count();
+        $pending_triages = Appointment::whereDoesntHave('triage')
+            ->with('patient')
+            ->where('status', 'pending')
+            ->latest()
+            ->take(10)
+            ->get();
+            $pending_triages_count = $pending_triages->count();
+            $completed_triages_count = Triage::count();
+
         return view('backend.dashboard.nurse', [
-            'pending_triages' => Triage::whereNull('temperature')->with('patient', 'appointment')->latest()->get(),
-            'pending_triages_count' => Triage::whereNull('temperature')->count(),
-            'today_triages_count' => Triage::whereDate('created_at', $today)->count(),
-            'completed_triages_count' => Triage::whereNotNull('temperature')->count(),
+            'today_triages_count' => $today_triages_count,
+            'pending_triages' => $pending_triages,
+            'pending_triages_count' => $pending_triages_count,
+            'completed_triages_count' => $completed_triages_count
         ]);
     }
 

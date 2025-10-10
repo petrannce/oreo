@@ -27,10 +27,6 @@
                     <div class="header">
                         <h2><strong>All Pharmacy Order Items</strong></h2>
                         <ul class="header-dropdown">
-                            <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{ route('pharmacy_orders_items.create') }}"
-                                    role="button">Add Pharmacy Order Item</a>
-                            </li>
                         </ul>
                     </div>
 

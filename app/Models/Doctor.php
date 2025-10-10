@@ -31,4 +31,14 @@ class Doctor extends Model
         return $this->hasOne(Profile::class);
     }
 
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function pharmacyOrders()
+    {
+        return $this->hasMany(PharmacyOrder::class);
+    }
+
 }

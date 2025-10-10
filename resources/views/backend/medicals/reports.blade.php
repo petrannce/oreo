@@ -30,10 +30,6 @@
                             @role('admin|doctor')
                             <ul class="header-dropdown">
                                 <li class="remove">
-                                    <a class="btn btn-primary btn-lg" href="{{route('medicals.create')}}"
-                                        role="button">Create
-                                        Medical</a>
-                                </li>
                             </ul>
                             @endrole
                         </div>

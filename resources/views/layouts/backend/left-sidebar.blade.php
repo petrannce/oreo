@@ -245,57 +245,91 @@
                     </li>
                     @endrole
 
-                    <li class="header">All reports</li>
 
-
-                    <li class="header">Reports</li>
-
+                    <li class="header">All Reports</li>
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-account-o"></i><span>Reports</span> </a>
                         <ul class="ml-menu">
+
+                            @role('admin|nurse|doctor|receptionist')
+
                             <li
                                 class="{{ Request::route()->getName() == 'appointments.report' ? 'active' : 'inactive' }}">
                                 <a href="{{route('appointments.report')}}">All Appointments</a>
                             </li>
+
+                            @endrole
+
+                            @role('admin|pharmacist')
+
                             <li class="{{ Request::route()->getName() == 'billings.report' ? 'active' : 'inactive' }}">
                                 <a href="{{route('billings.report')}}">All Billings</a>
-                            <li class="{{ Request::route()->getName() == 'doctors.report' ? 'active' : 'inactive' }}">
-                                <a href="{{route('doctors.report')}}">All Doctors</a>
                             </li>
-                            <li
-                                class="{{ Request::route()->getName() == 'lab_technicians.report' ? 'active' : 'inactive' }}">
-                                <a href="{{route('lab_technicians.report')}}">All Lab technicians</a>
-                            </li>
+
+                            @endrole
+
+                            @role('admin|doctor|lab_technician')
+
                             <li class="{{ Request::route()->getName() == 'lab_tests.report' ? 'active' : 'inactive' }}">
                                 <a href="{{route('lab_tests.report')}}">All Lab Tests</a>
                             </li>
+
                             <li class="{{ Request::route()->getName() == 'medicals.report' ? 'active' : 'inactive' }}">
                                 <a href="{{route('medicals.report')}}">All Medical Records</a>
                             </li>
-                            <li class="{{ Request::route()->getName() == 'nurses.report' ? 'active' : 'inactive' }}">
-                                <a href="{{route('nurses.report')}}">All Nurses</a>
-                            </li>
+
+                            @endrole
+
+                            @role('admin|receptionist|nurse|doctor')
+
                             <li class="{{ Request::route()->getName() == 'patients.report' ? 'active' : 'inactive' }}">
                                 <a href="{{route('patients.report')}}">All Patients</a>
                             </li>
+
+                            @endrole
+
+                            @role('admin|pharmacist|doctor')
                             <li
                                 class="{{ Request::route()->getName() == 'pharmacy_orders.report' ? 'active' : 'inactive' }}">
                                 <a href="{{route('pharmacy_orders.report')}}">All Pharmacy Orders</a>
                             </li>
+
                             <li
                                 class="{{ Request::route()->getName() == 'pharmacy_orders_items.report' ? 'active' : 'inactive' }}">
                                 <a href="{{route('pharmacy_orders_items.report')}}">All Pharmacy Items</a>
                             </li>
+
+                            @endrole
+
+                            @role('admin|doctor|lab_technician')
+
+                            <li class="{{ Request::route()->getName() == 'triages.report' ? 'active' : 'inactive' }}">
+                                <a href="{{route('triages.report')}}">All Triages</a>
+                            </li>
+                            @endrole
+
+                            @role('admin')
                             <li
                                 class="{{ Request::route()->getName() == 'receptionists.report' ? 'active' : 'inactive' }}">
                                 <a href="{{route('receptionists.report')}}">All Receptionists</a>
                             </li>
-                            <li class="{{ Request::route()->getName() == 'triages.report' ? 'active' : 'inactive' }}">
-                                <a href="{{route('triages.report')}}">All Triages</a>
+                            <li class="{{ Request::route()->getName() == 'doctors.report' ? 'active' : 'inactive' }}">
+                                <a href="{{route('doctors.report')}}">All Doctors</a>
                             </li>
-                            <li class="{{ Request::route()->getName() == 'users.report' ? 'active' : 'inactive' }}">
-                                <a href="{{route('users.report')}}">All Users</a>
+                            <li class="{{ Request::route()->getName() == 'nurses.report' ? 'active' : 'inactive' }}">
+                                <a href="{{route('nurses.report')}}">All Nurses</a>
+                            <li
+                                class="{{ Request::route()->getName() == 'lab_technicians.report' ? 'active' : 'inactive' }}">
+                                <a href="{{route('lab_technicians.report')}}">All Lab technicians</a>
                             </li>
+                    </li>
+                    <li class="{{ Request::route()->getName() == 'doctors.report' ? 'active' : 'inactive' }}">
+                        <a href="{{route('departments.report')}}">All Departments</a>
+                    </li>
+                    <li class="{{ Request::route()->getName() == 'users.report' ? 'active' : 'inactive' }}">
+                        <a href="{{route('users.report')}}">All Users</a>
+                    </li>
+                    @endrole
                     </li>
 
                     </li>
@@ -344,7 +378,7 @@
                             <a href="{{route('patients')}}">All Patients</a>
                         </li>
                         <li class="{{ Request::route()->getName() == 'patient.create' ? 'active' : 'inactive' }}">
-                            <a href="{{route('patient.create')}}">Add Patient</a>
+                            <a href="{{route('patients.create')}}">Add Patient</a>
                         </li>
                         @role('admin')
                         <li class="{{ Request::route()->getName() == 'patient-profile' ? 'active' : 'inactive' }}">
@@ -398,7 +432,35 @@
                 </li>
                 @endrole
 
-                @role('admin|receptionist')
+                @role('admin')
+                <li><a href="javascript:void(0);" class="menu-toggle"><i
+                            class="zmdi zmdi-account-o"></i><span>Hospital Services</span> </a>
+                    <ul class="ml-menu">
+                        <li class="{{ Request::route()->getName() == 'hospital_services' ? 'active' : 'inactive' }}">
+                            <a href="{{route('hospital_services')}}">Hospital Services</a>
+                        </li>
+                        <li class="{{ Request::route()->getName() == 'receptionist.create' ? 'active' : 'inactive' }}">
+                            <a href="{{route('hospital_services.create')}}">Add Hospital Service</a>
+                        </li>
+                    </ul>
+                </li>
+                @endrole
+
+                @role('admin')
+                <li><a href="javascript:void(0);" class="menu-toggle"><i
+                            class="zmdi zmdi-account-o"></i><span>Hospital Details</span> </a>
+                    <ul class="ml-menu">
+                        <li class="{{ Request::route()->getName() == 'hospital_details' ? 'active' : 'inactive' }}">
+                            <a href="{{route('hospital_details')}}">Hospital Details</a>
+                        </li>
+                        <li class="{{ Request::route()->getName() == 'receptionist.create' ? 'active' : 'inactive' }}">
+                            <a href="{{route('hospital_details.create')}}">Add Hospital Detail</a>
+                        </li>
+                    </ul>
+                </li>
+                @endrole
+
+                @role('admin')
                 <li class="{{ Request::route()->getName() == 'users' ? 'active' : 'inactive' }}">
                     <a href="{{route('users')}}"><i class="zmdi zmdi-home"></i><span>Users</span>
                     </a>

@@ -28,10 +28,6 @@
                     <div class="header">
                         <h2><strong>All Users</strong> </h2>
                         <ul class="header-dropdown">
-                            <li class="remove">
-                                <a class="btn btn-primary btn-lg" href="{{route('users.create')}}" role="button">Create
-                                    User</a>
-                            </li>
                         </ul>
                     </div>
                     @if(session('success'))
