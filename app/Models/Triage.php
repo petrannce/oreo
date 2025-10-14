@@ -32,6 +32,6 @@ class Triage extends Model
 
     public function nurse()
     {
-        return $this->belongsTo(Nurse::class);
+        return $this->belongsTo(Nurse::class, 'nurse_id');
     }
 }

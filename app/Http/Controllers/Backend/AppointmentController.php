@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Billing;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class AppointmentController extends Controller
         $patients = Patient::all();
         $services = Service::all();
         $doctors = User::where('role', 'doctor')->get();
-        return view('backend.appointments.create',[
+        return view('backend.appointments.create', [
             'patients' => $patients,
             'services' => $services,
             'doctors' => $doctors
@@ -142,7 +143,7 @@ class AppointmentController extends Controller
     }
     public function updateStage($id, $stage)
     {
-        $appointment = Appointment::findOrFail($id);
+        $appointment = Appointment::with(['patient', 'service', 'labTest', 'pharmacyOrder', 'billing'])->findOrFail($id);
 
         // All valid stages in your workflow
         $validStages = [
@@ -184,15 +185,70 @@ class AppointmentController extends Controller
             return back()->with('info', 'Patient is already in this stage.');
         }
 
-        // Update stage
+        /**
+         * AUTO-BILLING LOGIC
+         */
+        if ($stage === 'billing') {
+            // Avoid duplicate billing
+            if (!$appointment->billing) {
+                $totalAmount = 0;
+
+                // Base service cost
+                $totalAmount += $appointment->service->price ?? 0;
+
+                // Lab test cost
+                if ($appointment->labTest && $appointment->labTest->price) {
+                    $totalAmount += $appointment->labTest->price;
+                }
+
+                // Pharmacy order total
+                if ($appointment->pharmacyOrder && $appointment->pharmacyOrder->total_price) {
+                    $totalAmount += $appointment->pharmacyOrder->total_price;
+                }
+
+                // Create billing
+                $billing = Billing::create([
+                    'appointment_id' => $appointment->id,
+                    'patient_id' => $appointment->patient_id,
+                    'amount' => $totalAmount,
+                    'status' => 'pending',
+                ]);
+
+                // Link billing to appointment
+                $appointment->billing_id = $billing->id;
+                $appointment->save();
+            }
+        }
+
+        /**
+         * COMPLETION VALIDATION
+         */
+        if ($stage === 'completed') {
+            if (!$appointment->billing || $appointment->billing->status !== 'paid') {
+                return back()->with('error', 'Cannot complete appointment before billing is paid.');
+            }
+        }
+
+        // Update process stage
         $appointment->process_stage = $stage;
         $appointment->save();
 
         // Dynamic user-friendly message
         $message = 'Patient moved to ' . ucfirst(str_replace('_', ' ', $stage)) . ' stage successfully.';
 
+        // Special message for billing
+        if ($stage === 'billing') {
+            $message = 'Billing stage initiated successfully. Auto bill generated for patient.';
+        }
+
         return back()->with('success', $message);
+
+        // AJAX response
+        if ($request->ajax()) {
+            return response()->json(['status' => 'success', 'message' => $message]);
+        }
     }
+
 
     public function report(Request $request)
     {

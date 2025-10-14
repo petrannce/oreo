@@ -101,7 +101,7 @@
                                         <br>
                                         <small>Appointment: {{ optional($triage->appointment)->date }}</small>
                                     </div>
-                                    <a href="{{ route('triages.edit', $triage->id) }}" class="btn btn-sm btn-warning">
+                                    <a href="{{ route('triages.create') }}" class="btn btn-sm btn-warning">
                                         Record Vitals
                                     </a>
                                 </li>

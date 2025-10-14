@@ -19,7 +19,7 @@ class Billing extends Model
         'status',
     ];
 
-     public function billable()
+    public function billable()
     {
         return $this->morphTo();
     }
@@ -42,11 +42,6 @@ class Billing extends Model
     public function items()
     {
         return $this->hasMany(BillingItem::class);
-    }
-
-    public function getTotalAttribute()
-    {
-        return $this->items->sum('subtotal');
     }
 
 }

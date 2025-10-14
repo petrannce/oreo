@@ -57,7 +57,8 @@ class ServiceController extends Controller
 
     public function edit($id){
         $service = Service::find($id);
-        return view('backend.services.edit', compact('service'));
+        $departments = DB::table('departments')->get();
+        return view('backend.services.edit', compact('service', 'departments'));
     }
 
     public function update(Request $request, $id){
@@ -66,8 +67,6 @@ class ServiceController extends Controller
             'department' => 'required',
             'description' => 'required',
         ]);
-
-        //dd($request->all());
 
         DB::beginTransaction();
 

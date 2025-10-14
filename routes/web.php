@@ -114,6 +114,10 @@ Route::middleware(['auth', 'role.records'])->controller(AppointmentController::c
     Route::get('/appointment/update-status/{id}/{status}', 'updateStatus')->name('appointment.updateStatus');
     Route::get('/appointments/update-stage/{id}/{stage}', 'updateStage')->name('appointment.updateStage');
     Route::get('/appointments-report', 'report')->name('appointments.report');
+    Route::post('/{id}/mark-paid','markAsPaid')->name('markPaid');
+    Route::post('/{id}/cancel', 'cancelPayment')->name('cancel');
+    Route::get('admin/appointments/{appointment}/lab-status','labStatus')->name('appointments.lab-status');
+
 });
 
 //services

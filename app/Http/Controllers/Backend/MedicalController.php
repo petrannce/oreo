@@ -20,12 +20,12 @@ class MedicalController extends Controller
         ]);
     }
 
- public function create($appointment_id = null)
+ public function create(Request $request)
 {
-    $appointment = null;
+    $appointment_id = $request->appointment_id;
 
     if ($appointment_id) {
-        $appointment = Appointment::with('patient')->find($appointment_id);
+        $appointment = Appointment::with('patient', 'triage')->find($appointment_id);
     }
 
     $lab_tests = LabTest::all();

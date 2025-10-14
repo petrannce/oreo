@@ -213,4 +213,38 @@ class BillingController extends Controller
         }
     }
 
+    public function markAsPaid($id)
+    {
+        $billing = Billing::with('billable')->findOrFail($id);
+
+        // Update the billing status
+        $billing->update(['status' => 'paid']);
+
+        // Check if the billing is linked to an appointment
+        if ($billing->billable_type === 'App\\Models\\Appointment' && $billing->billable_id) {
+            $appointment = Appointment::find($billing->billable_id);
+
+            if ($appointment && $appointment->process_stage !== 'completed') {
+                $appointment->update(['process_stage' => 'completed']);
+            }
+        }
+
+        return redirect()
+            ->route('billings.show', $billing->id)
+            ->with('success', 'Bill marked as paid successfully. Appointment moved to completed stage.');
+    }
+
+    /**
+     * Mark a billing as cancelled.
+     */
+    public function cancelPayment($id)
+    {
+        $billing = Billing::findOrFail($id);
+        $billing->update(['status' => 'cancelled']);
+
+        return redirect()
+            ->route('billings.show', $billing->id)
+            ->with('info', 'Billing cancelled successfully.');
+    }
+
 }

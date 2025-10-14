@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
             $table->foreignId('doctor_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('medical_record_id')->constrained('medical_records')->onDelete('cascade');
-            $table->enum('status', ['pending', 'billed', 'dispensed'])->default('pending');
+            $table->enum('status', ['pending', 'billed', 'dispensed', 'finalised'])->default('pending');
             $table->timestamps();
         });
     }

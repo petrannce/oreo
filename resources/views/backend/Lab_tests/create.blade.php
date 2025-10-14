@@ -116,7 +116,7 @@
                                 {{-- Results --}}
                                 <div class="col-md-12 mb-3">
                                     <label>Results</label>
-                                    <textarea name="results" class="form-control" rows="4">{{ old('results') }}</textarea>
+                                    <textarea name="results" class="form-control" rows="4" required>{{ old('results') }}</textarea>
                                 </div>
                             </div>
 
@@ -126,7 +126,7 @@
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label>Status</label>
-                                    <select name="status" class="form-control">
+                                    <select name="status" class="form-control" required>
                                         <option value="requested" {{ old('status') == 'requested' ? 'selected' : '' }}>Requested</option>
                                         <option value="in_progress" {{ old('status') == 'in_progress' ? 'selected' : '' }}>In Progress</option>
                                         <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>

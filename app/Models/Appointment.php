@@ -66,26 +66,36 @@ class Appointment extends Model
     }
 
     public function medicalRecord()
-{
-    return $this->hasOne(Medical::class);
-}
+    {
+        return $this->hasOne(Medical::class);
+    }
 
     public function pharmacyOrder()
-{
-    return $this->hasOneThrough(
-        PharmacyOrder::class,
-        Medical::class,
-        'appointment_id',  // Foreign key on medical_records
-        'medical_record_id',  // Foreign key on pharmacy_orders
-        'id',  // Local key on appointments
-        'id'   // Local key on medical_records
-    );
-}
+    {
+        return $this->hasOneThrough(
+            PharmacyOrder::class,
+            Medical::class,
+            'appointment_id',  // Foreign key on medical_records
+            'medical_record_id',  // Foreign key on pharmacy_orders
+            'id',  // Local key on appointments
+            'id'   // Local key on medical_records
+        );
+    }
 
     public function billing()
     {
-        return $this->hasOne(Billing::class);
+        return $this->hasOne(Billing::class, 'billable_id', 'id');
     }
+
+    public function labStatus($id)
+    {
+        $appointment = Appointment::with('labTest')->findOrFail($id);
+
+        return response()->json([
+            'results_filled' => $appointment->labTest?->results_filled ?? false,
+        ]);
+    }
+
 
 
 
