@@ -12,7 +12,8 @@
                 </div>
                 <div class="col-lg-5 col-md-7 col-sm-12">
                     <ul class="breadcrumb float-md-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i class="zmdi zmdi-home"></i> Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin') }}"><i class="zmdi zmdi-home"></i>
+                                Dashboard</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('pharmacy_orders') }}">Pharmacy Orders</a></li>
                         <li class="breadcrumb-item active">Edit</li>
                     </ul>
@@ -43,8 +44,9 @@
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label class="form-label">Patient</label>
-                                            <input type="text" class="form-control" 
-                                                value="{{ $pharmacy_order->patient->fname }} {{ $pharmacy_order->patient->lname }}" readonly>
+                                            <input type="text" class="form-control"
+                                                value="{{ $pharmacy_order->patient->fname }} {{ $pharmacy_order->patient->lname }}"
+                                                readonly>
                                         </div>
                                     </div>
 
@@ -53,7 +55,8 @@
                                         <div class="form-group">
                                             <label class="form-label">Doctor</label>
                                             <input type="text" class="form-control"
-                                                value="{{ $pharmacy_order->doctor->fname }} {{ $pharmacy_order->doctor->lname }}" readonly>
+                                                value="{{ $pharmacy_order->doctor->fname }} {{ $pharmacy_order->doctor->lname }}"
+                                                readonly>
                                         </div>
                                     </div>
 
@@ -61,27 +64,34 @@
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label class="form-label">Medical Record</label>
-                                            <select name="medical_record_id" class="form-control show-tick" required>
-                                                <option value="" disabled>-- Select Record --</option>
-                                                @foreach($medical_records as $record)
-                                                    <option value="{{ $record->id }}" {{ $pharmacy_order->medical_record_id == $record->id ? 'selected' : '' }}>
-                                                        Record #{{ $record->id }} ({{ $record->created_at->format('d M Y') }})
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" class="form-control"
+                                                value="Record #{{ $pharmacy_order->medical_record_id }} ({{ $pharmacy_order->medical_record->created_at->format('d M Y') }})"
+                                                readonly>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row clearfix">
                                     {{-- Prescription --}}
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="prescription" class="form-label">Prescription</label>
-                                            <textarea rows="4" name="prescription" class="form-control no-resize" required>{{ $pharmacy_order->prescription }}</textarea>
+                                            <textarea rows="6" class="form-control no-resize"
+                                                readonly>{{ $prescriptionText }}</textarea>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row clearfix">
+                                    {{-- Total Price --}}
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label class="form-label">Total Price (KES)</label>
+                                            <input type="text" class="form-control"
+                                                value="{{ number_format($pharmacy_order->total_price, 2) }}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                                 <div class="row clearfix">
                                     {{-- Status --}}
@@ -92,14 +102,16 @@
                                                 <option value="pending" {{ $pharmacy_order->status == 'pending' ? 'selected' : '' }}>Pending</option>
                                                 <option value="billed" {{ $pharmacy_order->status == 'billed' ? 'selected' : '' }}>Billed</option>
                                                 <option value="dispensed" {{ $pharmacy_order->status == 'dispensed' ? 'selected' : '' }}>Dispensed</option>
+                                                <option value="finalised" {{ $pharmacy_order->status == 'finalised' ? 'selected' : '' }}>Finalised</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-sm-12">
+                                <div class="col-sm-12 mt-3">
                                     <button type="submit" class="btn btn-primary btn-round">Update</button>
-                                    <a href="{{ route('pharmacy_orders') }}" class="btn btn-default btn-round btn-simple">Cancel</a>
+                                    <a href="{{ route('pharmacy_orders') }}"
+                                        class="btn btn-default btn-round btn-simple">Cancel</a>
                                 </div>
 
                             </form>

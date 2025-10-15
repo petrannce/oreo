@@ -49,11 +49,6 @@
                                             placeholder="Please type what you want...">{{ $department->description }}</textarea>
                                     </div>
                                 </div>
-                                <div class="col-sm-12">
-                                    <div class="fallback">
-                                        <input name="image" type="file" multiple value="{{ $department->image }}" />
-                                    </div>
-                                </div>
                             </div>
                             <div class="row clearfix">
                                 <div class="col-sm-12">

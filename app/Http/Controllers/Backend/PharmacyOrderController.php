@@ -77,15 +77,34 @@ class PharmacyOrderController extends Controller
     public function edit($id)
     {
         $pharmacy_order = PharmacyOrder::findOrFail($id);
-        $patients = Patient::all();
-        $doctors = Doctor::all();
-        return view('backend.pharmacy_orders.edit', compact('pharmacy_order', 'patients', 'doctors'));
+
+        // Fetch all prescriptions for this appointment, ordered by creation date
+        $prescriptions = $pharmacy_order->appointment
+            ->medicalRecords()
+            ->orderBy('created_at')
+            ->pluck('prescription')
+            ->filter()
+            ->values();
+
+        $prescriptionText = $prescriptions->map(function ($item, $key) {
+            return ($key + 1) . ". " . $item;
+        })->implode("\n");
+
+        return view('backend.pharmacy_orders.edit', compact(
+            'pharmacy_order',
+            'prescriptionText'
+        ));
     }
+
 
     public function update(Request $request, $id)
     {
         $request->validate([
             'appointment_id' => 'required|exists:appointments,id',
+            'patient_id' => 'required|exists:patients,id',
+            'doctor_id' => 'required|exists:doctors,id',
+            'medical_record_id' => 'nullable|exists:medical_records,id',
+            'total_price' => 'required|numeric',
             'status' => 'required|in:pending,billed,dispensed',
         ]);
 
@@ -101,6 +120,7 @@ class PharmacyOrderController extends Controller
             $order->patient_id = $appointment->patient_id;
             $order->doctor_id = $appointment->doctor_id;
             $order->medical_record_id = $appointment->medicalRecord->id ?? null;
+            $order->total_price = $request->total_price;
             $order->status = $request->status;
 
             $order->save();

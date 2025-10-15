@@ -29,7 +29,7 @@ class PharmacyOrder extends Model
     }
     public function doctor()
     {
-        return $this->belongsTo(Doctor::class, 'doctor_id');
+        return $this->belongsTo(User::class, 'doctor_id');
     }
 
     public function appointmment()
@@ -37,7 +37,7 @@ class PharmacyOrder extends Model
         return $this->belongsTo(Appointment::class, 'appointment_id');
     }
 
-    public function medicalRecord()
+    public function medical_record()
     {
         return $this->belongsTo(Medical::class, 'medical_record_id');
     }
@@ -54,5 +54,11 @@ class PharmacyOrder extends Model
             'id'                // Local key on medical_records table
         );
     }
+
+    public function items()
+    {
+        return $this->hasMany(PharmacyOrderItem::class);
+    }
+
 
 }

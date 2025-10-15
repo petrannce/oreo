@@ -87,7 +87,7 @@
                                 {{-- Route Type --}}
                                 @php
                                     $disableFields = false;
-                                    if ($appointment->process_stage === 'lab' && (!$appointment->labTest || !$appointment->labTest->results_filled)) {
+                                    if ($appointment->process_stage === 'lab' && (!$appointment->labTest || $appointment->labTest->status !== 'completed')) {
                                         $disableFields = true;
                                     }
                                 @endphp
@@ -128,12 +128,23 @@
                                         @endif>{{ old('diagnosis') }}</textarea>
                                 </div>
 
-                                {{-- Prescription --}}
+                                {{-- Prescription Section --}}
                                 <div class="mb-3">
-                                    <label class="form-label">Prescription</label>
-                                    <textarea rows="3" class="form-control no-resize" name="prescription"
-                                        placeholder="Type your prescription..." @if($disableFields) disabled
-                                        @endif>{{ old('prescription') }}</textarea>
+                                    <label class="form-label d-flex justify-content-between align-items-center">
+                                        <span>Prescription</span>
+                                        <button type="button" id="addMedicineBtn" class="btn btn-sm btn-outline-primary">
+                                            <i class="zmdi zmdi-plus"></i> Add Medicine
+                                        </button>
+                                    </label>
+
+                                    <div id="prescriptionList" class="card p-3 bg-light">
+                                        <p class="text-muted mb-2">Add prescribed medicines below:</p>
+                                        <div id="medicineRows"></div>
+                                    </div>
+
+                                    <textarea name="prescription" id="prescriptionText" class="form-control mt-3" rows="4"
+                                        readonly placeholder="Generated prescription will appear here..."
+                                        @if($disableFields) disabled @endif>{{ old('prescription') }}</textarea>
                                 </div>
 
                                 {{-- Notes --}}
@@ -166,21 +177,21 @@
             const labSection = document.getElementById('labSection');
 
             // Enable fields if lab results already filled
-            const labResultsFilled = {{ $appointment->labTest && $appointment->labTest->results_filled ? 'true' : 'false' }};
-            if (labResultsFilled) {
+            const labCompleted = {{ $appointment->labTest && $appointment->labTest->status === 'completed' ? 'true' : 'false' }};
+            if (labCompleted) {
                 formFields.forEach(el => el.disabled = false);
             }
 
             // Poll lab status every 5 seconds if in lab stage and results not yet filled
             let labPoll;
-            @if($appointment->process_stage === 'lab' && (!$appointment->labTest || !$appointment->labTest->results_filled))
+            @if($appointment->process_stage === 'lab' && (!$appointment->labTest || $appointment->labTest->status !== 'completed'))
                 labPoll = setInterval(() => {
                     fetch("{{ url('admin/appointments/' . $appointment->id . '/lab-status') }}", {
                         headers: { 'X-Requested-With': 'XMLHttpRequest' }
                     })
                         .then(res => res.json())
                         .then(data => {
-                            if (data.results_filled) {
+                            if (data.status === 'completed') {
                                 formFields.forEach(el => el.disabled = false);
                                 clearInterval(labPoll);
                                 location.reload(); // show lab results dynamically
@@ -223,6 +234,133 @@
 
             // Show lab section if already selected
             if (routeType?.value === 'lab') labSection.style.display = 'block';
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addBtn = document.getElementById('addMedicineBtn');
+            const list = document.getElementById('medicineRows');
+            const output = document.getElementById('prescriptionText');
+            let medicineCount = 0;
+
+            // Add new medicine row
+            addBtn.addEventListener('click', function () {
+                medicineCount++;
+                const row = document.createElement('div');
+                row.className = "row align-items-center mb-2";
+                row.innerHTML = `
+            <div class="col-md-4 position-relative">
+                <input type="hidden" name="medicine_ids[]" class="medicine-id">
+                <input type="text" class="form-control form-control-sm medicine-name" 
+                    placeholder="Medicine name..." autocomplete="off" required>
+                <ul class="list-group position-absolute w-100 shadow-sm mt-1 medicine-suggestions" 
+                    style="display:none; z-index:999;"></ul>
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="quantities[]" class="form-control form-control-sm quantity" 
+                    placeholder="Qty" min="1" required>
+            </div>
+            <div class="col-md-4">
+                <input type="text" name="dosages[]" class="form-control form-control-sm dosage" 
+                    placeholder="Dosage (e.g., 1 tablet 3x daily)" required>
+            </div>
+            <div class="col-md-2 text-end">
+                <button type="button" class="btn btn-sm btn-danger remove-btn">
+                    <i class="zmdi zmdi-delete"></i>
+                </button>
+            </div>
+        `;
+                list.appendChild(row);
+            });
+
+
+            // Remove a medicine row
+            list.addEventListener('click', function (e) {
+                if (e.target.closest('.remove-btn')) {
+                    e.target.closest('.row').remove();
+                    updatePrescription();
+                }
+            });
+
+            // Update prescription text on input
+            list.addEventListener('input', function () {
+                updatePrescription();
+            });
+
+            // Generate formatted prescription text
+            function updatePrescription() {
+                const names = document.querySelectorAll('.medicine-name');
+                const qtys = document.querySelectorAll('.quantity');
+                const dosages = document.querySelectorAll('.dosage');
+                let lines = [];
+
+                for (let i = 0; i < names.length; i++) {
+                    const name = names[i].value.trim();
+                    const qty = qtys[i].value.trim();
+                    const dose = dosages[i].value.trim();
+                    if (name) {
+                        let line = `${name}`;
+                        if (qty) line += ` ${qty}`;
+                        if (dose) line += ` ${dose}`;
+                        lines.push(line);
+                    }
+                }
+                output.value = lines.join("\n");
+            }
+
+            /**
+             * Autocomplete for medicines (search from DB)
+             */
+            list.addEventListener('input', async function (e) {
+                if (!e.target.classList.contains('medicine-name')) return;
+
+                const query = e.target.value.trim();
+                const suggestionBox = e.target.nextElementSibling;
+                suggestionBox.innerHTML = '';
+                if (query.length < 2) {
+                    suggestionBox.style.display = 'none';
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/admin/medicines/search?q=${encodeURIComponent(query)}`, {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    const data = await res.json();
+
+                    if (data.length > 0) {
+                        data.forEach(med => {
+                            const li = document.createElement('li');
+                            li.className = "list-group-item list-group-item-action small";
+                            li.innerHTML = `
+                            <div><strong>${med.name}</strong> 
+                            <small class="text-muted">(${med.form || 'N/A'})</small></div>
+                            <small class="text-muted">Stock: ${med.stock_quantity} | KES ${med.unit_price}</small>
+                        `;
+                            li.addEventListener('click', function () {
+                                e.target.value = med.name;
+                                e.target.closest('.row').querySelector('.medicine-id').value = med.id;
+                                suggestionBox.style.display = 'none';
+                                updatePrescription();
+                            });
+                            suggestionBox.appendChild(li);
+                        });
+                        suggestionBox.style.display = 'block';
+                    } else {
+                        suggestionBox.style.display = 'none';
+                    }
+                } catch (err) {
+                    console.error('Autocomplete fetch failed', err);
+                }
+            });
+
+            // Hide suggestion dropdown on outside click
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.medicine-name') && !e.target.closest('.medicine-suggestions')) {
+                    document.querySelectorAll('.medicine-suggestions').forEach(box => box.style.display = 'none');
+                }
+            });
         });
     </script>
 

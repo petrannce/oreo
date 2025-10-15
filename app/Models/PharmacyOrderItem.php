@@ -14,10 +14,17 @@ class PharmacyOrderItem extends Model
         'drug_name',
         'quantity',
         'dosage',
+        'unit_price',
+        'subtotal',
     ];
 
     public function pharmacyOrder()
     {
         return $this->belongsTo(PharmacyOrder::class);
+    }
+
+    public function medicine()
+    {
+        return $this->belongsTo(Medicine::class);
     }
 }

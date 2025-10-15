@@ -12,7 +12,7 @@
                 </div>
                 <div class="col-lg-5 col-md-7 col-sm-12">
                     <ul class="breadcrumb float-md-right">
-                        <li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Oreo</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('admin')}}"><i class="zmdi zmdi-home"></i> Oreo</a></li>
                         <li class="breadcrumb-item"><a href="{{route('appointments')}}">Appointment</a></li>
                         <li class="breadcrumb-item active">Edit Appointment</li>
                     </ul>

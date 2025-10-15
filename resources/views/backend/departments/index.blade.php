@@ -43,7 +43,6 @@
                                         <th>*</th>
                                         <th>Name</th>
                                         <th>Description</th>
-                                        <th>Image</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -55,7 +54,6 @@
                                             <td>{{$loop->iteration}}</td>
                                             <td>{{$department->name}}</td>
                                             <td>{{str_limit($department->description, 50)}}</td>
-                                            <td>{{$department->image}}</td>
                                             <td>
                                                 <!-- Edit Button -->
                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"

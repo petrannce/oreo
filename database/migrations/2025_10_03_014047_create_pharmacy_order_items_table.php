@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,10 +12,12 @@ return new class extends Migration
     {
         Schema::create('pharmacy_order_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pharmacy_order_id')->constrained()->onDelete('cascade');
+            $table->foreignId('pharmacy_order_id')->constrained('pharmacy_orders')->onDelete('cascade');
             $table->foreignId('medicine_id')->constrained('medicines')->onDelete('cascade');
             $table->integer('quantity');
             $table->string('dosage')->nullable();
+            $table->decimal('unit_price', 10, 2)->default(0);
+            $table->decimal('subtotal', 10, 2)->default(0);
             $table->timestamps();
         });
     }

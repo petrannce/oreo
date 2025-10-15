@@ -65,9 +65,9 @@ class Appointment extends Model
         return $this->hasOne(LabTest::class);
     }
 
-    public function medicalRecord()
+    public function medicalRecords()
     {
-        return $this->hasOne(Medical::class);
+        return $this->hasMany(Medical::class, 'appointment_id');
     }
 
     public function pharmacyOrder()

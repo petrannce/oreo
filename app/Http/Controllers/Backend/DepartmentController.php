@@ -28,23 +28,14 @@ class DepartmentController extends Controller
         $request->validate([
             'name' => 'required',
             'description' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         DB::beginTransaction(); // Transaction starts
         try {
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $image_name = time() . '_' . $image->getClientOriginalName();
-                $image->move('public/departments', $image_name);
-            } else {
-                $image_name = null;
-            }
 
             $department = new Department();
             $department->name = $request->name;
             $department->description = $request->description;
-            $department->image = $image_name;
             $department->save();
 
             DB::commit(); 
@@ -66,19 +57,11 @@ class DepartmentController extends Controller
         $request->validate([
             'name' => 'required',
             'description' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         DB::beginTransaction(); // Transaction starts
         try {
             $department = Department::findOrFail($id);
-
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/departments'), $imageName);
-                $department->image = $imageName;
-            }
 
             $department->name = $request->name;
             $department->description = $request->description;

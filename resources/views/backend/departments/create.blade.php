@@ -48,11 +48,6 @@
                                             placeholder="Please type what you want..."></textarea>
                                     </div>
                                 </div>
-                                <div class="col-sm-12">
-                                    <div class="fallback">
-                                        <input name="image" type="file" multiple  required/>
-                                    </div>
-                                </div>
                             </div>
                             <div class="row clearfix">
                                 <div class="col-sm-12">

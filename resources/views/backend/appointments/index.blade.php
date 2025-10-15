@@ -206,7 +206,7 @@
                                                 {{-- PHARMACY --}}
                                                 @if($stage === 'pharmacy' && auth()->user()->hasAnyRole(['pharmacist', 'admin']))
                                                     @if($appointment->pharmacyOrder)
-                                                        <a href="{{ route('pharmacy_orders.show', $appointment->pharmacyOrder->id) }}" class="btn btn-sm btn-success">
+                                                        <a href="{{ route('pharmacy_orders.edit', $appointment->pharmacyOrder->id) }}" class="btn btn-sm btn-success">
                                                             <i class="zmdi zmdi-check"></i> Dispensed
                                                         </a>
                                                     @else

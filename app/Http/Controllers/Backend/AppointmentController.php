@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Billing;
+use App\Models\Medical;
+use App\Models\Medicine;
 use App\Models\Patient;
+use App\Models\PharmacyOrder;
+use App\Models\PharmacyOrderItem;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
@@ -141,31 +144,31 @@ class AppointmentController extends Controller
 
         return redirect()->back()->with('success', 'Status updated successfully!');
     }
-    public function updateStage($id, $stage)
+    public function updateStage(Request $request, $id, $stage)
     {
-        $appointment = Appointment::with(['patient', 'service', 'labTest', 'pharmacyOrder', 'billing'])->findOrFail($id);
+        $appointment = Appointment::with(['patient', 'service', 'labTest', 'pharmacyOrder.items.medicine', 'billing'])
+            ->findOrFail($id);
 
-        // All valid stages in your workflow
+        // ✅ 1. Valid stages
         $validStages = [
-            'reception',        // Appointment booked / pending check-in
-            'triage',           // Nurse evaluating vitals
-            'doctor_consult',   // Doctor consultation
-            'lab',              // Lab tests ordered
-            'pharmacy',         // Pharmacy dispensing
-            'billing',          // Billing/payment processing
-            'completed',        // Fully completed process
-            'cancelled',        // Cancelled appointment
+            'reception',
+            'triage',
+            'doctor_consult',
+            'lab',
+            'pharmacy',
+            'billing',
+            'completed',
+            'cancelled'
         ];
 
         if (!in_array($stage, $validStages)) {
             return back()->with('error', 'Invalid stage selected.');
         }
 
-        // Get logged-in user’s role
+        // ✅ 2. Role-based permissions
         $user = Auth::user();
         $userRole = $user->role ?? null;
 
-        // Define role-based permissions
         $rolePermissions = [
             'receptionist' => ['reception', 'triage', 'cancelled'],
             'nurse' => ['triage', 'doctor_consult'],
@@ -175,53 +178,114 @@ class AppointmentController extends Controller
             'admin' => $validStages,
         ];
 
-        // Permission check
         if (!isset($rolePermissions[$userRole]) || !in_array($stage, $rolePermissions[$userRole])) {
             return back()->with('error', 'You do not have permission to move a patient to this stage.');
         }
 
-        // Check if already in the desired stage
+        // ✅ 3. Prevent redundant stage move
         if ($appointment->process_stage === $stage) {
             return back()->with('info', 'Patient is already in this stage.');
         }
 
         /**
-         * AUTO-BILLING LOGIC
+         * 🧠 4. SMART PRESCRIPTION PARSER + PHARMACY LOGIC
+         */
+        if ($stage === 'pharmacy') {
+            $medicalRecord = Medical::where('appointment_id', $appointment->id)->latest()->first();
+
+            if (!$medicalRecord || empty($medicalRecord->prescription)) {
+                return back()->with('error', 'No prescriptions found for this patient.');
+            }
+
+            // Create or fetch existing pharmacy order
+            $pharmacyOrder = PharmacyOrder::firstOrCreate(
+                [
+                    'appointment_id' => $appointment->id,
+                    'medical_record_id' => $medicalRecord->id,
+                ],
+                [
+                    'patient_id' => $appointment->patient_id,
+                    'doctor_id' => $medicalRecord->doctor_id,
+                    'status' => 'pending',
+                ]
+            );
+
+            // Clear old items
+            if (method_exists($pharmacyOrder, 'items')) {
+                $pharmacyOrder->items()->delete();
+            }
+
+            /**
+             * 🧾 OPTION A: Use selected medicine IDs from form instead of free text parsing
+             */
+            $medicineIds = $request->input('medicine_ids', []); // hidden inputs from form
+            $quantities = $request->input('quantities', []);
+            $dosages = $request->input('dosages', []);
+            $totalPrice = 0;
+
+            foreach ($medicineIds as $index => $id) {
+                $medicine = Medicine::find($id);
+                if (!$medicine)
+                    continue; // skip if medicine not found
+
+                $quantity = $quantities[$index] ?? 1;
+                $dosage = $dosages[$index] ?? 'Not specified';
+                $subtotal = $medicine->unit_price * $quantity;
+
+                PharmacyOrderItem::create([
+                    'pharmacy_order_id' => $pharmacyOrder->id,
+                    'medicine_id' => $medicine->id,
+                    'quantity' => $quantity,
+                    'dosage' => $dosage,
+                    'unit_price' => $medicine->unit_price,
+                    'subtotal' => $subtotal,
+                ]);
+
+                $totalPrice += $subtotal;
+            }
+
+            $pharmacyOrder->update([
+                'total_price' => $totalPrice,
+                'status' => 'pending',
+            ]);
+        }
+
+
+        /**
+         * 💰 5. AUTO-BILLING LOGIC
          */
         if ($stage === 'billing') {
-            // Avoid duplicate billing
             if (!$appointment->billing) {
                 $totalAmount = 0;
 
-                // Base service cost
+                // Add service price
                 $totalAmount += $appointment->service->price ?? 0;
 
-                // Lab test cost
+                // Add lab test cost
                 if ($appointment->labTest && $appointment->labTest->price) {
                     $totalAmount += $appointment->labTest->price;
                 }
 
-                // Pharmacy order total
-                if ($appointment->pharmacyOrder && $appointment->pharmacyOrder->total_price) {
-                    $totalAmount += $appointment->pharmacyOrder->total_price;
+                // Add pharmacy order total
+                if ($appointment->pharmacyOrder && $appointment->pharmacyOrder->items->count() > 0) {
+                    $totalAmount += $appointment->pharmacyOrder->items->sum('subtotal');
                 }
 
-                // Create billing
-                $billing = Billing::create([
+                // Create billing record
+                $billing = \App\Models\Billing::create([
                     'appointment_id' => $appointment->id,
                     'patient_id' => $appointment->patient_id,
                     'amount' => $totalAmount,
                     'status' => 'pending',
                 ]);
 
-                // Link billing to appointment
                 $appointment->billing_id = $billing->id;
                 $appointment->save();
             }
         }
 
         /**
-         * COMPLETION VALIDATION
+         * ✅ 6. COMPLETION VALIDATION
          */
         if ($stage === 'completed') {
             if (!$appointment->billing || $appointment->billing->status !== 'paid') {
@@ -229,24 +293,18 @@ class AppointmentController extends Controller
             }
         }
 
-        // Update process stage
+        /**
+         * 🔄 7. Update process stage
+         */
         $appointment->process_stage = $stage;
         $appointment->save();
 
-        // Dynamic user-friendly message
         $message = 'Patient moved to ' . ucfirst(str_replace('_', ' ', $stage)) . ' stage successfully.';
-
-        // Special message for billing
         if ($stage === 'billing') {
             $message = 'Billing stage initiated successfully. Auto bill generated for patient.';
         }
 
         return back()->with('success', $message);
-
-        // AJAX response
-        if ($request->ajax()) {
-            return response()->json(['status' => 'success', 'message' => $message]);
-        }
     }
 
 
@@ -279,6 +337,20 @@ class AppointmentController extends Controller
             'canExport' => true
         ]);
     }
+
+    public function labStatus($id)
+    {
+        $appointment = Appointment::with('labTest')->find($id);
+
+        if (!$appointment || !$appointment->labTest) {
+            return response()->json(['status' => 'not_found']);
+        }
+
+        return response()->json([
+            'status' => $appointment->labTest->status ?? 'pending',
+        ]);
+    }
+
 
 
 }
