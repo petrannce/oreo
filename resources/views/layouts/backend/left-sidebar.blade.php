@@ -122,6 +122,22 @@
                             @endrole
                         </ul>
                     </li>
+                    
+                    @role('admin|receptionist')
+
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i
+                                class="zmdi zmdi-account-circle"></i><span>Patients</span> </a>
+                        <ul class="ml-menu">
+                            <li class="{{ Request::route()->getName() == 'patients' ? 'active' : 'inactive' }}">
+                                <a href="{{route('patients')}}">All Patients</a>
+                            </li>
+                            <li class="{{ Request::route()->getName() == 'patient.create' ? 'active' : 'inactive' }}">
+                                <a href="{{route('patients.create')}}">Add Patient</a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endrole
+
                     @role('admin|nurse|doctor')
                     <li><a class="menu-toggle"><i class="zmdi zmdi-hospital"></i><span>Triages</span> </a>
                         <ul class="ml-menu">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\LabRequirement;
 use App\Models\LabTest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class LabTestController extends Controller
 
         if ($appointment_id) {
             // load appointment with patient/doctor
-            $selectedAppointment = Appointment::with(['patient', 'doctor'])->find($appointment_id);
+            $selectedAppointment = Appointment::with(['patient', 'doctor','labRequirements'])->find($appointment_id);
             if (!$selectedAppointment) {
                 return redirect()->route('lab_tests.create')->with('error', 'Appointment not found.');
             }
@@ -80,47 +81,47 @@ class LabTestController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'patient_id' => 'required|exists:users,id',
-        'doctor_id' => 'required|exists:users,id',
-        'lab_technician_id' => 'nullable|exists:users,id',
-        'appointment_id' => 'nullable|exists:appointments,id',
-        'test_name' => 'required|string|max:255',
-        'results' => 'nullable|string',
-        'status' => 'required|in:requested,in_progress,completed',
-    ]);
-
-    DB::beginTransaction();
-
-    try {
-        LabTest::create([
-            'patient_id' => $request->patient_id,
-            'doctor_id' => $request->doctor_id,
-            'lab_technician_id' => $request->lab_technician_id ?? auth()->id(), // auto-assign logged-in tech
-            'appointment_id' => $request->appointment_id,
-            'test_name' => $request->test_name,
-            'results' => $request->results,
-            'status' => $request->status,
+    {
+        $request->validate([
+            'patient_id' => 'required|exists:users,id',
+            'doctor_id' => 'required|exists:users,id',
+            'lab_technician_id' => 'nullable|exists:users,id',
+            'appointment_id' => 'nullable|exists:appointments,id',
+            'test_name' => 'required|string|max:255',
+            'results' => 'nullable|string',
+            'status' => 'required|in:requested,in_progress,completed',
         ]);
 
-        // Optional: update appointment process stage to 'lab' if linked
-        if ($request->filled('appointment_id')) {
-            \App\Models\Appointment::where('id', $request->appointment_id)
-                ->update(['process_stage' => 'lab']);
+        DB::beginTransaction();
+
+        try {
+            LabTest::create([
+                'patient_id' => $request->patient_id,
+                'doctor_id' => $request->doctor_id,
+                'lab_technician_id' => $request->lab_technician_id ?? auth()->id(), // auto-assign logged-in tech
+                'appointment_id' => $request->appointment_id,
+                'test_name' => $request->test_name,
+                'results' => $request->results,
+                'status' => $request->status,
+            ]);
+
+            // Optional: update appointment process stage to 'lab' if linked
+            if ($request->filled('appointment_id')) {
+                Appointment::where('id', $request->appointment_id)
+                    ->update(['process_stage' => 'lab']);
+            }
+
+            DB::commit();
+
+            return redirect()->route('appointments')
+                ->with('success', 'Lab Test created successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->route('lab_tests')
+                ->with('error', 'Lab Test creation failed: ' . $e->getMessage());
         }
-
-        DB::commit();
-
-        return redirect()->route('appointments')
-            ->with('success', 'Lab Test created successfully');
-    } catch (\Exception $e) {
-        DB::rollBack();
-
-        return redirect()->route('lab_tests')
-            ->with('error', 'Lab Test creation failed: ' . $e->getMessage());
     }
-}
 
 
     public function edit($id)
@@ -195,5 +196,53 @@ class LabTestController extends Controller
             'lab_tests' => $lab_tests,
             'canExport' => true
         ]);
+    }
+
+    public function createForAppointment(Request $request, Appointment $appointment)
+    {
+        $request->validate([
+            'lab_tests' => 'array',
+            'lab_tests.*' => 'exists:lab_tests,id',
+            'custom_name' => 'nullable|string|max:255',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Save selected existing lab tests (if any)
+            if ($request->has('lab_tests') && count($request->lab_tests) > 0) {
+                foreach ($request->lab_tests as $testId) {
+                    LabRequirement::create([
+                        'appointment_id' => $appointment->id,
+                        'name' => LabTest::find($testId)->test_name ?? 'Unnamed Test',
+                    ]);
+                }
+            }
+
+            // Save new custom test if provided
+            if ($request->filled('custom_name')) {
+                LabRequirement::create([
+                    'appointment_id' => $appointment->id,
+                    'name' => $request->custom_name,
+                ]);
+            }
+
+            // Update appointment stage → lab
+            $appointment->update(['process_stage' => 'lab']);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Lab tests successfully created and appointment sent to lab.'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to send to lab: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }

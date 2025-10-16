@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Billing;
+use App\Models\HospitalService;
 use App\Models\Medical;
 use App\Models\Medicine;
 use App\Models\Patient;
@@ -188,16 +190,19 @@ class AppointmentController extends Controller
         }
 
         /**
-         * 🧠 4. SMART PRESCRIPTION PARSER + PHARMACY LOGIC
+         * 🧠 4. SMART PRESCRIPTION → PHARMACY ORDER CREATION (Option A)
          */
         if ($stage === 'pharmacy') {
-            $medicalRecord = Medical::where('appointment_id', $appointment->id)->latest()->first();
+            // 1️⃣ Get latest medical record for this appointment
+            $medicalRecord = Medical::where('appointment_id', $appointment->id)
+                ->latest()
+                ->first();
 
-            if (!$medicalRecord || empty($medicalRecord->prescription)) {
+            if (!$medicalRecord || empty(trim($medicalRecord->prescription))) {
                 return back()->with('error', 'No prescriptions found for this patient.');
             }
 
-            // Create or fetch existing pharmacy order
+            // 2️⃣ Create or get pharmacy order
             $pharmacyOrder = PharmacyOrder::firstOrCreate(
                 [
                     'appointment_id' => $appointment->id,
@@ -210,79 +215,151 @@ class AppointmentController extends Controller
                 ]
             );
 
-            // Clear old items
-            if (method_exists($pharmacyOrder, 'items')) {
-                $pharmacyOrder->items()->delete();
-            }
+            // 3️⃣ Clear any old items to avoid duplication
+            $pharmacyOrder->items()->delete();
 
-            /**
-             * 🧾 OPTION A: Use selected medicine IDs from form instead of free text parsing
-             */
-            $medicineIds = $request->input('medicine_ids', []); // hidden inputs from form
-            $quantities = $request->input('quantities', []);
-            $dosages = $request->input('dosages', []);
+            // 4️⃣ Split prescription text into lines
+            $lines = preg_split('/\r\n|\r|\n/', trim($medicalRecord->prescription));
+
             $totalPrice = 0;
 
-            foreach ($medicineIds as $index => $id) {
-                $medicine = Medicine::find($id);
-                if (!$medicine)
-                    continue; // skip if medicine not found
+            foreach ($lines as $line) {
+                $line = trim($line);
+                if ($line === '')
+                    continue;
 
-                $quantity = $quantities[$index] ?? 1;
-                $dosage = $dosages[$index] ?? 'Not specified';
-                $subtotal = $medicine->unit_price * $quantity;
+                /**
+                 * ✨ Attempt to extract medicine name, quantity & dosage
+                 * Example: "Paracetamol 100 gms 4 1 tablet 3x daily"
+                 */
+                $medicineName = null;
+                $quantity = 1;
+                $dosage = $line;
 
+                // Try to extract number from line (e.g., "4" means 4 quantities)
+                if (preg_match('/(\d+)\s?(tabs?|tablets?|caps?|pcs?|x)?/i', $line, $match)) {
+                    $quantity = (int) $match[1];
+                }
+
+                // Find medicine by fuzzy match
+                $medicine = Medicine::where('name', 'like', '%' . strtok($line, ' ') . '%')->first();
+
+                $unitPrice = $medicine->unit_price ?? 0;
+                $subtotal = $unitPrice * $quantity;
+                $totalPrice += $subtotal;
+
+                // 5️⃣ Create pharmacy order item
                 PharmacyOrderItem::create([
                     'pharmacy_order_id' => $pharmacyOrder->id,
-                    'medicine_id' => $medicine->id,
+                    'medicine_id' => $medicine->id ?? null,
                     'quantity' => $quantity,
                     'dosage' => $dosage,
-                    'unit_price' => $medicine->unit_price,
+                    'unit_price' => $unitPrice,
                     'subtotal' => $subtotal,
                 ]);
-
-                $totalPrice += $subtotal;
             }
 
+            // 6️⃣ Update total price and status
             $pharmacyOrder->update([
                 'total_price' => $totalPrice,
                 'status' => 'pending',
             ]);
         }
-
-
         /**
          * 💰 5. AUTO-BILLING LOGIC
          */
         if ($stage === 'billing') {
-            if (!$appointment->billing) {
-                $totalAmount = 0;
 
-                // Add service price
-                $totalAmount += $appointment->service->price ?? 0;
+            // 🧭 Check if billing already exists
+            $billing = $appointment->billing;
 
-                // Add lab test cost
-                if ($appointment->labTest && $appointment->labTest->price) {
-                    $totalAmount += $appointment->labTest->price;
+            $billingItems = [];
+            $totalAmount = 0;
+
+            // 🏥 1️⃣ TRIAGE (always exists, usually 0.00)
+            $triageService = HospitalService::where('name', 'like', '%triage%')->first();
+            if ($triageService) {
+                $billingItems[] = [
+                    'hospital_service_id' => $triageService->id,
+                    'description' => $triageService->name,
+                    'quantity' => 1,
+                    'unit_price' => $triageService->price ?? 0,
+                    'subtotal' => $triageService->price ?? 0,
+                ];
+                $totalAmount += $triageService->price ?? 0;
+            }
+
+            // 🩺 2️⃣ CONSULTATION
+            $consultationService = HospitalService::where('name', 'like', '%consultation%')->first();
+            if ($consultationService) {
+                $billingItems[] = [
+                    'hospital_service_id' => $consultationService->id,
+                    'description' => $consultationService->name,
+                    'quantity' => 1,
+                    'unit_price' => $consultationService->price ?? 0,
+                    'subtotal' => $consultationService->price ?? 0,
+                ];
+                $totalAmount += $consultationService->price ?? 0;
+            }
+
+            // 🧪 3️⃣ LAB TEST — only if done
+            if ($appointment->labTest && $appointment->labTest->price) {
+                $labService = HospitalService::where('name', 'like', '%lab%')->first();
+                $billingItems[] = [
+                    'hospital_service_id' => $labService->id ?? null,
+                    'description' => $appointment->labTest->name ?? 'Lab Test',
+                    'quantity' => 1,
+                    'unit_price' => $appointment->labTest->price,
+                    'subtotal' => $appointment->labTest->price,
+                ];
+                $totalAmount += $appointment->labTest->price;
+            }
+
+            // 💊 4️⃣ PHARMACY — only if any medicines exist
+            if ($appointment->pharmacyOrder && $appointment->pharmacyOrder->items->count() > 0) {
+                foreach ($appointment->pharmacyOrder->items as $phItem) {
+                    $billingItems[] = [
+                        'hospital_service_id' => null, // pharmacy is separate
+                        'description' => $phItem->medicine->name ?? 'Medicine',
+                        'quantity' => $phItem->quantity,
+                        'unit_price' => $phItem->unit_price ?? 0,
+                        'subtotal' => $phItem->subtotal ?? 0,
+                    ];
+                    $totalAmount += $phItem->subtotal ?? 0;
                 }
+            }
 
-                // Add pharmacy order total
-                if ($appointment->pharmacyOrder && $appointment->pharmacyOrder->items->count() > 0) {
-                    $totalAmount += $appointment->pharmacyOrder->items->sum('subtotal');
-                }
-
-                // Create billing record
-                $billing = \App\Models\Billing::create([
-                    'appointment_id' => $appointment->id,
+            // ✅ If billing does NOT exist, create one
+            if (!$billing) {
+                $billing = Billing::create([
                     'patient_id' => $appointment->patient_id,
+                    'hospital_service_id' => $consultationService->id ?? null,
                     'amount' => $totalAmount,
-                    'status' => 'pending',
+                    'status' => 'unpaid',
+                    'billable_id' => $appointment->id,
+                    'billable_type' => Appointment::class,
                 ]);
 
-                $appointment->billing_id = $billing->id;
-                $appointment->save();
+                foreach ($billingItems as $item) {
+                    $billing->items()->create($item);
+                }
+            } else {
+                // 🔄 Sync check: add any missing billing items (avoid duplicates)
+                foreach ($billingItems as $item) {
+                    $exists = $billing->items()
+                        ->where('description', $item['description'])
+                        ->exists();
+
+                    if (!$exists) {
+                        $billing->items()->create($item);
+                    }
+                }
+
+                // 💵 Recalculate total
+                $billing->update(['amount' => $billing->items->sum('subtotal')]);
             }
         }
+
 
         /**
          * ✅ 6. COMPLETION VALIDATION
@@ -304,9 +381,15 @@ class AppointmentController extends Controller
             $message = 'Billing stage initiated successfully. Auto bill generated for patient.';
         }
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+            ]);
+        }
+
         return back()->with('success', $message);
     }
-
 
     public function report(Request $request)
     {

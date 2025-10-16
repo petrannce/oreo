@@ -42,45 +42,7 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="card">
-                    <div class="body">
-                        <h3>{{ $pharmacy_order_items }}</h3>
-                        <p class="text-muted">Low Stock Items</p>
-                        <div class="progress">
-                            <div class="progress-bar bg-danger" style="width:40%"></div>
-                        </div>
-                        <small>Reorder these medicines</small>
-                    </div>
-                </div>
-            </div>
         </div>
-
-        {{-- Pending Prescriptions --}}
-        <div class="row clearfix">
-            <div class="col-lg-8 col-md-12">
-                <div class="card">
-                    <div class="header">
-                        <h2><strong>Pending</strong> Prescriptions</h2>
-                    </div>
-                    <div class="body">
-                        <ul class="list-group">
-                            @forelse($pharmacy_order_items->take(8) as $rx)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>
-                                        {{ $rx->patient->fname }} {{ $rx->patient->lname }} – 
-                                        <small>{{ $rx->drug_name }}</small>
-                                    </span>
-                                    <span class="badge badge-warning">Awaiting</span>
-                                </li>
-                            @empty
-                                <li class="list-group-item text-muted">No pending prescriptions</li>
-                            @endforelse
-                        </ul>
-                    </div>
-                </div>
-            </div>
 
             {{-- Inventory Actions --}}
             <div class="col-lg-4 col-md-12">

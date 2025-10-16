@@ -24,24 +24,14 @@ class Billing extends Model
         return $this->morphTo();
     }
 
-    public function medicalRecords()
-    {
-        return $this->hasMany(Medical::class);
-    }
-
-    public function labTests()
-    {
-        return $this->hasMany(LabTest::class);
-    }
-
-    public function consultations()
-    {
-        return $this->hasMany(Appointment::class);
-    }
-
     public function items()
     {
         return $this->hasMany(BillingItem::class);
+    }
+
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
     }
 
 }

@@ -118,9 +118,9 @@ Route::middleware(['auth', 'role.records'])->controller(AppointmentController::c
     Route::get('/appointment/update-status/{id}/{status}', 'updateStatus')->name('appointment.updateStatus');
     Route::get('/appointments/update-stage/{id}/{stage}', 'updateStage')->name('appointment.updateStage');
     Route::get('/appointments-report', 'report')->name('appointments.report');
-    Route::post('/{id}/mark-paid','markAsPaid')->name('markPaid');
+    Route::post('/{id}/mark-paid', 'markAsPaid')->name('markPaid');
     Route::post('/{id}/cancel', 'cancelPayment')->name('cancel');
-    Route::get('admin/appointments/{appointment}/lab-status','labStatus')->name('appointments.lab-status');
+    Route::get('admin/appointments/{appointment}/lab-status', 'labStatus')->name('appointments.lab-status');
 
 });
 
@@ -190,6 +190,7 @@ Route::middleware(['auth', 'role.records'])->controller(LabTestController::class
     Route::get('/lab-tests/{id}', 'show')->name('lab_tests.show');
     Route::delete('/lab-tests/{id}', 'destroy')->name('lab_tests.destroy');
     Route::get('/lab-tests-report', 'report')->name('lab_tests.report');
+    Route::post('labs/create-for-appointment/{appointment}','createForAppointment')->name('labs.createForAppointment');
 });
 
 //medical records
@@ -287,10 +288,13 @@ Route::middleware(['auth', 'role.records'])->controller(PharmacyOrderController:
     Route::get('/pharmacy_orders/create/{appointment_id?}', 'create')->name('pharmacy_orders.create');
     Route::post('/pharmacy_orders', 'store')->name('pharmacy_orders.store');
     Route::get('/pharmacy_orders/{id}/edit', 'edit')->name('pharmacy_orders.edit');
-    Route::put('/pharmacy_orders/{id}', 'update')->name('pharmacy_orders.update');
+    Route::match(['put', 'patch'], '/pharmacy_orders/{id}', 'update')->name('pharmacy_orders.update');
     Route::get('/pharmacy_orders/{id}', 'show')->name('pharmacy_orders.show');
     Route::delete('/pharmacy_orders/{id}', 'destroy')->name('pharmacy_orders.destroy');
     Route::get('/pharmacy_orders-report', 'report')->name('pharmacy_orders.report');
+    Route::post('/pharmacy-orders/{id}/ajax-update', 'ajaxUpdate')
+        ->name('pharmacy_orders.ajax_update');
+
 });
 
 // Pharmacy Order Items
@@ -324,11 +328,12 @@ Route::controller(BillingController::class)->prefix('admin')->group(function () 
     Route::get('/billings/{id}/edit', 'edit')->name('billings.edit');
     Route::put('/billings/{id}', 'update')->name('billings.update');
     Route::get('/billings/{id}', 'show')->name('billings.show');
+    Route::post('/billings/{id}/mark-ready', [BillingController::class, 'markReady'])->name('billings.markReady');
     Route::delete('/billings/{id}', 'destroy')->name('billings.destroy');
     Route::get('/billings-report', 'report')->name('billings.report');
-    Route::get('/billings/fetch-patient-services/{patient}', 'fetchPatientServices')
-    ->name('billings.fetch-patient-services');
-
+    Route::get('/billings/{billing}/receipt', 'showReceipt')->name('billings.receipt');
+    Route::get('/billings/{billing}/download-pdf', 'downloadPDF')->name('billings.downloadPDF');
+    Route::post('billings/fetch-services', 'fetchServices')->name('billings.fetchServices');
 });
 
 // Hospital Services

@@ -14,6 +14,7 @@ class PharmacyOrder extends Model
         'patient_id',
         'doctor_id',
         'medical_record_id',
+        'total_price',
         'status',
     ];
 

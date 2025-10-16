@@ -72,20 +72,15 @@ class Appointment extends Model
 
     public function pharmacyOrder()
     {
-        return $this->hasOneThrough(
-            PharmacyOrder::class,
-            Medical::class,
-            'appointment_id',  // Foreign key on medical_records
-            'medical_record_id',  // Foreign key on pharmacy_orders
-            'id',  // Local key on appointments
-            'id'   // Local key on medical_records
-        );
+        return $this->hasOne(PharmacyOrder::class, 'appointment_id');
     }
+
 
     public function billing()
     {
-        return $this->hasOne(Billing::class, 'billable_id', 'id');
+        return $this->morphOne(\App\Models\Billing::class, 'billable');
     }
+
 
     public function labStatus($id)
     {
@@ -96,6 +91,10 @@ class Appointment extends Model
         ]);
     }
 
+    public function labRequirements()
+    {
+        return $this->hasMany(LabRequirement::class);
+    }
 
 
 

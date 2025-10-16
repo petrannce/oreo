@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\Billing;
 use App\Models\HospitalService;
 use App\Models\Patient;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use DB;
 
@@ -21,93 +22,126 @@ class BillingController extends Controller
     public function create(Request $request)
     {
         $patients = Patient::all();
-        $services = HospitalService::all();
+        $items = [];
 
-        // Optional: pre-fill if coming from appointment/pharmacy
-        $billableType = $request->query('billable_type');
-        $billableId = $request->query('billable_id');
+        if ($request->filled('patient_id')) {
+            $patient = Patient::find($request->patient_id);
+            if ($patient) {
+                $appointment = $patient->appointments()->latest()->first();
+                if ($appointment) {
+                    // Triage
+                    if ($triage = HospitalService::where('name', 'triage')->first()) {
+                        $items[] = [
+                            'hospital_service_id' => $triage->id,
+                            'description' => $triage->name,
+                            'quantity' => 1,
+                            'unit_price' => $triage->price,
+                        ];
+                    }
 
-        return view('backend.billings.create', compact('patients', 'services', 'billableType', 'billableId'));
+                    // Consultation / Service
+                    if ($appointment->service) {
+                        $items[] = [
+                            'hospital_service_id' => $appointment->service->id,
+                            'description' => $appointment->service->name,
+                            'quantity' => 1,
+                            'unit_price' => $appointment->service->price,
+                        ];
+                    }
+
+                    // Lab
+                    if ($appointment->labTest) {
+                        $labService = HospitalService::where('name', 'like', '%lab%')->first();
+                        if ($labService) {
+                            $items[] = [
+                                'hospital_service_id' => $labService->id,
+                                'description' => $appointment->labTest->name,
+                                'quantity' => 1,
+                                'unit_price' => $appointment->labTest->price,
+                            ];
+                        }
+                    }
+
+                    // Pharmacy
+                    foreach ($appointment->pharmacyOrder?->items ?? [] as $phItem) {
+                        $items[] = [
+                            'hospital_service_id' => null,
+                            'description' => $phItem->medicine->name,
+                            'quantity' => $phItem->quantity,
+                            'unit_price' => $phItem->unit_price,
+                        ];
+                    }
+                }
+            }
+        }
+
+        return view('backend.billings.create', compact('patients', 'items'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+
+        // Validate the form
+        $request->validate([
             'patient_id' => 'required|exists:patients,id',
+            'payment_method' => 'required|string',
             'items' => 'required|array|min:1',
             'items.*.description' => 'required|string',
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.unit_price' => 'required|numeric|min:0',
-            'amount' => 'required|numeric',
-            'payment_method' => 'nullable|string',
-            'status' => 'nullable|string',
         ]);
 
-        DB::beginTransaction();
-        try {
-            $billing = Billing::create([
-                'patient_id' => $validated['patient_id'],
-                'amount' => $validated['amount'],
-                'payment_method' => $request->payment_method,
-                'status' => $request->status ?? 'unpaid',
+        // Calculate total amount from items
+        $totalAmount = collect($request->items)->reduce(function ($carry, $item) {
+            return $carry + ($item['quantity'] * $item['unit_price']);
+        }, 0);
+
+        // Create billing
+        $billing = new Billing();
+        $billing->patient_id = $request->patient_id;
+        $billing->amount = $totalAmount;
+        $billing->payment_method = $request->payment_method;
+        $billing->status = 'unpaid'; // default
+        $billing->save();
+
+        // Create billing items
+        foreach ($request->items as $item) {
+            $billing->items()->create([
+                'hospital_service_id' => $item['hospital_service_id'] ?? null,
+                'description' => $item['description'],
+                'quantity' => $item['quantity'],
+                'unit_price' => $item['unit_price'],
+                'subtotal' => $item['quantity'] * $item['unit_price'],
             ]);
-
-            foreach ($validated['items'] as $item) {
-                $billing->items()->create([
-                    'description' => $item['description'],
-                    'quantity' => $item['quantity'],
-                    'unit_price' => $item['unit_price'],
-                    'subtotal' => $item['quantity'] * $item['unit_price'],
-                    'hospital_service_id' => $item['hospital_service_id'] ?? null,
-                ]);
-            }
-
-            DB::commit();
-            return redirect()->route('billings')->with('success', 'Billing saved.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Failed to save billing: ' . $e->getMessage());
         }
+
+        return redirect()->route('billings')->with('success', 'Billing created successfully!');
     }
 
 
     public function edit($id)
     {
-        $billing = Billing::findOrFail($id);
+        $billing = Billing::with('items.hospitalService', 'patient')->findOrFail($id);
         return view('backend.billings.edit', compact('billing'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'billable_type' => 'required|string',
-            'billable_id' => 'required|integer',
-            'amount' => 'required|numeric',
-            'payment_method' => 'required|string',
-            'status' => 'required|string',
+        $billing = Billing::findOrFail($id);
+
+        $billing->update([
+            'payment_method' => $request->payment_method,
+            'status' => $request->status,
         ]);
 
-        DB::beginTransaction();
+        return redirect()->route('billings.edit', $billing->id)
+            ->with('success', 'Billing updated successfully.');
+    }
 
-        try {
-            $billing = Billing::findOrFail($id);
-
-            $billing->update([
-                'patient_id' => $request->patient_id,
-                'billable_type' => $request->billable_type,
-                'billable_id' => $request->billable_id,
-                'amount' => $request->amount,
-                'payment_method' => $request->payment_method,
-                'status' => $request->status,
-            ]);
-
-            DB::commit();
-            return redirect()->route('billings')->with('success', 'Billing updated successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('billings')->with('error', 'Billing update failed');
-        }
+    public function show($id)
+    {
+        $billing = Billing::with('items', 'patient')->findOrFail($id);
+        return view('backend.billings.show', compact('billing'));
     }
 
     public function destroy($id)
@@ -139,78 +173,103 @@ class BillingController extends Controller
         ]);
     }
 
-    public function fetchPatientServices(Patient $patient)
+    public function markReady($id)
     {
-        try {
-            // Get latest appointment for the patient (adjust column if appointments reference users instead)
-            $appointment = Appointment::where('patient_id', $patient->id)
-                ->with(['labTests', 'pharmacyOrder'])
-                ->latest()
-                ->first();
+        $billing = Billing::findOrFail($id);
+        $billing->update(['status' => 'paid']);
 
-            if (!$appointment) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No appointment found for this patient.'
-                ]);
-            }
+        return redirect()->route('billings.show', $billing->id)
+            ->with('success', 'Final bill is ready for printing.');
+    }
 
-            $items = [];
+    public function showReceipt(Billing $billing)
+    {
+        return view('backend.billings.receipt', compact('billing'));
+    }
 
-            // 1) Consultation fee (if you store it as hospital service)
-            $consultation = HospitalService::where('category', 'consultation')->first();
-            if ($consultation) {
+    public function downloadPDF(Billing $billing)
+    {
+        // Load relationships
+        $billing->load(['patient', 'items']);
+
+        // Generate PDF from the receipt view
+        $pdf = Pdf::loadView('backend.billings.receipt_pdf', compact('billing'));
+
+        // Download as PDF
+        $filename = 'Bill_' . str_pad($billing->id, 5, '0', STR_PAD_LEFT) . '.pdf';
+        return $pdf->download($filename);
+    }
+
+    public function fetchServices(Request $request)
+    {
+        $request->validate([
+            'patient_id' => 'required|exists:patients,id',
+            'payment_method' => 'nullable|string',
+        ]);
+
+        $patient = Patient::findOrFail($request->patient_id);
+
+        // Start with default payment method
+        $payment_method = $request->payment_method ?? 'cash';
+
+        $items = [];
+
+        $appointment = $patient->appointments()->latest()->first();
+        if ($appointment) {
+            // 1️⃣ Triage
+            $triage = HospitalService::where('name', 'triage')->first();
+            if ($triage) {
                 $items[] = [
-                    'description' => 'Doctor Consultation',
+                    'hospital_service_id' => $triage->id,
+                    'description' => $triage->name,
                     'quantity' => 1,
-                    'unit_price' => (float) $consultation->price,
-                    'subtotal' => (float) $consultation->price,
-                    'hospital_service_id' => $consultation->id,
+                    'unit_price' => $triage->price,
                 ];
             }
 
-            // 2) Lab tests attached to appointment
-            if ($appointment->labTests && $appointment->labTests->count()) {
-                $labServiceTemplate = HospitalService::where('category', 'lab')->first();
-                foreach ($appointment->labTests as $lab) {
-                    $unitPrice = $labServiceTemplate ? (float) $labServiceTemplate->price : 0.0;
+            // 2️⃣ Consultation / Hospital service
+            if ($appointment->service) {
+                $service = $appointment->service;
+                $items[] = [
+                    'hospital_service_id' => $service->id,
+                    'description' => $service->name,
+                    'quantity' => 1,
+                    'unit_price' => $service->price,
+                ];
+            }
+
+            // 3️⃣ Lab Tests
+            if ($appointment->labTest) {
+                $labService = HospitalService::where('name', 'like', '%lab%')->first();
+                if ($labService) {
                     $items[] = [
-                        'description' => $lab->test_name ?? 'Lab Test',
+                        'hospital_service_id' => $labService->id,
+                        'description' => $appointment->labTest->name,
                         'quantity' => 1,
-                        'unit_price' => $unitPrice,
-                        'subtotal' => $unitPrice,
-                        'hospital_service_id' => $labServiceTemplate ? $labServiceTemplate->id : null,
+                        'unit_price' => $appointment->labTest->price,
                     ];
                 }
             }
 
-            // 3) Pharmacy (if a pharmacy order exists and you want a fixed dispensing fee)
-            if ($appointment->pharmacyOrder) {
-                $pharmService = HospitalService::where('category', 'pharmacy')->first();
-                $unitPrice = $pharmService ? (float) $pharmService->price : 0.0;
-                $items[] = [
-                    'description' => 'Pharmacy Items Dispensed',
-                    'quantity' => 1,
-                    'unit_price' => $unitPrice,
-                    'subtotal' => $unitPrice,
-                    'hospital_service_id' => $pharmService ? $pharmService->id : null,
-                ];
-
-                // Optionally: you can also push each pharmacy_order_item as separate billing items
-                // if you want patient to be billed per-drug (expand here if needed).
+            // 4️⃣ Pharmacy
+            if ($appointment->pharmacyOrder && $appointment->pharmacyOrder->items->count()) {
+                foreach ($appointment->pharmacyOrder->items as $phItem) {
+                    $items[] = [
+                        'hospital_service_id' => null,
+                        'description' => $phItem->medicine->name,
+                        'quantity' => $phItem->quantity,
+                        'unit_price' => $phItem->unit_price,
+                    ];
+                }
             }
-
-            return response()->json([
-                'success' => true,
-                'items' => $items,
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('Fetch Patient Services Error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Server error while fetching services.'
-            ], 500);
         }
+
+        return view('backend.billings.create', [
+            'patients' => Patient::all(),
+            'selectedPatient' => $patient,
+            'payment_method' => $payment_method,
+            'fetchedItems' => $items,
+        ]);
     }
 
     public function markAsPaid($id)
@@ -221,7 +280,7 @@ class BillingController extends Controller
         $billing->update(['status' => 'paid']);
 
         // Check if the billing is linked to an appointment
-        if ($billing->billable_type === 'App\\Models\\Appointment' && $billing->billable_id) {
+        if ($billing->billable_type === 'Appointment' && $billing->billable_id) {
             $appointment = Appointment::find($billing->billable_id);
 
             if ($appointment && $appointment->process_stage !== 'completed') {

@@ -50,7 +50,7 @@
                                     <div class="form-group">
                                         <label for="name" class="form-label">Medicine Name</label>
                                         <input type="text" name="name" id="name" class="form-control"
-                                            placeholder="e.g. Paracetamol 500mg" required>
+                                            placeholder="e.g. Paracetamol" required>
                                     </div>
                                 </div>
 

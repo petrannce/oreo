@@ -11,7 +11,7 @@ class MedicineController extends Controller
 {
     public function index()
     {
-        $medicines = Medicine::all();
+        $medicines = Medicine::latest()->get();
         return view('backend.medicines.index', compact('medicines'));
     }
 

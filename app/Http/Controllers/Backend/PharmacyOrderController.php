@@ -100,12 +100,12 @@ class PharmacyOrderController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'appointment_id' => 'required|exists:appointments,id',
-            'patient_id' => 'required|exists:patients,id',
-            'doctor_id' => 'required|exists:doctors,id',
-            'medical_record_id' => 'nullable|exists:medical_records,id',
-            'total_price' => 'required|numeric',
-            'status' => 'required|in:pending,billed,dispensed',
+            'appointment_id' => 'required',
+            'patient_id' => 'required',
+            'doctor_id' => 'required',
+            'medical_record_id' => 'nullable',
+            'total_price' => 'required',
+            'status' => 'required|in:pending,billed,dispensed,finalised',
         ]);
 
         DB::beginTransaction();
@@ -113,13 +113,10 @@ class PharmacyOrderController extends Controller
         try {
             $order = PharmacyOrder::findOrFail($id);
 
-            $appointment = Appointment::with(['patient', 'doctor', 'medicalRecord'])
-                ->findOrFail($request->appointment_id);
-
-            $order->appointment_id = $appointment->id;
-            $order->patient_id = $appointment->patient_id;
-            $order->doctor_id = $appointment->doctor_id;
-            $order->medical_record_id = $appointment->medicalRecord->id ?? null;
+            $order->appointment_id = $request->appointment_id;
+            $order->patient_id = $request->patient_id;
+            $order->doctor_id = $request->doctor_id;
+            $order->medical_record_id = $request->medical_record_id;
             $order->total_price = $request->total_price;
             $order->status = $request->status;
 
@@ -128,7 +125,7 @@ class PharmacyOrderController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('pharmacy_orders')
+                ->route('appointments')
                 ->with('success', 'Pharmacy order updated successfully.');
 
         } catch (\Exception $e) {
@@ -172,4 +169,6 @@ class PharmacyOrderController extends Controller
             'canExport' => true
         ]);
     }
+
+
 }

@@ -69,7 +69,7 @@
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Weight (kg)</label>
-                                        <input type="number" step="0.01" name="weight" class="form-control" value="{{ $triage->weight }}">
+                                        <input type="number" step="0.01" name="weight" class="form-control" value="{{ $triage->weight }}" readonly>
                                     </div>
                                 </div>
                             </div>

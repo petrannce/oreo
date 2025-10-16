@@ -5,21 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HospitalService extends Model
+class LabRequirement extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'appointment_id',
         'name',
-        'category',
-        'price',
-        'description',
     ];
 
-    public function billingItems()
+    public function appointment()
     {
-        return $this->hasMany(BillingItem::class);
+        return $this->belongsTo(Appointment::class);
     }
-
-
 }

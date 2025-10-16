@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\LabTest;
+use App\Models\PharmacyOrderItem;
 use App\Models\Triage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -75,8 +76,8 @@ class HomeController extends Controller
             ->latest()
             ->take(10)
             ->get();
-            $pending_triages_count = $pending_triages->count();
-            $completed_triages_count = Triage::count();
+        $pending_triages_count = $pending_triages->count();
+        $completed_triages_count = Triage::count();
 
         return view('backend.dashboard.nurse', [
             'today_triages_count' => $today_triages_count,
@@ -88,7 +89,12 @@ class HomeController extends Controller
 
     public function pharmacists()
     {
-        $pharmacy_order_items = DB::table('pharmacy_order_items')->get(); //pharmacy_order_items
+        
+        $pharmacy_order_items = PharmacyOrderItem::with('patient')
+            ->latest()
+            ->take(8)
+            ->get();
+
         return view('backend.dashboard.pharmacist', compact('pharmacy_order_items'));
     }
 

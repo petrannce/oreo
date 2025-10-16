@@ -107,11 +107,32 @@
                                 </div>
 
                                 {{-- Test Name --}}
-                                <div class="col-md-6 mb-3">
-                                    <label>Test Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="test_name" class="form-control" value="{{ old('test_name') }}" required>
-                                    @error('test_name') <small class="text-danger">{{ $message }}</small> @enderror
-                                </div>
+<div class="col-md-6 mb-3">
+    <label>Test Name <span class="text-danger">*</span></label>
+    <input type="text" name="test_name" class="form-control" value="{{ old('test_name') }}" required>
+    @error('test_name') <small class="text-danger">{{ $message }}</small> @enderror
+</div>
+
+{{-- Suggested Test(s) from Lab Requirements --}}
+@if(isset($selectedAppointment) && $selectedAppointment->labRequirements->count() > 0)
+    <div class="col-md-12 mb-3">
+        <label>Suggested Test(s)</label>
+        <div class="card bg-light p-3">
+            @foreach($selectedAppointment->labRequirements as $requirement)
+                @php
+                    // Split by comma and trim spaces
+                    $tests = array_map('trim', explode(',', $requirement->name));
+                @endphp
+                <ul class="mb-2">
+                    @foreach($tests as $index => $test)
+                        <li>{{ $test }}</li>
+                    @endforeach
+                </ul>
+            @endforeach
+        </div>
+    </div>
+@endif
+
 
                                 {{-- Results --}}
                                 <div class="col-md-12 mb-3">

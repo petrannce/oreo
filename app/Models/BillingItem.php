@@ -24,11 +24,4 @@ class BillingItem extends Model
         return $this->belongsTo(HospitalService::class);
     }
 
-    public static function booted()
-    {
-        static::saving(function ($item) {
-            $item->subtotal = $item->quantity * $item->unit_price;
-        });
-    }
-
 }
