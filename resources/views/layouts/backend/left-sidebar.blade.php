@@ -122,7 +122,7 @@
                             @endrole
                         </ul>
                     </li>
-                    
+
                     @role('admin|receptionist')
 
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
@@ -311,6 +311,14 @@
 
                             <li class="{{ Request::route()->getName() == 'patients.report' ? 'active' : 'inactive' }}">
                                 <a href="{{route('patients.report')}}">All Patients</a>
+                            </li>
+
+                            @endrole
+
+                            @role('admin|pharmacist')
+
+                            <li class="{{ Request::route()->getName() == 'medicines.report' ? 'active' : 'inactive' }}">
+                                <a href="{{route('medicines.report')}}">All Medicines</a>
                             </li>
 
                             @endrole

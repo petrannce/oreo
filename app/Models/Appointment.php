@@ -52,7 +52,7 @@ class Appointment extends Model
 
     public function labTests()
     {
-        return $this->hasMany(LabTest::class);
+        return $this->hasMany(LabTest::class, 'appointment_id');
     }
 
     public function triage()
@@ -72,7 +72,7 @@ class Appointment extends Model
 
     public function pharmacyOrder()
     {
-        return $this->hasOne(PharmacyOrder::class, 'appointment_id');
+        return $this->hasOne(PharmacyOrder::class);
     }
 
 

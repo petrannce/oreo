@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\Billing;
 use App\Models\HospitalService;
 use App\Models\Patient;
+use App\Models\PharmacyOrderItem;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use DB;
@@ -26,50 +27,71 @@ class BillingController extends Controller
 
         if ($request->filled('patient_id')) {
             $patient = Patient::find($request->patient_id);
+
             if ($patient) {
-                $appointment = $patient->appointments()->latest()->first();
+                $appointment = Appointment::with(['labRequirements', 'pharmacyOrder.items.medicine'])
+                    ->where('patient_id', $patient->id)
+                    ->latest()
+                    ->first();
+
                 if ($appointment) {
-                    // Triage
-                    if ($triage = HospitalService::where('name', 'triage')->first()) {
+                    // 1. TRIAGE
+                    $triageService = HospitalService::where('name', 'like', '%triage%')->first();
+                    if ($triageService) {
                         $items[] = [
-                            'hospital_service_id' => $triage->id,
-                            'description' => $triage->name,
+                            'hospital_service_id' => $triageService->id,
+                            'description' => $triageService->name,
                             'quantity' => 1,
-                            'unit_price' => $triage->price,
+                            'unit_price' => (float) $triageService->price, // ✅ Use price, not rate
                         ];
                     }
 
-                    // Consultation / Service
-                    if ($appointment->service) {
+                    // 2. CONSULTATION
+                    $consultationService = null;
+                    if ($appointment->hospital_service_id) {
+                        $consultationService = HospitalService::find($appointment->hospital_service_id);
+                    }
+                    if (!$consultationService) {
+                        $consultationService = HospitalService::where('name', 'like', '%consultation%')->first();
+                    }
+                    if ($consultationService) {
                         $items[] = [
-                            'hospital_service_id' => $appointment->service->id,
-                            'description' => $appointment->service->name,
+                            'hospital_service_id' => $consultationService->id,
+                            'description' => $consultationService->name,
                             'quantity' => 1,
-                            'unit_price' => $appointment->service->price,
+                            'unit_price' => (float) $consultationService->price,
                         ];
                     }
 
-                    // Lab
-                    if ($appointment->labTest) {
-                        $labService = HospitalService::where('name', 'like', '%lab%')->first();
-                        if ($labService) {
-                            $items[] = [
-                                'hospital_service_id' => $labService->id,
-                                'description' => $appointment->labTest->name,
-                                'quantity' => 1,
-                                'unit_price' => $appointment->labTest->price,
-                            ];
+                    // 3. LAB TESTS
+                    $labService = HospitalService::where('name', 'like', '%lab%')->first();
+                    $labTotal = 0;
+
+                    if ($appointment->labRequirements && $appointment->labRequirements->count() > 0) {
+                        foreach ($appointment->labRequirements as $lab) {
+                            $labTotal += (float) ($lab->price ?? $lab->amount ?? 0);
                         }
                     }
 
-                    // Pharmacy
-                    foreach ($appointment->pharmacyOrder?->items ?? [] as $phItem) {
+                    if ($labService && $labTotal > 0) {
                         $items[] = [
-                            'hospital_service_id' => null,
-                            'description' => $phItem->medicine->name,
-                            'quantity' => $phItem->quantity,
-                            'unit_price' => $phItem->unit_price,
+                            'hospital_service_id' => $labService->id,
+                            'description' => $labService->name,
+                            'quantity' => 1,
+                            'unit_price' => $labTotal,
                         ];
+                    }
+
+                    // 4. PHARMACY ITEMS
+                    if ($appointment->pharmacyOrder && $appointment->pharmacyOrder->items->count() > 0) {
+                        foreach ($appointment->pharmacyOrder->items as $phItem) {
+                            $items[] = [
+                                'hospital_service_id' => null,
+                                'description' => $phItem->medicine->name ?? 'Medicine',
+                                'quantity' => (int) $phItem->quantity,
+                                'unit_price' => (float) $phItem->unit_price,
+                            ];
+                        }
                     }
                 }
             }
@@ -80,44 +102,63 @@ class BillingController extends Controller
 
     public function store(Request $request)
     {
-
-        // Validate the form
         $request->validate([
             'patient_id' => 'required|exists:patients,id',
             'payment_method' => 'required|string',
             'items' => 'required|array|min:1',
             'items.*.description' => 'required|string',
-            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.quantity' => 'required|numeric|min:1',
             'items.*.unit_price' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0',
         ]);
 
-        // Calculate total amount from items
-        $totalAmount = collect($request->items)->reduce(function ($carry, $item) {
-            return $carry + ($item['quantity'] * $item['unit_price']);
-        }, 0);
+        DB::beginTransaction();
 
-        // Create billing
-        $billing = new Billing();
-        $billing->patient_id = $request->patient_id;
-        $billing->amount = $totalAmount;
-        $billing->payment_method = $request->payment_method;
-        $billing->status = 'unpaid'; // default
-        $billing->save();
+        try {
+            // 1️⃣ Find latest appointment for that patient
+            $appointment = Appointment::where('patient_id', $request->patient_id)
+                ->latest()
+                ->first();
 
-        // Create billing items
-        foreach ($request->items as $item) {
-            $billing->items()->create([
-                'hospital_service_id' => $item['hospital_service_id'] ?? null,
-                'description' => $item['description'],
-                'quantity' => $item['quantity'],
-                'unit_price' => $item['unit_price'],
-                'subtotal' => $item['quantity'] * $item['unit_price'],
+            // 2️⃣ Create billing record
+            $billing = Billing::create([
+                'patient_id' => $request->patient_id,
+                'billable_id' => $appointment?->id,                   // Link to the latest appointment
+                'billable_type' => $appointment ? Appointment::class : null, // Define polymorphic link
+                'hospital_service_id' => null,                                // Items handle their own services
+                'amount' => $request->amount,
+                'payment_method' => $request->payment_method,
+                'status' => 'unpaid',
             ]);
+
+            // 3️⃣ Store billing items (each line item from the form)
+            foreach ($request->items as $item) {
+                $billing->billingItems()->create([
+                    'hospital_service_id' => $item['hospital_service_id'] ?? null,
+                    'description' => $item['description'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'subtotal' => $item['quantity'] * $item['unit_price'],
+                ]);
+            }
+
+            // 4️⃣ Update billing total (sum of all items)
+            $billing->update([
+                'amount' => $billing->billingItems->sum('subtotal'),
+            ]);
+
+            DB::commit();
+
+            return redirect()
+                ->route('billings', $billing->id)
+                ->with('success', 'Billing created successfully!');
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error('Billing creation failed: ' . $e->getMessage());
+            return back()->with('error', 'Failed to create billing. Please try again.');
         }
-
-        return redirect()->route('billings')->with('success', 'Billing created successfully!');
     }
-
 
     public function edit($id)
     {

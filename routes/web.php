@@ -323,7 +323,7 @@ Route::controller(MedicineController::class)->prefix('admin')->group(function ()
 //billings
 Route::controller(BillingController::class)->prefix('admin')->group(function () {
     Route::get('/billings', 'index')->name('billings');
-    Route::get('/billings/create/{appointment_id?}', 'create')->name('billings.create');
+    Route::get('/billings/create', 'create')->name('billings.create');
     Route::post('/billings', 'store')->name('billings.store');
     Route::get('/billings/{id}/edit', 'edit')->name('billings.edit');
     Route::put('/billings/{id}', 'update')->name('billings.update');

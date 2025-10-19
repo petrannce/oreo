@@ -116,7 +116,7 @@ class MedicineController extends Controller
 
         $medicines = $query->latest()->paginate(10);
 
-        return view('backend.departments.reports', [
+        return view('backend.medicines.reports', [
             'medicines' => $medicines,
             'canExport' => true
         ]);

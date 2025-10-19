@@ -90,7 +90,7 @@
     <div class="header">
         <div class="header-left">
             @if($hospital->logo)
-                <img src="{{ public_path('uploads/hospital/' . $hospital->logo) }}" alt="Hospital Logo">
+                <img src="{{ asset('storage/' . $hospital->logo) }}" alt="Hospital Logo">
             @endif
             <div class="hospital-info">
                 <h1>{{ $hospital->name }}</h1>

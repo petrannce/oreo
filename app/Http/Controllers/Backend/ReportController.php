@@ -59,6 +59,13 @@ class ReportController extends Controller
                 'title' => 'Lab Tests Report',
                 'date_field' => 'created_at',
             ],
+            'medicines' => [
+                'model' => \App\Models\Medicine::class,
+                'relations' => [],
+                'columns' => ['name', 'category', 'form', 'stock_quantity', 'unit_price', 'manufacturer', 'created_at'],
+                'title' => 'Medicines Report',
+                'date_field' => 'created_at',
+            ],
             'medical_records' => [
                 'model' => \App\Models\Medical::class,
                 'relations' => ['patient', 'doctor', 'appointment'],
