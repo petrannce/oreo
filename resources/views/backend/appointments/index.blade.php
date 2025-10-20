@@ -200,7 +200,7 @@
                                                                                     @if($appointment->labTest)
                                                                                         <a href="{{ route('medicals.create', ['appointment_id' => $appointment->id]) }}"
                                                                                             class="btn btn-sm btn-success">
-                                                                                            <i class="zmdi zmdi-flask"></i> Lab Done
+                                                                                            <i class="zmdi zmdi-flask"></i> View Results
                                                                                         </a>
                                                                                     @else
                                                                                         <a href="{{ route('lab_tests.create', ['appointment_id' => $appointment->id]) }}"
@@ -245,7 +245,7 @@
                                                                                             @else
                                                                                                 <a href="{{ route('billings.show', $appointment->billing->id) }}"
                                                                                                     class="btn btn-sm btn-secondary">
-                                                                                                    <i class="zmdi zmdi-money"></i> Bill Generated
+                                                                                                    <i class="zmdi zmdi-money"></i> View Bill
                                                                                                 </a>
                                                                                             @endif
                                                                                         </div>

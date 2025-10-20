@@ -44,10 +44,11 @@
                                 <thead>
                                     <tr>
                                         <th>*</th>
+                                        <th>Appointment ID</th>
                                         <th>Full Name</th>
-                                        <th>License Number</th>
-                                        <th>Deparment</th>
-                                        <th>Employee Code</th>
+                                        <th>Doctors Name</th>
+                                        <th>Medical Record ID</th>
+                                        <th>Total Amount</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -58,11 +59,20 @@
 
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
-                                            <td>{{$pharmacy_order->user->fname}} {{$pharmacy_order->user->lname}}</td>
-                                            <td>{{$pharmacy_order->license_number  }}</td>
-                                            <td>{{$pharmacy_order->department}}</td>
-                                            <td>{{$pharmacy_order->employee_code  }}</td>
-                                            <td>{{$pharmacy_order->user->profile?->status ?? 'No Status'}}</td>
+                                            <td>{{$pharmacy_order->appointment_id ?? '—'}}</td>
+                                            <td>{{$pharmacy_order->patient->fname ?? '—'}} {{$pharmacy_order->patient->lname ?? '—'}}</td>
+                                            <td>{{$pharmacy_order->doctor->fname ?? '—'}} {{$pharmacy_order->doctor->lname ?? '—'}}</td>
+                                            <td>{{$pharmacy_order->medical_record_id ?? '—'}}</td>
+                                            <td>{{$pharmacy_order->total_price ?? '—'}}</td>
+                                            <td>
+                                                @if($pharmacy_order->status == 'pending')
+                                                    <span class="badge badge-warning">Pending</span>
+                                                @elseif($pharmacy_order->status == 'billed')
+                                                    <span class="badge badge-info">Billed</span>
+                                                @elseif($pharmacy_order->status == 'cancelled')
+                                                    <span class="badge badge-danger">Cancelled</span>
+                                                @endif
+                                            </td>
                                             <td>
                                                 <!-- Edit Button -->
                                                 <button class="btn btn-icon btn-neutral btn-icon-mini"
@@ -71,7 +81,7 @@
                                                 </button>
 
                                                 <!-- Delete Button -->
-                                                <form action="{{ route('pharmacy_orders.destroy', $nurse->id) }}" method="POST"
+                                                <form action="{{ route('pharmacy_orders.destroy', $pharmacy_order->id) }}" method="POST"
                                                     style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')

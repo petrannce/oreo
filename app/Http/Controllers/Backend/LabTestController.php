@@ -29,7 +29,7 @@ class LabTestController extends Controller
 
         if ($appointment_id) {
             // load appointment with patient/doctor
-            $selectedAppointment = Appointment::with(['patient', 'doctor','labRequirements'])->find($appointment_id);
+            $selectedAppointment = Appointment::with(['patient', 'doctor', 'labRequirements'])->find($appointment_id);
             if (!$selectedAppointment) {
                 return redirect()->route('lab_tests.create')->with('error', 'Appointment not found.');
             }
@@ -200,6 +200,13 @@ class LabTestController extends Controller
 
     public function createForAppointment(Request $request, Appointment $appointment)
     {
+        if ($appointment->labTest) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'This appointment already has a lab test assigned.'
+            ], 400);
+        }
+
         $request->validate([
             'lab_tests' => 'array',
             'lab_tests.*' => 'exists:lab_tests,id',

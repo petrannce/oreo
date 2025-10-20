@@ -90,7 +90,7 @@ class ReportController extends Controller
             'pharmacy_orders' => [
                 'model' => \App\Models\PharmacyOrder::class,
                 'relations' => ['patient', 'pharmacy'],
-                'columns' => ['patient.name', 'pharmacy.name', 'created_at'],
+                'columns' => [ 'appointment.id', 'patient.fname', 'patient.lname', 'doctor.fname', 'doctor.lname','medical_record_id', 'status', 'created_at'],
                 'title' => 'Pharmacy Orders Report',
                 'date_field' => 'created_at',
             ],

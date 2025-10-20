@@ -93,12 +93,20 @@
                             @role('admin|doctor')
 
                             <div class="mb-3">
-                                <label class="form-label">Route Type</label>
-                                <select class="form-control" name="route_type" id="routeType" @if($disableFields) disabled @endif>
-                                    <option value="">-- Select Route --</option>
-                                    <option value="lab">Send to Lab</option>
-                                    <option value="pharmacy">Send to Pharmacy</option>
-                                </select>
+                                <label class="form-label">Send Patient To</label>
+                                @php
+    // Prevent multiple lab sends: if labTest already exists, disable lab option.
+    $labAlreadySent = isset($appointment->labTest) && $appointment->labTest !== null;
+@endphp
+
+<select class="form-control" name="route_type" id="routeType" @if($disableFields) disabled @endif>
+    <option value="">-- Send Patient To --</option>
+    <option value="lab" @if($labAlreadySent) disabled @endif>
+        Send to Lab @if($labAlreadySent) (Already Sent) @endif
+    </option>
+    <option value="pharmacy">Send to Pharmacy</option>
+</select>
+
                             </div>
 
                             {{-- Lab Test Section --}}
@@ -216,6 +224,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle "Send to Lab"
     sendBtn?.addEventListener('click', function() {
+        if (@json($appointment->labTest !== null)) {
+        alert('This patient has already been sent to the lab. You cannot send them again.');
+        return;
+    }
+    
         const selectedTests = Array.from(document.querySelectorAll('input[name="lab_tests[]"]:checked')).map(el => el.value);
         const customName = document.getElementById('customTestName').value.trim();
 
