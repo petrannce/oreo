@@ -294,6 +294,8 @@ Route::middleware(['auth', 'role.records'])->controller(PharmacyOrderController:
     Route::get('/pharmacy_orders-report', 'report')->name('pharmacy_orders.report');
     Route::post('/pharmacy-orders/{id}/ajax-update', 'ajaxUpdate')
         ->name('pharmacy_orders.ajax_update');
+    Route::get('/appointments/{id}/details','getAppointmentDetails')->name('appointments.details');
+
 
 });
 

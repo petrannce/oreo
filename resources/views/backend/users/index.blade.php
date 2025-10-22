@@ -76,6 +76,7 @@
                                                         @elseif($user->role == 'pharmacist') btn-danger
                                                         @elseif($user->role == 'nurse') btn-secondary
                                                         @elseif($user->role == 'lab_technician') btn-dark
+                                                        @elseif($user->role == 'accountant') btn-primary
                                                         @else
                                                             btn-danger
                                                         @endif" data-toggle="dropdown" aria-expanded="false">
@@ -110,6 +111,10 @@
                                                         <a class="dropdown-item"
                                                             href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'lab_technician']) }}">
                                                             <i class="text-default"></i> Lab Technician
+                                                        </a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('user.updateRole', ['id' => $user->id, 'role' => 'accountant']) }}">
+                                                            <i class="text-dark"></i> Accountant
                                                         </a>
                                                     </div>
                                                     @endrole

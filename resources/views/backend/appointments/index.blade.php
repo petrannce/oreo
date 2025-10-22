@@ -57,9 +57,10 @@
                                     $rolePermissions = [
                                         'receptionist' => ['reception', 'triage', 'cancelled'],
                                         'nurse' => ['triage', 'doctor_consult'],
-                                        'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing', 'completed'],
+                                        'doctor' => ['doctor_consult', 'lab', 'pharmacy'],
                                         'lab_technician' => ['lab'],
-                                        'pharmacist' => ['pharmacy', 'billing', 'completed'],
+                                        'pharmacist' => ['pharmacy'],
+                                        'accountant' => ['billing', 'completed'],
                                         'admin' => ['reception', 'triage', 'doctor_consult', 'lab', 'pharmacy', 'billing', 'completed', 'cancelled'],
                                     ];
                                 @endphp
@@ -131,8 +132,7 @@
                                                 'pharmacy' => 'primary',
                                                 'billing' => 'dark',
                                                 'completed' => 'success',
-                                                'cancelled' => 'danger',
-                                                default => 'light'
+                                                'cancelled' => 'danger',                                                default => 'light'
                                             }
                                                                                     }}">
                                                                                     {{ ucfirst(str_replace('_', ' ', $appointment->process_stage)) }}
@@ -226,7 +226,7 @@
                                                                                 @endif
 
                                                                                 {{-- BILLING --}}
-                                                                                @if($stage === 'billing' && auth()->user()->hasAnyRole(['pharmacist', 'admin']))
+                                                                                @if($stage === 'billing' && auth()->user()->hasAnyRole(['accountant', 'admin']))
                                                                                     @if($appointment->billing)
                                                                                         {{-- ✅ Bill already exists --}}
                                                                                         <div class="btn-group" role="group">

@@ -213,9 +213,10 @@
                     </li>
                     @endrole
 
-                    @role('admin|pharmacist')
+                    @role('admin|pharmacist|accountant')
                     <li class="header">Billing Department</li>
 
+                    @role('admin|pharmacist')
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-local-hospital"></i><span>Medicines</span> </a>
@@ -257,8 +258,11 @@
                             </li>
                         </ul>
                     </li>
+                    @endrole
 
-                    <li><a href="javascript:void(0);" class="menu-toggle"><i
+                    @role('admin|accountant')
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-money-box"></i><span>Billing</span> </a>
                         <ul class="ml-menu">
                             <li class="{{ Request::route()->getName() == 'billings' ? 'active' : 'inactive' }}">
@@ -269,6 +273,8 @@
                             </li>
                         </ul>
                     </li>
+                    @endrole
+
                     @endrole
 
                     @role('admin|pharmacist|lab_technician|doctor|nurse|receptionist')

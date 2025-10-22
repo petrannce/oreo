@@ -37,6 +37,7 @@
                             <div class="body">
                                 <div class="row clearfix">
                                     <div class="col-sm-4">
+                                        <label for="patient">Patient</label>
                                         <select name="patient_id" class="form-control show-tick">
                                             <option value="">- Select Patient -</option>
                                             @foreach($patients as $patient)
@@ -48,12 +49,14 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-group">
+                                            <label for="booked_by">Appointment Booked BY</label>
                                             <input name="booked_by" type="hidden" value="{{ auth()->id() }}">
                                             <input type="text" class="form-control"
                                                 value="{{ auth()->user()->fname }} {{ auth()->user()->lname }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
+                                        <label for="Date">Date of Appointment</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <i class="zmdi zmdi-calendar"></i>
@@ -66,6 +69,7 @@
                                 </div>
                                 <div class="row clearfix">
                                     <div class="col-sm-4">
+                                        <label for="time">Time of Appointment</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <i class="zmdi zmdi-calendar"></i>
@@ -75,6 +79,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
+                                        <label for="service_id">Service</label>
                                         <select name="service_id" class="form-control show-tick">
                                             <option value="">- Select Service -</option>
                                             @foreach ($services as $service)
@@ -83,6 +88,7 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-4">
+                                        <label for="doctor">Doctor</label>
                                         <select name="doctor_id" class="form-control show-tick">
                                             <option value="">- Select Doctor -</option>
                                             @foreach ($doctors as $doctor)

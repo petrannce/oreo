@@ -16,6 +16,7 @@ class PharmacyOrderItem extends Model
         'dosage',
         'unit_price',
         'subtotal',
+        'status',
     ];
 
     public function appointment()

@@ -30,6 +30,7 @@ class PermissionsOreo extends Seeder
             'manage blogs',
             'manage users',
             'manage prescriptions',
+            'manage billings',
         ];
 
         foreach ($permissions as $permission) {
@@ -54,6 +55,9 @@ class PermissionsOreo extends Seeder
 
         $lab_technician = Role::firstOrCreate(['name' => 'lab_technician']);
         $lab_technician->syncPermissions('manage prescriptions');
+
+        $accountant = Role::firstOrCreate(['name' => 'accountant']);
+        $accountant->syncPermissions('manage billings');
 
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $admin->syncPermissions(['manage appointments', 'manage services', 'manage doctors', 'manage patients', 'manage departments', 'manage resources', 'manage blogs', 'manage users']);

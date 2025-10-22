@@ -12,8 +12,7 @@
                 </div>
                 <div class="col-lg-5 col-md-7 col-sm-12">
                     <ul class="breadcrumb float-md-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard.pharmacy_orders_items') }}"><i class="zmdi zmdi-home"></i> Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('pharmacy_orders_items.index') }}">Pharmacy Order Items</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('pharmacy_orders_items') }}">Pharmacy Order Items</a></li>
                         <li class="breadcrumb-item active">Edit</li>
                     </ul>
                 </div>
@@ -43,8 +42,8 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="form-label">Order #</label>
-                                            <input type="text" class="form-control" 
-                                                value="Order #{{ $pharmacy_order_item->pharmacyOrder->id }}" readonly>
+                                            <input type="text" name="pharmacy_order_id" class="form-control" 
+                                                value="{{ $pharmacy_order_item->pharmacyOrder->id }}" readonly>
                                         </div>
                                     </div>
 
@@ -75,12 +74,30 @@
                                         </div>
                                     </div>
 
+                                    {{-- Dosage --}}
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label class="form-label">Dosage</label>
+                                            <input type="text" name="dosage" class="form-control" 
+                                                value="{{ $pharmacy_order_item->dosage }}" readonly>
+                                        </div>
+                                    </div>
+
                                     {{-- Price --}}
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label class="form-label">Price per Unit</label>
-                                            <input type="number" name="price" step="0.01" class="form-control" 
-                                                value="{{ $pharmacy_order_item->price }}" required>
+                                            <input type="number" name="unit_price" step="0.01" class="form-control" 
+                                                value="{{ $pharmacy_order_item->unit_price }}" readonly>
+                                        </div>
+                                    </div>
+
+                                    {{-- Subtotal --}}
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label class="form-label">Total Price</label>
+                                            <input type="number" name="subtotal" step="0.01" class="form-control" 
+                                                value="{{ $pharmacy_order_item->subtotal }}" readonly>
                                         </div>
                                     </div>
 
@@ -99,7 +116,7 @@
 
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-primary btn-round">Update</button>
-                                    <a href="{{ route('pharmacy_orders_items.index') }}" class="btn btn-default btn-round btn-simple">Cancel</a>
+                                    <a href="{{ route('pharmacy_orders_items') }}" class="btn btn-default btn-round btn-simple">Cancel</a>
                                 </div>
 
                             </form>

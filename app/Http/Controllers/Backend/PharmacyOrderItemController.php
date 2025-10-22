@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Medicine;
 use App\Models\PharmacyOrderItem;
 use DB;
 use Illuminate\Http\Request;
@@ -55,16 +56,20 @@ class PharmacyOrderItemController extends Controller
     public function edit($id)
     {
         $pharmacy_order_item = PharmacyOrderItem::findOrFail($id);
-        return view('backend.pharmacy_orders_items.edit', compact('pharmacy_order_item'));
+        $medicines = Medicine::all();
+        return view('backend.pharmacy_orders_items.edit', compact('pharmacy_order_item', 'medicines'));
     }
 
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'pharmacy_order_id' => 'required|exists:pharmacy_orders,id',
-            'drug_name' => 'required|string|max:255',    
+            'medicine_id' => 'required|exists:medicines,id',
             'quantity' => 'required|numeric',
             'dosage' => 'nullable|string|max:255',
+            'unit_price' => 'required|numeric',
+            'subtotal' => 'required|numeric',
             ]);
 
         DB::beginTransaction();
@@ -72,9 +77,11 @@ class PharmacyOrderItemController extends Controller
         try {
             $pharmacy_order_item = PharmacyOrderItem::findOrFail($id);
             $pharmacy_order_item->pharmacy_order_id = $request->pharmacy_order_id;
-            $pharmacy_order_item->drug_name = $request->drug_name;
+            $pharmacy_order_item->medicine_id = $request->medicine_id;
             $pharmacy_order_item->quantity = $request->quantity;
             $pharmacy_order_item->dosage = $request->dosage;
+            $pharmacy_order_item->unit_price = $request->unit_price;
+            $pharmacy_order_item->subtotal = $request->subtotal;
             $pharmacy_order_item->save();
 
             DB::commit();

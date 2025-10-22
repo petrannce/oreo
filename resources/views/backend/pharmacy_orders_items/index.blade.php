@@ -52,7 +52,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->pharmacy_order_id }}</td>
-                                            <td>{{ $item->drug_name }}</td>
+                                            <td>{{ $item->medicine->name }}</td>
                                             <td>{{ $item->quantity }}</td>
                                             <td>{{ $item->dosage ?? '-' }}</td>
                                             <td>

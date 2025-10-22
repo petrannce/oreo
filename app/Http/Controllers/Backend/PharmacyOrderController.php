@@ -26,7 +26,7 @@ class PharmacyOrderController extends Controller
         $appointment = null;
 
         if ($appointment_id) {
-            $appointment = Appointment::with(['patient', 'doctor'])->find($appointment_id);
+            $appointment = Appointment::with(['patient', 'doctor', 'medicalRecord'])->find($appointment_id);
         }
 
         return view('backend.pharmacy_orders.create', [
@@ -169,6 +169,31 @@ class PharmacyOrderController extends Controller
             'canExport' => true
         ]);
     }
+
+    public function getAppointmentDetails($id)
+    {
+        $appointment = Appointment::with(['patient', 'doctor', 'medicalRecords'])->find($id);
+
+        if (!$appointment) {
+            return response()->json(['error' => 'Appointment not found'], 404);
+        }
+
+        return response()->json([
+            'patient' => [
+                'id' => $appointment->patient->id,
+                'name' => $appointment->patient->fname . ' ' . $appointment->patient->lname,
+            ],
+            'doctor' => [
+                'id' => $appointment->doctor->id,
+                'name' => 'Dr. ' . $appointment->doctor->fname . ' ' . $appointment->doctor->lname,
+            ],
+            'medical_record' => $appointment->medicalRecord ? [
+                'id' => $appointment->medicalRecord->id,
+                'name' => 'Record #' . $appointment->medicalRecord->id,
+            ] : null,
+        ]);
+    }
+
 
 
 }

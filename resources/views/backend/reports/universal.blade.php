@@ -6,6 +6,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>{{ $title ?? 'Report' }}</title>
@@ -16,6 +17,7 @@
             font-size: 12px;
             margin: 20px;
         }
+
         .header {
             display: flex;
             align-items: center;
@@ -24,82 +26,100 @@
             padding-bottom: 10px;
             margin-bottom: 15px;
         }
+
         .header-left {
             display: flex;
             align-items: center;
         }
+
         .header-left img {
             height: 60px;
             width: auto;
             margin-right: 12px;
         }
+
         .hospital-info h1 {
             font-size: 18px;
             margin: 0;
             color: #222;
         }
+
         .hospital-info div {
             font-size: 12px;
             color: #555;
         }
+
         h2 {
             text-align: center;
             color: #222;
             text-transform: uppercase;
             margin-bottom: 10px;
         }
+
         .filters {
             margin-bottom: 15px;
             text-align: center;
             font-size: 12px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 6px 8px;
             text-align: left;
             font-size: 11px;
         }
+
         th {
             background-color: #f3f3f3;
             font-weight: bold;
             text-transform: capitalize;
         }
+
         tr:nth-child(even) {
             background-color: #fafafa;
         }
+
         .footer {
             margin-top: 30px;
             font-size: 11px;
             color: #666;
             text-align: center;
         }
+
         .footer div {
             margin-top: 4px;
         }
     </style>
 </head>
+
 <body>
+
+    @php
+        $hospital = HospitalDetail::first();
+    @endphp
 
     {{-- Hospital Header --}}
     @if($hospital)
-    <div class="header">
-        <div class="header-left">
-            @if($hospital->logo)
-                <img src="{{ asset('storage/' . $hospital->logo) }}" alt="Hospital Logo">
-            @endif
-            <div class="hospital-info">
-                <h1>{{ $hospital->name }}</h1>
-                <div>{{ $hospital->address }}</div>
-                <div>Phone: {{ $hospital->phone_number }} | Email: {{ $hospital->email }}</div>
-                <div>Website: {{ $hospital->website }}</div>
+        <div class="header">
+            <div class="header-left">
+                @if($hospital->logo)
+                    <img src="{{ public_path('storage/' . $hospital->logo) }}" alt="Hospital Logo">
+                @endif
+                <div class="hospital-info">
+                    <h1>{{ $hospital->name }}</h1>
+                    <div>{{ $hospital->address }}</div>
+                    <div>Phone: {{ $hospital->phone_number }} | Email: {{ $hospital->email }}</div>
+                    <div>Website: {{ $hospital->website }}</div>
+                </div>
             </div>
         </div>
-    </div>
     @endif
 
     {{-- Report Title --}}
@@ -133,7 +153,8 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="{{ count($columns) + 1 }}" style="text-align:center;">No data found for the selected filters.</td>
+                    <td colspan="{{ count($columns) + 1 }}" style="text-align:center;">No data found for the selected
+                        filters.</td>
                 </tr>
             @endforelse
         </tbody>
@@ -149,4 +170,5 @@
     </div>
 
 </body>
+
 </html>
