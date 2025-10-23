@@ -17,71 +17,51 @@
 
         {{-- Quick Stats --}}
         <div class="row clearfix">
-
-            {{-- Patients Awaiting Triage --}}
             <div class="col-lg-3 col-md-6">
                 <div class="card">
                     <div class="body">
-                        <h3 class="number count-to m-b-0">
-                            {{ $pending_triages_count ?? 0 }}
-                        </h3>
+                        <h3 class="number count-to m-b-0">{{ $pending_triages_count ?? 0 }}</h3>
                         <p class="text-muted">Patients Awaiting Vitals</p>
-                        <div class="progress">
-                            <div class="progress-bar bg-warning" style="width:70%"></div>
-                        </div>
+                        <div class="progress"><div class="progress-bar bg-warning" style="width:70%"></div></div>
                         <small>Record vitals before doctor consultation</small>
                     </div>
                 </div>
             </div>
 
-            {{-- Vitals Recorded Today --}}
             <div class="col-lg-3 col-md-6">
                 <div class="card">
                     <div class="body">
-                        <h3 class="number count-to m-b-0">
-                            {{ $today_triages_count ?? 0 }}
-                        </h3>
+                        <h3 class="number count-to m-b-0">{{ $today_triages_count ?? 0 }}</h3>
                         <p class="text-muted">Vitals Recorded Today</p>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" style="width:80%"></div>
-                        </div>
+                        <div class="progress"><div class="progress-bar bg-success" style="width:80%"></div></div>
                         <small>Good job keeping up with patient monitoring!</small>
                     </div>
                 </div>
             </div>
 
-            {{-- Admitted Patients --}}
             <div class="col-lg-3 col-md-6">
                 <div class="card">
                     <div class="body">
-                        <h3 class="number count-to m-b-0">
-                            {{ $admitted_patients_count ?? 0 }}
-                        </h3>
-                        <p class="text-muted">Admitted Patients</p>
-                        <div class="progress">
-                            <div class="progress-bar bg-primary" style="width:60%"></div>
-                        </div>
-                        <small>Keep ward records up to date</small>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Completed Triages --}}
-            <div class="col-lg-3 col-md-6">
-                <div class="card">
-                    <div class="body">
-                        <h3 class="number count-to m-b-0">
-                            {{ $completed_triages_count ?? 0 }}
-                        </h3>
+                        <h3 class="number count-to m-b-0">{{ $completed_triages_count ?? 0 }}</h3>
                         <p class="text-muted">Completed Triages</p>
-                        <div class="progress">
-                            <div class="progress-bar bg-info" style="width:75%"></div>
-                        </div>
+                        <div class="progress"><div class="progress-bar bg-info" style="width:75%"></div></div>
                         <small>Patients ready for doctor consultation</small>
                     </div>
                 </div>
             </div>
 
+            {{-- Vitals Summary --}}
+            <div class="col-lg-3 col-md-6">
+                <div class="card">
+                    <div class="body">
+                        <h5 class="m-b-0">Avg Temp: {{ number_format($average_temp, 1) }}°C</h5>
+                        <h5 class="m-b-0">Avg Weight: {{ number_format($average_weight, 1) }} kg</h5>
+                        <h5 class="m-b-0">Common BP: {{ $common_bp ?? 'N/A' }}</h5>
+                        <h5 class="m-b-0">Common HR: {{ $common_hr ?? 'N/A' }}</h5>
+                        <p class="text-muted m-t-10">Today's vitals snapshot</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         {{-- Patients Waiting for Triage --}}
@@ -93,17 +73,15 @@
                         <small>Patients who haven’t had their vitals recorded yet</small>
                     </div>
                     <div class="body">
+                        <input type="text" class="form-control m-b-10" placeholder="Search patient..." onkeyup="filterList(this)">
                         <ul class="list-group">
                             @forelse($pending_triages as $triage)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <div>
-                                        <strong>{{ $triage->patient->fname }} {{ $triage->patient->lname }}</strong>
-                                        <br>
+                                        <strong>{{ $triage->patient->fname }} {{ $triage->patient->lname }}</strong><br>
                                         <small>Appointment: {{ optional($triage->appointment)->date }}</small>
                                     </div>
-                                    <a href="{{ route('triages.create') }}" class="btn btn-sm btn-warning">
-                                        Record Vitals
-                                    </a>
+                                    <a href="{{ route('triages.create', $triage->id) }}" class="btn btn-sm btn-warning">Record Vitals</a>
                                 </li>
                             @empty
                                 <li class="list-group-item text-muted text-center">No patients awaiting vitals</li>
@@ -133,4 +111,13 @@
         </div>
     </div>
 </section>
+
+<script>
+function filterList(input) {
+    const filter = input.value.toLowerCase();
+    document.querySelectorAll('.list-group-item').forEach(item => {
+        item.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';
+    });
+}
+</script>
 @endsection

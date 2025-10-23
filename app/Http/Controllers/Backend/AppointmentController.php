@@ -174,8 +174,8 @@ class AppointmentController extends Controller
         $rolePermissions = [
             'receptionist' => ['reception', 'triage', 'cancelled'],
             'nurse' => ['triage', 'doctor_consult'],
-            'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing', 'completed'],
-            'lab_technician' => ['lab'],
+            'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing'],
+            'lab_technician' => ['lab','doctor_consult'],
             'pharmacist' => ['pharmacy', 'billing', 'completed'],
             'admin' => $validStages,
         ];
@@ -408,7 +408,7 @@ class AppointmentController extends Controller
             'receptionist' => ['reception', 'triage', 'cancelled'],
             'nurse' => ['triage', 'doctor_consult'],
             'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing', 'completed'],
-            'lab_technician' => ['lab'],
+            'lab_technician' => ['lab','doctor_consult'],
             'pharmacist' => ['pharmacy', 'billing', 'completed'],
             'admin' => ['reception', 'triage', 'doctor_consult', 'lab', 'pharmacy', 'billing', 'completed', 'cancelled'],
         ];

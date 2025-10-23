@@ -58,8 +58,8 @@
                                         'receptionist' => ['reception', 'triage', 'cancelled'],
                                         'nurse' => ['triage', 'doctor_consult'],
                                         'doctor' => ['doctor_consult', 'lab', 'pharmacy'],
-                                        'lab_technician' => ['lab'],
-                                        'pharmacist' => ['pharmacy'],
+                                        'lab_technician' => ['lab','doctor_consult'],
+                                        'pharmacist' => ['pharmacy','billing'],
                                         'accountant' => ['billing', 'completed'],
                                         'admin' => ['reception', 'triage', 'doctor_consult', 'lab', 'pharmacy', 'billing', 'completed', 'cancelled'],
                                     ];

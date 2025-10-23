@@ -100,6 +100,17 @@ class RoleBasedRecords
             }
 
             // --------------------------
+            // ACCOUNTANT
+            // --------------------------
+            elseif ($user->role === 'accountant') {
+                // Accountants should see appointments linked to Pharmacy orders
+                $view->with('appointments', Appointment::with(['patient', 'doctor'])->latest()->get());
+
+                // Pharmacists don’t usually see all medical records, but you can limit it
+                $view->with('medical_records', collect());
+            }
+
+            // --------------------------
             // ADMIN
             // --------------------------
             elseif ($user->role === 'admin') {

@@ -75,9 +75,8 @@ Route::middleware(['auth', 'role.records'])->controller(HomeController::class)->
     Route::get('/dashboard/patients', 'patients')->name('dashboard.patients');
     Route::get('/dashboard/nurses', 'nurses')->name('dashboard.nurses');
     Route::get('/dashboard/pharmacist', 'pharmacists')->name('dashboard.pharmacist');
+    Route::get('/dashboard/accountant', 'accountant')->name('dashboard.accountant');
     Route::get('/dashboard/lab_technicians', 'lab_technicians')->name('dashboard.lab_technicians');
-    Route::get('/dashboard/medicines', 'medicines')->name('dashboard.medicines');
-    Route::get('/dashboard/billing', 'billing')->name('dashboard.billing');
     Route::get('/admin/subscribers', 'subscribers')->name('admin.subscribers');
     Route::delete('/subscribers/{id}', 'subscribersDestroy')->name('subscribers.destroy');
 });

@@ -46,6 +46,9 @@
                                         @elseif(Auth::user()->role == 'pharmacist')
                                             <a href="{{ route('dashboard.pharmacist') }}" class="btn btn-link"
                                                 target="_blank">Pharmacist's Dashboard</a>
+                                        @elseif(Auth::user()->role == 'accountant')
+                                            <a href="{{ route('dashboard.accountant') }}" class="btn btn-link"
+                                                target="_blank">Accountant's Dashboard</a>
                                         @else
                                             //
                                         @endif

@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Billing;
+use App\Models\BillingItem;
 use App\Models\LabTest;
 use App\Models\PharmacyOrderItem;
 use App\Models\Triage;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Subscriber;
 use App\Models\Patient;
 use App\Models\Doctor;
 use App\Models\User;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -69,6 +70,7 @@ class HomeController extends Controller
     public function nurses()
     {
         $today = now()->toDateString();
+
         $today_triages_count = Triage::whereDate('created_at', $today)->count();
         $pending_triages = Appointment::whereDoesntHave('triage')
             ->with('patient')
@@ -79,23 +81,83 @@ class HomeController extends Controller
         $pending_triages_count = $pending_triages->count();
         $completed_triages_count = Triage::count();
 
+        $average_temp = Triage::whereDate('created_at', $today)->avg('temperature');
+        $average_weight = Triage::whereDate('created_at', $today)->avg('weight');
+        $common_bp = Triage::whereDate('created_at', $today)
+            ->select('blood_pressure')
+            ->groupBy('blood_pressure')
+            ->orderByRaw('COUNT(*) DESC')
+            ->value('blood_pressure');
+        $common_hr = Triage::whereDate('created_at', $today)
+            ->select('heart_rate')
+            ->groupBy('heart_rate')
+            ->orderByRaw('COUNT(*) DESC')
+            ->value('heart_rate');
+
         return view('backend.dashboard.nurse', [
             'today_triages_count' => $today_triages_count,
             'pending_triages' => $pending_triages,
             'pending_triages_count' => $pending_triages_count,
-            'completed_triages_count' => $completed_triages_count
+            'completed_triages_count' => $completed_triages_count,
+            'average_temp' => $average_temp,
+            'average_weight' => $average_weight,
+            'common_bp' => $common_bp,
+            'common_hr' => $common_hr
         ]);
     }
 
     public function pharmacists()
     {
-        
+
         $pharmacy_order_items = PharmacyOrderItem::with('patient')
             ->latest()
             ->take(8)
             ->get();
 
         return view('backend.dashboard.pharmacist', compact('pharmacy_order_items'));
+    }
+
+    public function accountant()
+    {
+
+        $totalRevenue = Billing::where('status', 'paid')->sum('amount');
+        $unpaidBills = Billing::where('status', 'unpaid')->count();
+        $paidBills = Billing::where('status', 'paid')->count();
+        $cancelledBills = Billing::where('status', 'cancelled')->count();
+
+        $revenueTrend = Billing::select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('SUM(amount) as total')
+            )
+            ->where('status', 'paid')
+            ->where('created_at', '>=', Carbon::now()->subMonths(6))
+            ->groupBy('month')
+            ->pluck('total', 'month');
+
+        $topServices = BillingItem::select('hospital_service_id', DB::raw('SUM(subtotal) as total'))
+            ->groupBy('hospital_service_id')
+            ->with('hospitalService')
+            ->orderByDesc('total')
+            ->take(5)
+            ->get();
+
+        $recentTransactions = Billing::with('patient')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $outstandingTotal = Billing::where('status', 'unpaid')->sum('amount');
+
+        return view('backend.dashboard.accountant', [
+            'totalRevenue' => $totalRevenue,
+            'unpaidBills' => $unpaidBills,
+            'paidBills' => $paidBills,
+            'cancelledBills' => $cancelledBills,
+            'revenueTrend' => $revenueTrend,
+            'topServices' => $topServices,
+            'recentTransactions' => $recentTransactions,
+            'outstandingTotal' => $outstandingTotal
+        ]);
     }
 
     public function lab_technicians()

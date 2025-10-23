@@ -107,6 +107,13 @@
                     </li>
                     @endrole
 
+                    @role('admin|accountant')
+                    <li class="{{ Request::route()->getName() == 'dashboard.accountant' ? 'active' : 'inactive' }}">
+                        <a href="{{route('dashboard.accountant')}}"><i class="zmdi zmdi-local-atm"></i>
+                            <span>Accountant</span></a>
+                    </li>
+                    @endrole
+
                     <li class="header">MAIN</li>
 
                     <li><a class="menu-toggle"><i class="zmdi zmdi-calendar"></i><span>Appointment</span> </a>
