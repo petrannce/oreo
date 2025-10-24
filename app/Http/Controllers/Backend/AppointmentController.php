@@ -176,7 +176,8 @@ class AppointmentController extends Controller
             'nurse' => ['triage', 'doctor_consult'],
             'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing'],
             'lab_technician' => ['lab','doctor_consult'],
-            'pharmacist' => ['pharmacy', 'billing', 'completed'],
+            'pharmacist' => ['pharmacy', 'billing'],
+            'accountant' => ['billing', 'completed'],
             'admin' => $validStages,
         ];
 

@@ -79,7 +79,7 @@
                         <ul class="list-unstyled">
                             @foreach ($topServices as $service)
                                 <li>
-                                    {{ $service->hospitalService->name ?? 'N/A' }} 
+                                    {{ $service->hospitalService->name ?? 'N/A' }}
                                     <span class="float-right text-success">{{ number_format($service->total, 2) }} KES</span>
                                 </li>
                             @endforeach
@@ -112,7 +112,7 @@
                                 @foreach ($recentTransactions as $index => $bill)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
-                                        <td>{{ $bill->patient->full_name ?? 'N/A' }}</td>
+                                        <td>{{ $bill->patient->fname ?? 'N/A' }}</td>
                                         <td>{{ number_format($bill->amount, 2) }} KES</td>
                                         <td>
                                             <span class="badge badge-{{ $bill->status == 'paid' ? 'success' : ($bill->status == 'unpaid' ? 'warning' : 'danger') }}">
