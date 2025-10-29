@@ -73,58 +73,61 @@
                             </div>
 
                             {{-- Lab Results --}}
-                            @if($appointment->labTest)
+                            @if($appointment->labTests && $appointment->labTests->count() > 0)
                                 <div class="mb-3 card p-3 bg-light">
                                     <h5 class="text-warning">Lab Results</h5>
-                                    <p><strong>Test:</strong> {{ $appointment->labTest->test_name }}</p>
-                                    <p><strong>Results:</strong> {{ $appointment->labTest->results ?? 'Pending' }}</p>
-                                    <p><strong>Status:</strong> {{ ucfirst($appointment->labTest->status ?? 'Pending') }}</p>
+                                    @foreach($appointment->labTests as $labTest)
+                                        <div class="border-bottom mb-2 pb-2">
+                                            <p><strong>Test:</strong> {{ $labTest->test_name }}</p>
+                                            <p><strong>Results:</strong> {{ $labTest->results ?? 'Pending' }}</p>
+                                            <p><strong>Status:</strong> {{ ucfirst($labTest->status ?? 'Pending') }}</p>
+                                        </div>
+                                    @endforeach
                                 </div>
                             @endif
 
-                            {{-- Route Type --}}
+                            {{-- Logic for disabling form --}}
                             @php
                                 $disableFields = false;
-                                if ($appointment->process_stage === 'lab' && (!$appointment->labTest || $appointment->labTest->status !== 'completed')) {
+                                if ($appointment->process_stage === 'lab' && (!$appointment->labTests || $appointment->labTests->where('status', 'completed')->isEmpty())) {
                                     $disableFields = true;
                                 }
                             @endphp
 
                             @role('admin|doctor')
 
+                            {{-- Send Patient To --}}
                             <div class="mb-3">
                                 <label class="form-label">Send Patient To</label>
                                 @php
-    // Prevent multiple lab sends: if labTest already exists, disable lab option.
-    $labAlreadySent = isset($appointment->labTest) && $appointment->labTest !== null;
-@endphp
-
-<select class="form-control" name="route_type" id="routeType" @if($disableFields) disabled @endif>
-    <option value="">-- Send Patient To --</option>
-    <option value="lab" @if($labAlreadySent) disabled @endif>
-        Send to Lab @if($labAlreadySent) (Already Sent) @endif
-    </option>
-    <option value="pharmacy">Send to Pharmacy</option>
-</select>
-
+                                    $labAlreadySent = isset($appointment->labRequirements) && $appointment->labRequirements->count() > 0;
+                                @endphp
+                                <select class="form-control" name="route_type" id="routeType" @if($disableFields) disabled @endif>
+                                    <option value="">-- Send Patient To --</option>
+                                    <option value="lab" @if($labAlreadySent) disabled @endif>
+                                        Send to Lab @if($labAlreadySent) (Already Sent) @endif
+                                    </option>
+                                    <option value="pharmacy">Send to Pharmacy</option>
+                                </select>
                             </div>
 
-                            {{-- Lab Test Section --}}
+                            {{-- Lab Test Selection --}}
                             <div id="labSection" class="mb-3" style="display:none;">
-                                <label class="form-label text-warning">Select or Add Lab Tests</label>
+                                <label class="form-label text-warning">Select Lab Tests</label>
 
                                 <div class="form-check">
-                                    @foreach($lab_tests as $labTest)
+                                    @foreach($lab_tests as $test)
                                         <label class="form-check-label d-block">
-                                            <input type="checkbox" name="lab_tests[]" value="{{ $labTest->id }}">
-                                            {{ $labTest->test_name }}
+                                            <input type="checkbox" name="lab_tests[]" value="{{ $test->id }}">
+                                            {{ $test->test_name }} -
+                                            <small class="text-muted">KES {{ number_format($test->price, 2) }}</small>
                                         </label>
                                     @endforeach
                                 </div>
 
                                 <hr>
 
-                                {{-- Suggested Tests (from lab_requirements) --}}
+                                {{-- Suggested Tests (from requirements) --}}
                                 @if(isset($appointment) && $appointment->labRequirements->count() > 0)
                                     <div class="mb-3">
                                         <label class="form-label text-success">Suggested Test(s)</label>
@@ -139,13 +142,6 @@
                                     </div>
                                 @endif
 
-                                {{-- New Lab Test --}}
-                                <div class="mt-3">
-                                    <label class="form-label">Add New Test Name</label>
-                                    <input type="text" class="form-control" id="customTestName"
-                                           placeholder="Enter new test name...">
-                                </div>
-
                                 <div class="mt-3">
                                     <button type="button" id="sendToLabBtn" class="btn btn-outline-warning btn-round">
                                         <i class="zmdi zmdi-flask"></i> Send to Lab
@@ -153,7 +149,7 @@
                                 </div>
 
                                 <p class="text-muted small mt-2">
-                                    When you click <strong>Send to Lab</strong>, the selected or new test will be saved and
+                                    When you click <strong>Send to Lab</strong>, the selected test(s) will be saved and
                                     this appointment will move to the lab queue.
                                 </p>
                             </div>
@@ -209,31 +205,22 @@
     </div>
 </section>
 
-{{-- LAB LOGIC (isolated) --}}
+{{-- LAB LOGIC --}}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const routeType = document.getElementById('routeType');
     const labSection = document.getElementById('labSection');
     const sendBtn = document.getElementById('sendToLabBtn');
 
-    // Toggle lab section visibility
     routeType?.addEventListener('change', function() {
-        if (this.value === 'lab') labSection.style.display = 'block';
-        else labSection.style.display = 'none';
+        labSection.style.display = (this.value === 'lab') ? 'block' : 'none';
     });
 
-    // Handle "Send to Lab"
     sendBtn?.addEventListener('click', function() {
-        if (@json($appointment->labTest !== null)) {
-        alert('This patient has already been sent to the lab. You cannot send them again.');
-        return;
-    }
-    
         const selectedTests = Array.from(document.querySelectorAll('input[name="lab_tests[]"]:checked')).map(el => el.value);
-        const customName = document.getElementById('customTestName').value.trim();
 
-        if (selectedTests.length === 0 && !customName) {
-            alert('Please select or enter at least one lab test.');
+        if (selectedTests.length === 0) {
+            alert('Please select at least one lab test.');
             return;
         }
 
@@ -244,16 +231,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({ lab_tests: selectedTests, custom_name: customName })
+            body: JSON.stringify({ lab_tests: selectedTests })
         })
         .then(res => res.json())
         .then(data => {
-            if (data.status === 'success') {
-                alert(data.message || 'Sent to lab successfully.');
-                window.location.href = "{{ route('appointments') }}";
-            } else {
-                alert(data.message || 'Failed to send to lab.');
-            }
+            alert(data.message || 'Sent to lab successfully.');
+            window.location.href = "{{ route('appointments') }}";
         })
         .catch(err => {
             console.error('Error sending to lab:', err);
@@ -263,15 +246,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-{{-- PRESCRIPTION / ADD MEDICINE LOGIC (restored exactly) --}}
+{{-- PRESCRIPTION LOGIC (unchanged) --}}
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
     const addBtn = document.getElementById('addMedicineBtn');
     const list = document.getElementById('medicineRows');
     const output = document.getElementById('prescriptionText');
     let medicineCount = 0;
 
-    // Add new medicine row
     addBtn.addEventListener('click', function () {
         medicineCount++;
         const row = document.createElement('div');
@@ -301,8 +283,6 @@ document.addEventListener('DOMContentLoaded', function () {
         list.appendChild(row);
     });
 
-
-    // Remove a medicine row
     list.addEventListener('click', function (e) {
         if (e.target.closest('.remove-btn')) {
             e.target.closest('.row').remove();
@@ -310,12 +290,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Update prescription text on input
     list.addEventListener('input', function () {
         updatePrescription();
     });
 
-    // Generate formatted prescription text
     function updatePrescription() {
         const names = document.querySelectorAll('.medicine-name');
         const qtys = document.querySelectorAll('.quantity');
@@ -336,9 +314,6 @@ document.addEventListener('DOMContentLoaded', function () {
         output.value = lines.join("\n");
     }
 
-    /**
-     * Autocomplete for medicines (search from DB)
-     */
     list.addEventListener('input', async function (e) {
         if (!e.target.classList.contains('medicine-name')) return;
 
@@ -382,7 +357,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Hide suggestion dropdown on outside click
     document.addEventListener('click', function (e) {
         if (!e.target.closest('.medicine-name') && !e.target.closest('.medicine-suggestions')) {
             document.querySelectorAll('.medicine-suggestions').forEach(box => box.style.display = 'none');
@@ -390,5 +364,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
 @endsection

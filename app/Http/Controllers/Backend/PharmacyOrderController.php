@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Doctor;
+use App\Models\LabService;
 use App\Models\Patient;
 use App\Models\PharmacyOrder;
 use DB;
@@ -26,7 +27,7 @@ class PharmacyOrderController extends Controller
         $appointment = null;
 
         if ($appointment_id) {
-            $appointment = Appointment::with(['patient', 'doctor', 'medicalRecord'])->find($appointment_id);
+            $appointment = Appointment::with(['patient', 'doctor', 'medicalRecords'])->find($appointment_id);
         }
 
         return view('backend.pharmacy_orders.create', [
@@ -77,10 +78,10 @@ class PharmacyOrderController extends Controller
     public function edit($id)
     {
         $pharmacy_order = PharmacyOrder::findOrFail($id);
+        $appointment = $pharmacy_order->appointment;
 
-        // Fetch all prescriptions for this appointment, ordered by creation date
-        $prescriptions = $pharmacy_order->appointment
-            ->medicalRecords()
+        // ✅ Fetch all prescriptions
+        $prescriptions = $appointment->medicalRecords()
             ->orderBy('created_at')
             ->pluck('prescription')
             ->filter()
@@ -90,12 +91,43 @@ class PharmacyOrderController extends Controller
             return ($key + 1) . ". " . $item;
         })->implode("\n");
 
+        // ✅ Handle lab tests formatting
+        $labTests = $appointment->labTests()
+            ->orderBy('created_at')
+            ->get();
+
+        $formattedLabTests = [];
+        $totalLabPrice = 0;
+
+        foreach ($labTests as $labTest) {
+            // Split comma-separated test names
+            $testNames = array_map('trim', explode(',', $labTest->test_name));
+
+            foreach ($testNames as $testName) {
+                $formattedLabTests[] = $testName;
+
+                // Look up lab service price
+                $service = LabService::where('test_name', $testName)->first();
+                if ($service) {
+                    $totalLabPrice += $service->price ?? 0;
+                }
+            }
+        }
+
+        $labTestsText = collect($formattedLabTests)
+            ->map(fn($item, $index) => ($index + 1) . ". " . $item)
+            ->implode("\n");
+
+        // ✅ Combine medicine + lab test totals
+        $totalPrice = $pharmacy_order->total_price + $totalLabPrice;
+
         return view('backend.pharmacy_orders.edit', compact(
             'pharmacy_order',
-            'prescriptionText'
+            'prescriptionText',
+            'labTestsText',
+            'totalPrice'
         ));
     }
-
 
     public function update(Request $request, $id)
     {

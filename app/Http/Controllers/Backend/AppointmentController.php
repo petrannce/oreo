@@ -148,7 +148,7 @@ class AppointmentController extends Controller
     }
     public function updateStage(Request $request, $id, $stage)
     {
-        $appointment = Appointment::with(['patient', 'service', 'labTest', 'pharmacyOrder.items.medicine', 'billing'])
+        $appointment = Appointment::with(['patient', 'service', 'labTests', 'pharmacyOrder.items.medicine', 'billing'])
             ->findOrFail($id);
 
         // ✅ 1. Valid stages
@@ -175,7 +175,7 @@ class AppointmentController extends Controller
             'receptionist' => ['reception', 'triage', 'cancelled'],
             'nurse' => ['triage', 'doctor_consult'],
             'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing'],
-            'lab_technician' => ['lab','doctor_consult'],
+            'lab_technician' => ['lab', 'doctor_consult'],
             'pharmacist' => ['pharmacy', 'billing'],
             'accountant' => ['billing', 'completed'],
             'admin' => $validStages,
@@ -303,18 +303,36 @@ class AppointmentController extends Controller
                 $totalAmount += $consultationService->price ?? 0;
             }
 
-            // 🧪 3️⃣ LAB TEST — only if done
-            if ($appointment->labTest && $appointment->labTest->price) {
-                $labService = HospitalService::where('name', 'like', '%lab%')->first();
-                $billingItems[] = [
-                    'hospital_service_id' => $labService->id ?? null,
-                    'description' => $appointment->labTest->name ?? 'Lab Test',
-                    'quantity' => 1,
-                    'unit_price' => $appointment->labTest->price,
-                    'subtotal' => $appointment->labTest->price,
-                ];
-                $totalAmount += $appointment->labTest->price;
+            // 🧪 3️⃣ LAB TEST — handle multiple tests in one record
+            if ($appointment->labTests && $appointment->labTests->count() > 0) {
+                foreach ($appointment->labTests as $labTest) {
+                    if ($labTest->status === 'completed') {
+                        // Split by comma → multiple test names in one record
+                        $tests = array_map('trim', explode(',', $labTest->test_name));
+
+                        foreach ($tests as $singleTest) {
+                            if (empty($singleTest))
+                                continue;
+
+                            // Try to match lab service by partial name
+                            $labService = \App\Models\LabService::where('test_name', 'like', '%' . $singleTest . '%')->first();
+
+                            $price = $labService->price ?? 0;
+
+                            $billingItems[] = [
+                                'hospital_service_id' => $labService->id ?? null,
+                                'description' => $singleTest,
+                                'quantity' => 1,
+                                'unit_price' => $price,
+                                'subtotal' => $price,
+                            ];
+
+                            $totalAmount += $price;
+                        }
+                    }
+                }
             }
+
 
             // 💊 4️⃣ PHARMACY — only if any medicines exist
             if ($appointment->pharmacyOrder && $appointment->pharmacyOrder->items->count() > 0) {
@@ -409,7 +427,7 @@ class AppointmentController extends Controller
             'receptionist' => ['reception', 'triage', 'cancelled'],
             'nurse' => ['triage', 'doctor_consult'],
             'doctor' => ['doctor_consult', 'lab', 'pharmacy', 'billing', 'completed'],
-            'lab_technician' => ['lab','doctor_consult'],
+            'lab_technician' => ['lab', 'doctor_consult'],
             'pharmacist' => ['pharmacy', 'billing', 'completed'],
             'admin' => ['reception', 'triage', 'doctor_consult', 'lab', 'pharmacy', 'billing', 'completed', 'cancelled'],
         ];

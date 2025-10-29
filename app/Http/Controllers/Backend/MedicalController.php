@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\LabService;
 use App\Models\LabTest;
 use App\Models\Medical;
 use DB;
@@ -20,19 +21,18 @@ class MedicalController extends Controller
         ]);
     }
 
- public function create(Request $request)
-{
-    $appointment_id = $request->appointment_id;
+    public function create(Request $request)
+    {
+        $appointment_id = $request->appointment_id;
 
-    if ($appointment_id) {
-        $appointment = Appointment::with('patient', 'triage')->find($appointment_id);
+        if ($appointment_id) {
+            $appointment = Appointment::with('patient', 'triage', 'LabTests')->find($appointment_id);
+        }
+
+        $lab_tests = LabService::all();
+
+        return view('backend.medicals.create', compact('appointment', 'lab_tests'));
     }
-
-    $lab_tests = LabTest::all();
-
-    return view('backend.medicals.create', compact('appointment', 'lab_tests'));
-}
-
 
     public function store(Request $request)
     {

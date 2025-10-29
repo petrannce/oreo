@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\LabRequirement;
+use App\Models\LabService;
 use App\Models\LabTest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -132,11 +133,12 @@ class LabTestController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'doctor_id' => 'required|exists:doctors,id',
-            'lab_technician_id' => 'required|exists:lab_technicians,id',
-            'appointment_id' => 'required|exists:appointments,id',
+            'patient_id' => 'required',
+            'doctor_id' => 'required',
+            'lab_technician_id' => 'required',
+            'appointment_id' => 'required',
             'test_name' => 'required|string|max:255',
             'results' => 'nullable|string',
             'status' => 'required|string',
@@ -200,50 +202,44 @@ class LabTestController extends Controller
 
     public function createForAppointment(Request $request, Appointment $appointment)
     {
-        if ($appointment->labTest) {
+        // Prevent duplicate assignment
+        if ($appointment->labRequirements && $appointment->labRequirements->count() > 0) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'This appointment already has a lab test assigned.'
+                'message' => 'This appointment already has lab test(s) assigned.'
             ], 400);
         }
 
+        // Validate input
         $request->validate([
-            'lab_tests' => 'array',
-            'lab_tests.*' => 'exists:lab_tests,id',
-            'custom_name' => 'nullable|string|max:255',
+            'lab_tests' => 'required|array|min:1',
+            'lab_tests.*' => 'exists:lab_services,id',
         ]);
 
         try {
             DB::beginTransaction();
 
-            // Save selected existing lab tests (if any)
-            if ($request->has('lab_tests') && count($request->lab_tests) > 0) {
-                foreach ($request->lab_tests as $testId) {
-                    LabRequirement::create([
-                        'appointment_id' => $appointment->id,
-                        'name' => LabTest::find($testId)->test_name ?? 'Unnamed Test',
-                    ]);
-                }
-            }
+            // Save selected lab services into lab_requirements
+            foreach ($request->lab_tests as $serviceId) {
+                $service = LabService::find($serviceId);
 
-            // Save new custom test if provided
-            if ($request->filled('custom_name')) {
                 LabRequirement::create([
                     'appointment_id' => $appointment->id,
-                    'name' => $request->custom_name,
+                    'name' => $service->test_name,
+                    // Optional: Store price for quicker billing reference
+                    // 'price' => $service->price,
                 ]);
             }
 
-            // Update appointment stage → lab
+            // Update appointment process stage to lab
             $appointment->update(['process_stage' => 'lab']);
 
             DB::commit();
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Lab tests successfully created and appointment sent to lab.'
+                'message' => 'Lab tests successfully assigned and appointment sent to lab.'
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -252,4 +248,20 @@ class LabTestController extends Controller
             ], 500);
         }
     }
+
+    public function showByAppointment($appointment_id)
+    {
+        $lab_tests = LabTest::where('appointment_id', $appointment_id)->get();
+
+        if ($lab_tests->isEmpty()) {
+            abort(404, 'No lab tests found for this appointment.');
+        }
+
+        $lab_test = $lab_tests->first();
+
+        return view('backend.lab_tests.view', compact('lab_tests', 'lab_test'));
+    }
+
+
+
 }

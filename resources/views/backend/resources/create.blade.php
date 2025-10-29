@@ -39,17 +39,20 @@
                             <div class="row clearfix">
                                 <div class="col-sm-12">
                                     <div class="form-group">
+                                        <label for="title">Title</label>
                                         <input type="text" name="title" class="form-control"
                                             placeholder="Enter Your title">
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
+                                        <label for="type">Type</label>
                                         <input type="text" name="type" class="form-control" placeholder="Type">
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
+                                        <label for="description">Description</label>
                                         <textarea rows="4" name="description" class="form-control no-resize"
                                             placeholder="Please type what you want..."></textarea>
                                     </div>

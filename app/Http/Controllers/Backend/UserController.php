@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         // Get the results and return them as a collection
-        $users = User::with('profile')->get();
+        $users = User::with('profile')->latest()->get();
 
         return view('backend.users.index', compact('users'));
     }

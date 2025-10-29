@@ -88,6 +88,8 @@
                                                                             $allowedStages = $rolePermissions[$role] ?? [];
                                                                             $isFinalStage = in_array($stage, ['completed', 'cancelled']) ||
                                                                                 (!empty($allowedStages) && end($allowedStages) === $stage);
+                                                                            // NEW: check if any lab_tests exist for this appointment (performed tests)
+                                                                            $hasPerformedLabTests = $appointment->labTests()->exists();
                                                                         @endphp
 
                                                                         <tr>
@@ -197,10 +199,16 @@
 
                                                                                 {{-- LAB --}}
                                                                                 @if($stage === 'lab' && auth()->user()->hasAnyRole(['lab_technician', 'doctor', 'admin']))
-                                                                                    @if($appointment->labTest)
-                                                                                        <a href="{{ route('medicals.create', ['appointment_id' => $appointment->id]) }}"
+                                                                                    @if($hasPerformedLabTests)
+                                                                                        {{-- LINK: showByAppointment route (uses appointment id) --}}
+                                                                                        <a href="{{ route('lab_tests.show', $appointment->id) }}"
                                                                                             class="btn btn-sm btn-success">
                                                                                             <i class="zmdi zmdi-flask"></i> View Results
+                                                                                        </a>
+                                                                                        {{-- Back to doctor_consult button --}}
+                                                                                        <a href="{{ route('appointment.updateStage', ['id' => $appointment->id, 'stage' => 'doctor_consult']) }}"
+                                                                                            class="btn btn-sm btn-outline-primary">
+                                                                                            <i class="zmdi zmdi-rotate-left"></i> Back to Doctor Consult
                                                                                         </a>
                                                                                     @else
                                                                                         <a href="{{ route('lab_tests.create', ['appointment_id' => $appointment->id]) }}"

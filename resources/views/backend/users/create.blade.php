@@ -36,12 +36,14 @@
                             <div class="row clearfix">
                                 <div class="col-sm-6">
                                     <div class="form-group">
+                                        <label for="fname">First Name</label>
                                         <input type="text" name="fname" class="form-control" value="{{ old('fname') }}" placeholder="First Name" required>
                                         @error('fname') <small class="text-danger">{{ $message }}</small> @enderror
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
+                                        <label for="lname">Last Name</label>
                                         <input type="text" name="lname" class="form-control" value="{{ old('lname') }}" placeholder="Last Name" required>
                                         @error('lname') <small class="text-danger">{{ $message }}</small> @enderror
                                     </div>
@@ -51,6 +53,7 @@
                             <div class="row clearfix">
                                 <div class="col-sm-6">
                                     <div class="form-group position-relative">
+                                        <label for="username">UserName</label>
                                         <input type="text" id="username" name="username" class="form-control" value="{{ old('username') }}" placeholder="Enter Username" required>
                                         <small id="username-feedback" class="form-text"></small>
                                         @error('username') <small class="text-danger">{{ $message }}</small> @enderror
@@ -59,6 +62,7 @@
 
                                 <div class="col-sm-6">
                                     <div class="form-group position-relative">
+                                        <label for="email">Email</label>
                                         <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="Enter Email" required>
                                         <small id="email-feedback" class="form-text"></small>
                                         @error('email') <small class="text-danger">{{ $message }}</small> @enderror
@@ -76,6 +80,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
+                                        <span class="text-muted">Confirm Password</span>
                                         <input type="password" name="confirm_password" class="form-control" value="12345678" minlength="8" required>
                                         @error('confirm_password') <small class="text-danger">{{ $message }}</small> @enderror
                                     </div>

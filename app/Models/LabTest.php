@@ -32,11 +32,16 @@ class LabTest extends Model
 
     public function lab_technician()
     {
-        return $this->belongsTo(User::class, 'lab_technician_id');
+        return $this->belongsTo(User::class);
     }
 
     public function appointment()
     {
         return $this->belongsTo(Appointment::class, 'appointment_id');
+    }
+
+    public function labService()
+    {
+        return $this->belongsTo(LabService::class, foreignKey: 'lab_service_id');
     }
 }

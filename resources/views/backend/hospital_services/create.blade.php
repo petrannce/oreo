@@ -68,7 +68,7 @@
                             <div class="row clearfix">
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-primary btn-round">Submit</button>
-                                    <button type="submit" class="btn btn-default btn-round btn-simple">Cancel</button>
+                                    <button type="{{route('hospital_services')}}" class="btn btn-default btn-round btn-simple">Cancel</button>
                                 </div>
                             </div>
                         </div>

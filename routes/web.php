@@ -3,6 +3,7 @@
 use App\Http\Controllers\backend\BillingController;
 use App\Http\Controllers\Backend\HospitalDetailsController;
 use App\Http\Controllers\Backend\HospitalServiceController;
+use App\Http\Controllers\Backend\LabServiceController;
 use App\Http\Controllers\backend\LabTechnicianController;
 use App\Http\Controllers\backend\LabTestController;
 use App\Http\Controllers\Backend\MedicineController;
@@ -186,10 +187,22 @@ Route::middleware(['auth', 'role.records'])->controller(LabTestController::class
     Route::post('/lab-tests', 'store')->name('lab_tests.store');
     Route::get('/lab-tests/{id}/edit', 'edit')->name('lab_tests.edit');
     Route::put('/lab-tests/{id}', 'update')->name('lab_tests.update');
-    Route::get('/lab-tests/{id}', 'show')->name('lab_tests.show');
+    Route::get('/lab-tests/{id}', 'show')->name('lab_test.show');
     Route::delete('/lab-tests/{id}', 'destroy')->name('lab_tests.destroy');
     Route::get('/lab-tests-report', 'report')->name('lab_tests.report');
     Route::post('labs/create-for-appointment/{appointment}','createForAppointment')->name('labs.createForAppointment');
+    Route::get('/lab-tests/appointment/{appointment_id}', 'showByAppointment')->name('lab_tests.show');
+});
+
+// Lab Services
+Route::middleware(['auth', 'role.records'])->controller(LabServiceController::class)->prefix('admin')->group(function () {
+    Route::get('/lab-services', 'index')->name('lab_services');
+    Route::get('/lab-services/create', 'create')->name('lab_services.create');
+    Route::post('/lab-services', 'store')->name('lab_services.store');
+    Route::get('/lab-services/{id}/edit', 'edit')->name('lab_services.edit');
+    Route::put('/lab-services/{id}', 'update')->name('lab_services.update');
+    Route::delete('/lab-services/{id}', 'destroy')->name('lab_services.destroy');
+    Route::get('/lab-services-report', 'report')->name('lab_services.report');
 });
 
 //medical records

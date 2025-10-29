@@ -1,12 +1,12 @@
 @extends('layouts.backend.header')
 
 @section('content')
-
 <section class="content">
     <div class="block-header">
         <div class="row">
             <div class="col-lg-7 col-md-5 col-sm-12">
-                <h2>Edit Pharmacy Order
+                <h2>
+                    Edit Pharmacy Order
                     <small>Welcome to Hospital System</small>
                 </h2>
             </div>
@@ -25,120 +25,110 @@
     </div>
 
     <div class="container-fluid">
-        <div class="row clearfix">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="card">
-                    <div class="header">
-                        <h2><strong>Edit</strong> Pharmacy Order</h2>
+        <div class="row clearfix justify-content-center">
+            <div class="col-lg-10 col-md-12">
+                <div class="card shadow-sm border-0 rounded-lg">
+                    <div class="header bg-primary text-white px-4 py-3 rounded-top">
+                        <h5 class="mb-0"><i class="zmdi zmdi-edit"></i> Edit Pharmacy Order</h5>
                     </div>
 
-                    <div class="body">
-                        {{-- ✅ Normal Laravel Form --}}
+                    <div class="body px-4 py-4">
                         <form action="{{ route('pharmacy_orders.update', $pharmacy_order->id) }}" method="POST">
                             @csrf
                             @method('PUT')
 
-                            <div class="row clearfix">
-
+                            {{-- ================= BASIC INFORMATION ================= --}}
+                            <h6 class="font-weight-bold text-uppercase text-muted mb-3">Basic Information</h6>
+                            <div class="row">
                                 {{-- Appointment ID --}}
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        <label class="form-label">Appointment ID</label>
-                                        <input type="text" name="appointment_id" class="form-control"
-                                            value="{{ $pharmacy_order->appointment_id }}" readonly>
-                                    </div>
+                                <div class="col-md-3 mb-3">
+                                    <label>Appointment ID</label>
+                                    <input type="text" name="appointment_id" class="form-control" value="{{ $pharmacy_order->appointment_id }}" readonly>
                                 </div>
 
                                 {{-- Patient --}}
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        <label class="form-label">Patient</label>
-                                        <input type="hidden" name="patient_id" value="{{ $pharmacy_order->patient_id }}">
-                                        <input type="text" class="form-control"
-                                            value="{{ $pharmacy_order->patient->fname }} {{ $pharmacy_order->patient->lname }}"
-                                            readonly>
-                                    </div>
+                                <div class="col-md-3 mb-3">
+                                    <label>Patient</label>
+                                    <input type="hidden" name="patient_id" value="{{ $pharmacy_order->patient_id }}">
+                                    <input type="text" class="form-control" value="{{ $pharmacy_order->patient->fname }} {{ $pharmacy_order->patient->lname }}" readonly>
                                 </div>
 
                                 {{-- Doctor --}}
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        <label class="form-label">Doctor</label>
-                                        <input type="hidden" name="doctor_id" value="{{ $pharmacy_order->doctor_id }}">
-                                        <input type="text" class="form-control"
-                                            value="{{ $pharmacy_order->doctor->fname }} {{ $pharmacy_order->doctor->lname }}"
-                                            readonly>
-                                    </div>
+                                <div class="col-md-3 mb-3">
+                                    <label>Doctor</label>
+                                    <input type="hidden" name="doctor_id" value="{{ $pharmacy_order->doctor_id }}">
+                                    <input type="text" class="form-control" value="{{ $pharmacy_order->doctor->fname }} {{ $pharmacy_order->doctor->lname }}" readonly>
                                 </div>
 
                                 {{-- Medical Record --}}
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        <label class="form-label">Medical Record</label>
-                                        <input type="hidden" name="medical_record_id" value="{{ $pharmacy_order->medical_record_id }}">
-                                        <input type="text" class="form-control"
-                                            value="Record #{{ $pharmacy_order->medical_record_id }} ({{ $pharmacy_order->medical_record->created_at->format('d M Y') }})"
-                                            readonly>
-                                    </div>
+                                <div class="col-md-3 mb-3">
+                                    <label>Medical Record</label>
+                                    <input type="hidden" name="medical_record_id" value="{{ $pharmacy_order->medical_record_id }}">
+                                    <input type="text" class="form-control" value="Record #{{ $pharmacy_order->medical_record_id }} ({{ $pharmacy_order->medical_record->created_at->format('d M Y') }})" readonly>
                                 </div>
                             </div>
 
-                            <div class="row clearfix">
-                                {{-- Prescription --}}
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <label for="prescription" class="form-label">Prescription</label>
-                                        <textarea rows="6" class="form-control no-resize" readonly>{{ $prescriptionText }}</textarea>
-                                    </div>
-                                </div>
+                            <hr>
+
+                            {{-- ================= PRESCRIPTIONS ================= --}}
+                            <h6 class="font-weight-bold text-uppercase text-muted mb-3">Prescriptions</h6>
+                            <div class="form-group">
+                                <textarea rows="5" class="form-control no-resize" readonly>{{ $prescriptionText }}</textarea>
                             </div>
 
-                            <div class="row clearfix">
-                                {{-- Notes --}}
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <label for="prescription" class="form-label">Notes</label>
-                                        <textarea rows="6" class="form-control no-resize" readonly>{{ $pharmacy_order->medical_record->notes }}</textarea>
-                                    </div>
-                                </div>
+                            {{-- ================= LAB TESTS ================= --}}
+                            <h6 class="font-weight-bold text-uppercase text-muted mb-3">Lab Tests</h6>
+                            <div class="form-group">
+                                <textarea rows="5" class="form-control no-resize" readonly>{{ $labTestsText ?? 'No lab tests available' }}</textarea>
                             </div>
 
-                            <div class="row clearfix">
+                            {{-- ================= DOCTOR'S NOTES ================= --}}
+                            <h6 class="font-weight-bold text-uppercase text-muted mb-3">Doctor’s Notes</h6>
+                            <div class="form-group">
+                                <textarea rows="5" class="form-control no-resize" readonly>{{ $pharmacy_order->medical_record->notes }}</textarea>
+                            </div>
+
+                            {{-- ================= TOTALS AND STATUS ================= --}}
+                            @php
+                                $labTotal = $pharmacy_order->appointment->labTests->sum(function ($lab) {
+                                    return $lab->labService->price ?? 0;
+                                });
+                                $totalPrice = ($pharmacy_order->total_price ?? 0) + $labTotal;
+                            @endphp
+
+                            <div class="row">
                                 {{-- Total Price --}}
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label class="form-label">Total Price (KES)</label>
-                                        <input type="text" class="form-control" name="total_price"
-                                            value="{{ $pharmacy_order->total_price }}" readonly>
-                                    </div>
+                                <div class="col-md-4 mb-3">
+                                    <label>Total Price (KES)</label>
+                                    <input type="text" class="form-control" name="total_price" value="{{ $totalPrice }}" readonly>
                                 </div>
-                            </div>
 
-                            <div class="row clearfix">
                                 {{-- Status --}}
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label class="form-label">Status</label>
-                                        <select name="status" class="form-control show-tick">
-                                            <option value="pending" {{ $pharmacy_order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="billed" {{ $pharmacy_order->status == 'billed' ? 'selected' : '' }}>Billed</option>
-                                            <option value="dispensed" {{ $pharmacy_order->status == 'dispensed' ? 'selected' : '' }}>Dispensed</option>
-                                            <option value="finalised" {{ $pharmacy_order->status == 'finalised' ? 'selected' : '' }}>Finalised</option>
-                                        </select>
-                                    </div>
+                                <div class="col-md-4 mb-3">
+                                    <label>Status</label>
+                                    <select name="status" class="form-control">
+                                        <option value="pending" {{ $pharmacy_order->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="billed" {{ $pharmacy_order->status == 'billed' ? 'selected' : '' }}>Billed</option>
+                                        <option value="dispensed" {{ $pharmacy_order->status == 'dispensed' ? 'selected' : '' }}>Dispensed</option>
+                                        <option value="finalised" {{ $pharmacy_order->status == 'finalised' ? 'selected' : '' }}>Finalised</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="col-sm-12 mt-3">
-                                <button type="submit" class="btn btn-primary btn-round">Update</button>
-                                <a href="{{ route('pharmacy_orders') }}" class="btn btn-default btn-round btn-simple">Cancel</a>
+                            {{-- ================= ACTION BUTTONS ================= --}}
+                            <div class="mt-4 text-right">
+                                <button type="submit" class="btn btn-primary btn-round">
+                                    <i class="zmdi zmdi-check"></i> Update
+                                </button>
+                                <a href="{{ route('pharmacy_orders') }}" class="btn btn-secondary btn-round btn-simple">
+                                    <i class="zmdi zmdi-arrow-left"></i> Cancel
+                                </a>
                             </div>
-
                         </form>
                     </div>
                 </div>
 
-                {{-- ✅ Success/Error Alerts --}}
+                {{-- ✅ Alerts --}}
                 @if(session('success'))
                     <div class="alert alert-success mt-3">{{ session('success') }}</div>
                 @endif
@@ -150,5 +140,4 @@
         </div>
     </div>
 </section>
-
 @endsection

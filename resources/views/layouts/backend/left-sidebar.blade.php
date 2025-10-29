@@ -191,6 +191,16 @@
                     </li>
                     @endrole
 
+                    @role('admin|lab_technician')
+                    <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-collection-item"></i><span>Lab Services</span> </a>
+                        <ul class="ml-menu">
+                            <li class="{{ Request::route()->getName() == 'lab_services' ? 'active' : 'inactive' }}">
+                                <a href="{{route('lab_services')}}">All Lab Services</a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endrole
+
                     @role('admin')
                     <li><a href="javascript:void(0);" class="menu-toggle"><i
                                 class="zmdi zmdi-accounts-list-alt"></i><span>Departments</span> </a>
