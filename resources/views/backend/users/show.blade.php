@@ -88,11 +88,11 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label>First Name</label>
-                                        <input type="text" name="fname" class="form-control" value="{{ $user->fname }}">
+                                        <input type="text" name="fname" class="form-control" pattern="[A-Za-z\s]+" value="{{ $user->fname }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label>Last Name</label>
-                                        <input type="text" name="lname" class="form-control" value="{{ $user->lname }}">
+                                        <input type="text" name="lname" class="form-control" pattern="[A-Za-z\s]+" value="{{ $user->lname }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label>Username</label>
@@ -104,7 +104,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label>Phone Number</label>
-                                        <input type="text" name="phone_number" class="form-control" value="{{ $user->profile->phone_number ?? '' }}">
+                                        <input type="text" name="phone_number" class="form-control" pattern="^\+?[0-9]{10,15}$" value="{{ $user->profile->phone_number ?? '' }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label>Gender</label>
@@ -112,6 +112,7 @@
                                             <option value="">Select</option>
                                             <option value="male" {{ ($user->profile->gender ?? '') == 'male' ? 'selected' : '' }}>Male</option>
                                             <option value="female" {{ ($user->profile->gender ?? '') == 'female' ? 'selected' : '' }}>Female</option>
+                                            <option value="other" {{ ($user->profile->gender ?? '') == 'other' ? 'selected' : '' }}>Other</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6 mb-3">

@@ -348,6 +348,7 @@ Route::controller(BillingController::class)->prefix('admin')->group(function () 
     Route::get('/billings/{billing}/receipt', 'showReceipt')->name('billings.receipt');
     Route::get('/billings/{billing}/download-pdf', 'downloadPDF')->name('billings.downloadPDF');
     Route::post('billings/fetch-services', 'fetchServices')->name('billings.fetchServices');
+    Route::get('/billings/{id}/resend', [BillingController::class, 'resendEmail'])->name('billings.resendEmail');
 });
 
 // Hospital Services

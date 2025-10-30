@@ -30,8 +30,8 @@ class UserController extends Controller
     {
 
         $request->validate([
-            'fname' => 'required',
-            'lname' => 'required',
+            'fname' => 'required|regex:/^[A-Za-z\s]+$/',
+            'lname' => 'required|regex:/^[A-Za-z\s]+$/',
             'username' => 'required|unique:users',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
@@ -75,11 +75,11 @@ class UserController extends Controller
         if ($tab === 'profile') {
 
             $request->validate([
-                'fname' => 'required|string|max:255',
-                'lname' => 'required|string|max:255',
-                'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+                'fname' => 'required|regex:/^[A-Za-z\s]+$/|string|max:255',
+                'lname' => 'required|regex:/^[A-Za-z\s]+$/|string|max:255',
+                'username' => 'required|regex:/^[A-Za-z\s]+$/|string|max:255|unique:users,username,' . $user->id,
                 'email' => 'required|email|unique:users,email,' . $user->id,
-                'phone_number' => 'nullable|string|max:50',
+                'phone_number' => 'nullable|regex:/^\+?[0-9]{10,15}$/|string|max:50',
                 'gender' => 'nullable|string|max:10',
                 'city' => 'nullable|string|max:255',
                 'country' => 'nullable|string|max:255',

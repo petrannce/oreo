@@ -27,7 +27,7 @@
             <div style="font-size:13px;">
                 <strong>Patient:</strong> {{ $billing->patient->fname }} {{ $billing->patient->lname }}<br>
                 <strong>Bill No:</strong> #BILL-{{ str_pad($billing->id, 5, '0', STR_PAD_LEFT) }}<br>
-                <strong>Date:</strong> {{ $billing->created_at->format('d M Y, h:i A') }}
+                <strong>Date:</strong> {{ {{ $billing->created_at->timezone('Africa/Nairobi')->format('d M Y, h:i A') }} }}
             </div>
 
             <hr style="border-top: 1px dashed #000; margin:5px 0;">

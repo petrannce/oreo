@@ -37,14 +37,14 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="fname">First Name</label>
-                                        <input type="text" name="fname" class="form-control" value="{{ old('fname') }}" placeholder="First Name" required>
+                                        <input type="text" name="fname" class="form-control" pattern="[A-Za-z\s]+"  value="{{ old('fname') }}" placeholder="First Name" required>
                                         @error('fname') <small class="text-danger">{{ $message }}</small> @enderror
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="lname">Last Name</label>
-                                        <input type="text" name="lname" class="form-control" value="{{ old('lname') }}" placeholder="Last Name" required>
+                                        <input type="text" name="lname" class="form-control" pattern="[A-Za-z\s]+"  value="{{ old('lname') }}" placeholder="Last Name" required>
                                         @error('lname') <small class="text-danger">{{ $message }}</small> @enderror
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group position-relative">
                                         <label for="username">UserName</label>
-                                        <input type="text" id="username" name="username" class="form-control" value="{{ old('username') }}" placeholder="Enter Username" required>
+                                        <input type="text" id="username" name="username" class="form-control" pattern="[A-Za-z\s]+"  value="{{ old('username') }}" placeholder="Enter Username" required>
                                         <small id="username-feedback" class="form-text"></small>
                                         @error('username') <small class="text-danger">{{ $message }}</small> @enderror
                                     </div>

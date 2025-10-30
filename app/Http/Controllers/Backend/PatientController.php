@@ -30,11 +30,11 @@ class PatientController extends Controller
     {
 
         $request->validate([
-            'fname' => 'required|string|max:255',
-            'lname' => 'required|string|max:255',
+            'fname' => 'required|regex:/^[A-Za-z\s]+$/|string|max:255',
+            'lname' => 'required|regex:/^[A-Za-z\s]+$/|string|max:255',
             'dob' => 'nullable|date',
             'email' => 'nullable|email|unique:patients,email',
-            'phone_number' => 'nullable|string|max:20',
+            'phone_number' => 'nullable|regex:/^\+?[0-9]{10,15}$/|string|max:20',
         ]);
 
         DB::beginTransaction();
@@ -101,10 +101,10 @@ class PatientController extends Controller
 
         // Validate incoming data
         $validated = $request->validate([
-            'fname' => 'required|string|max:100',
-            'lname' => 'required|string|max:100',
+            'fname' => 'required|regex:/^[A-Za-z\s]+$/|string|max:100',
+            'lname' => 'required|regex:/^[A-Za-z\s]+$/|string|max:100',
             'email' => 'nullable|email|max:150|unique:patients,email,' . $patient->id,
-            'phone_number' => 'nullable|string|max:20',
+            'phone_number' => 'nullable|regex:/^\+?[0-9]{10,15}$/|string|max:20',
             'gender' => 'nullable|in:male,female,other',
             'dob' => 'nullable|date|before_or_equal:today',
             'national_id' => 'nullable|string|max:50',

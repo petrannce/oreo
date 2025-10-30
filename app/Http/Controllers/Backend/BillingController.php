@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PatientReceiptMail;
 use App\Models\Appointment;
 use App\Models\Billing;
 use App\Models\HospitalService;
 use App\Models\Patient;
-use App\Models\PharmacyOrderItem;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Mail;
 
 class BillingController extends Controller
 {
@@ -174,6 +175,20 @@ class BillingController extends Controller
             'payment_method' => $request->payment_method,
             'status' => $request->status,
         ]);
+
+        // ✅ Send email with attached receipt if billing is marked paid
+        if ($billing->status === 'paid' && $billing->patient && $billing->patient->email) {
+            try {
+                // 🧾 Generate PDF receipt from view
+                $pdf = PDF::loadView('backend.billings.receipt', compact('billing'));
+
+                // Send email with PDF attached
+                Mail::to($billing->patient->email)->send(new PatientReceiptMail($billing, $pdf));
+
+            } catch (\Exception $e) {
+                \Log::error('❌ Failed to send receipt email: ' . $e->getMessage());
+            }
+        }
 
         return redirect()->route('billings.edit', $billing->id)
             ->with('success', 'Billing updated successfully.');
@@ -346,5 +361,20 @@ class BillingController extends Controller
             ->route('billings.show', $billing->id)
             ->with('info', 'Billing cancelled successfully.');
     }
+
+    public function resendEmail($id)
+    {
+        $billing = Billing::with(['patient', 'items'])->findOrFail($id);
+
+        if ($billing->status !== 'paid') {
+            return back()->with('error', 'Only paid bills can have receipts emailed.');
+        }
+
+        $pdf = PDF::loadView('backend.billings.receipt', compact('billing'));
+        Mail::to($billing->patient->email)->send(new PatientReceiptMail($billing, $pdf));
+
+        return back()->with('success', 'Receipt re-sent successfully.');
+    }
+
 
 }

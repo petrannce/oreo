@@ -307,20 +307,27 @@ class AppointmentController extends Controller
             if ($appointment->labTests && $appointment->labTests->count() > 0) {
                 foreach ($appointment->labTests as $labTest) {
                     if ($labTest->status === 'completed') {
-                        // Split by comma → multiple test names in one record
+
+                        // Split test names by commas
                         $tests = array_map('trim', explode(',', $labTest->test_name));
 
                         foreach ($tests as $singleTest) {
                             if (empty($singleTest))
                                 continue;
 
-                            // Try to match lab service by partial name
+                            // 🔍 Find lab test price from lab_services
                             $labService = \App\Models\LabService::where('test_name', 'like', '%' . $singleTest . '%')->first();
-
                             $price = $labService->price ?? 0;
 
+                            // 🏥 Ensure this lab test exists in hospital_services
+                            $hospitalService = HospitalService::firstOrCreate(
+                                ['name' => $singleTest, 'category' => 'Lab Test'],
+                                ['price' => $price, 'description' => 'Automated sync from lab_services.']
+                            );
+
+                            // 💰 Add to billing items
                             $billingItems[] = [
-                                'hospital_service_id' => $labService->id ?? null,
+                                'hospital_service_id' => $hospitalService->id,
                                 'description' => $singleTest,
                                 'quantity' => 1,
                                 'unit_price' => $price,
@@ -332,6 +339,7 @@ class AppointmentController extends Controller
                     }
                 }
             }
+
 
 
             // 💊 4️⃣ PHARMACY — only if any medicines exist
