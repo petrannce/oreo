@@ -83,7 +83,11 @@ Route::middleware(['auth', 'role.records'])->controller(HomeController::class)->
 });
 
 // Report
-Route::get('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
+Route::controller(ReportController::class)->prefix('admin')->group(function () {
+    Route::get('/reports/generate', 'generate')->name('reports.generate');
+    Route::get('/dashboard/reports','dashboard')->name('dashboard.reports');
+    Route::get('/dashboard/reports/filter','filterData')->name('reports.filterData');
+});
 
 
 //FAQs

@@ -114,6 +114,13 @@
                     </li>
                     @endrole
 
+                    @role('admin')
+                    <li class="{{ Request::route()->getName() == 'dashboard.reports' ? 'active' : 'inactive' }}">
+                        <a href="{{route('dashboard.reports')}}"><i class="zmdi zmdi-chart"></i>
+                            <span>Reports</span></a>
+                    </li>
+                    @endrole
+
                     <li class="header">MAIN</li>
 
                     <li><a class="menu-toggle"><i class="zmdi zmdi-calendar"></i><span>Appointment</span> </a>
