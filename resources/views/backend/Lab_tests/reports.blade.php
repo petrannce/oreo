@@ -44,7 +44,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $lab_test->patient->fname }} {{ $lab_test->patient->lname }}</td>
                                         <td>{{ $lab_test->doctor->fname }} {{ $lab_test->doctor->lname }}</td>
-                                        <td>{{ $lab_test->labTechnician?->fname ?? 'Unassigned' }}</td>
+                                        <td>{{ $lab_test->lab_technician->fname }} {{ $lab_test->lab_technician->lname }}</td>
                                         <td>{{ $lab_test->test_name }}</td>
                                         <td>{{ ucfirst($lab_test->status) }}</td>
                                         <td>{{ $lab_test->results ? Str::limit($lab_test->results, 30) : 'Pending' }}</td>

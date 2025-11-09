@@ -22,7 +22,7 @@
     <div class="container-fluid">
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <form action="{{route('hospital_details.update', $hospital_details->id)}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route('hospital_details.update', $hospital_detail->id)}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -39,42 +39,49 @@
                             <div class="row clearfix">
                                 <div class="col-sm-12">
                                     <div class="form-group">
+                                        <label for="name">Hospital Name</label>
                                         <input type="text" name="name" class="form-control"
-                                            Value="{{ $hospital_details->name }}">
+                                            Value="{{ $hospital_detail->name }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
+                                        <label for="address">Hospital Address</label>
                                         <input type="text" name="address" class="form-control"
-                                            value="{{ $hospital_details->address }}">
+                                            value="{{ $hospital_detail->address }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
+                                        <label for="phone_number">Hospital Phone Number</label>
                                         <input type="text" name="phone_number" class="form-control"
-                                            value="{{ $hospital_details->phone_number }}">
+                                            value="{{ $hospital_detail->phone_number }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
+                                        <label for="email">Hospital Email</label>
                                         <input type="email" name="email" class="form-control"
-                                            value="{{ $hospital_details->email }}">
+                                            value="{{ $hospital_detail->email }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
+                                        <label for="website">Hospital Website</label>
                                         <input type="text" name="website" class="form-control"
-                                            value="{{ $hospital_details->website }}">
+                                            value="{{ $hospital_detail->website }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <input type="file" name="logo" class="form-control">
+                                        <label for="logo">Hospital Logo</label>
+                                        <input type="file" name="logo" class="form-control" value="{{ $hospital_detail->logo }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <input type="file" name="image" class="form-control">
+                                        <label for="image">Hospital Image</label>
+                                        <input type="file" name="image" class="form-control" value="{{ $hospital_detail->image }}">
                                     </div>
                                 </div>
 
@@ -82,7 +89,7 @@
                             <div class="row clearfix">
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-primary btn-round">Submit</button>
-                                    <button type="submit" class="btn btn-default btn-round btn-simple">Cancel</button>
+                                    <button type="{{route('hospital_details')}}" class="btn btn-default btn-round btn-simple">Cancel</button>
                                 </div>
                             </div>
                         </div>

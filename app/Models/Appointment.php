@@ -91,6 +91,12 @@ class Appointment extends Model
         return $this->hasMany(LabRequirement::class);
     }
 
+    protected $casts = [
+        'date' => 'date:Y-m-d',  // Automatically cast to Carbon
+        'time' => 'datetime:H:i',
+    ];
+
+
 
 
 }

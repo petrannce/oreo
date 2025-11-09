@@ -16,7 +16,7 @@ class TriageController extends Controller
 {
     public function index(Request $request)
     {
-        $triages = Triage::all();
+        $triages = Triage::with(['patient', 'nurse', 'appointment'])->latest()->paginate(10);
 
         return view('backend.triages.index', [
             'triages' => $triages,

@@ -73,8 +73,8 @@ class HospitalDetailsController extends Controller
 
     public function edit($id)
     {
-        $hospital = HospitalDetail::findOrFail($id);
-        return view('backend.hospital_details.edit', compact('hospital'));
+        $hospital_detail = HospitalDetail::findOrFail($id);
+        return view('backend.hospital_details.edit', compact('hospital_detail'));
     }
 
     public function update(Request $request, $id)
@@ -92,36 +92,36 @@ class HospitalDetailsController extends Controller
         DB::beginTransaction();
 
         try {
-            $hospital = HospitalDetail::findOrFail($id);
+            $hospital_detail = HospitalDetail::findOrFail($id);
 
-            $hospital->name = $request->name;
-            $hospital->address = $request->address;
-            $hospital->phone_number = $request->phone_number;
-            $hospital->email = $request->email;
-            $hospital->website = $request->website;
+            $hospital_detail->name = $request->name;
+            $hospital_detail->address = $request->address;
+            $hospital_detail->phone_number = $request->phone_number;
+            $hospital_detail->email = $request->email;
+            $hospital_detail->website = $request->website;
 
             // ✅ Handle Logo Upload
             if ($request->hasFile('logo')) {
-                if ($hospital->logo && file_exists(public_path('storage/' . $hospital->logo))) {
-                    unlink(public_path('storage/' . $hospital->logo)); // delete old file
+                if ($hospital_detail->logo && file_exists(public_path('storage/' . $hospital_detail->logo))) {
+                    unlink(public_path('storage/' . $hospital_detail->logo)); // delete old file
                 }
                 $path = $request->file('logo')->store('hospitals/logos', 'public');
-                $hospital->logo = $path;
+                $hospital_detail->logo = $path;
             }
 
             // ✅ Handle Main Image Upload
             if ($request->hasFile('image')) {
-                if ($hospital->image && file_exists(public_path('storage/' . $hospital->image))) {
-                    unlink(public_path('storage/' . $hospital->image)); // delete old file
+                if ($hospital_detail->image && file_exists(public_path('storage/' . $hospital_detail->image))) {
+                    unlink(public_path('storage/' . $hospital_detail->image)); // delete old file
                 }
                 $path = $request->file('image')->store('hospitals/images', 'public');
-                $hospital->image = $path;
+                $hospital_detail->image = $path;
             }
 
-            $hospital->save();
+            $hospital_detail->save();
 
             DB::commit();
-            return redirect()->route('hospital_details.index')
+            return redirect()->route('hospital_details')
                 ->with('success', 'Hospital details updated successfully.');
 
         } catch (\Exception $e) {

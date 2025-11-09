@@ -423,7 +423,7 @@ class AppointmentController extends Controller
         $user = Auth::user();
         $userRole = $user->getRoleNames()->first(); // Spatie role
 
-        $appointments = Appointment::with(['patient', 'doctor', 'service', 'triage', 'labTest'])
+        $appointments = Appointment::with(['patient', 'doctor', 'service', 'triage', 'labTests'])
             ->when($request->from_date, fn($query) => $query->whereDate('date', '>=', $request->from_date))
             ->when($request->to_date, fn($query) => $query->whereDate('date', '<=', $request->to_date))
             ->when($request->status, fn($query) => $query->where('status', $request->status))

@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/blog.css')}}">
+    
 
 </head>
 
@@ -179,6 +180,7 @@
     <!-- Jquery DataTable Plugin Js -->
     <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
     <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <script>
         $(function () {

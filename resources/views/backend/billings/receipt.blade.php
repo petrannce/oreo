@@ -92,6 +92,11 @@
 
     {{-- 🧾 Print Styles --}}
     <style>
+        @page {
+            size: 80mm auto;
+            margin: 0;
+        }
+
         @media print {
             body {
                 background: #fff;

@@ -16,7 +16,7 @@ Thank you for your payment. Below are your receipt details:
 **Total Paid:** KSh {{ number_format($billing->amount, 2) }}  
 **Payment Method:** {{ ucfirst($billing->payment_method) }}
 
-We appreciate your visit to {{ config('app.name') }}.
+We appreciate your visit to {{ config('app.name') }}. We wish you a speedy recovery. Get well soon.
 
 Thanks,  
 **{{ config('app.name') }} Team**

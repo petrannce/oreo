@@ -12,7 +12,6 @@ use App\Models\Medical;
 use App\Models\Medicine;
 use App\Models\Nurse;
 use App\Models\Patient;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,224 +19,6 @@ use App\Exports\ArrayExport;
 
 class ReportController extends Controller
 {
-
-    public function dashboard(Request $request)
-{
-    // Basic initial counts for cards
-    $appointments = Appointment::query();
-    $billings = Billing::query();
-    $users = User::query();
-    $patients = Patient::query();
-
-    return view('backend.dashboard.reports', [
-        'appointments' => $appointments->limit(5)->get(), // sample
-        'billings' => $billings->latest()->limit(10)->get(),
-        'users' => $users->get(),
-        'patients' => $patients->get(),
-        // available report types (used to populate dropdown)
-        'reportTypes' => [
-            'billings' => 'Billings',
-            'appointments' => 'Appointments',
-            'patients' => 'Patients',
-            'lab_tests' => 'Lab Tests',
-            // add more later
-        ],
-    ]);
-}
-
-  public function filterData(Request $request)
-    {
-        $type = $request->get('type', 'billings');
-
-        switch ($type) {
-            case 'billings':
-                return $this->billingReport($request);
-            case 'patients':
-                return $this->patientReport($request);
-            case 'appointments':
-                return $this->appointmentReport($request);
-            case 'lab_tests':
-                return $this->labTestReport($request);
-            default:
-                return response()->json(['cards' => [], 'table' => [], 'fields' => []]);
-        }
-    }
-
-    // ------------------------------
-    //  BILLING REPORT
-    // ------------------------------
-    private function billingReport(Request $request)
-    {
-        $mode   = $request->get('mode', 'summarised');
-        $from   = $request->get('from_date');
-        $to     = $request->get('to_date');
-        $field  = $request->get('field');
-        $value  = $request->get('value');
-
-        $query = Billing::with('patient');
-        $this->applyDateRange($query, 'created_at', $from, $to);
-
-        if ($field && $value && in_array($field, ['payment_method', 'status'])) {
-            $query->where($field, $value);
-        }
-
-        switch ($mode) {
-            case 'summarised':
-                return $this->billingSummarised($query);
-            case 'detailed':
-                return $this->billingDetailed($query);
-            case 'parameterised':
-                return $this->billingParameterised($field);
-            default:
-                return response()->json(['cards' => [], 'table' => [], 'fields' => []]);
-        }
-    }
-
-    private function billingSummarised($query)
-    {
-        $cards = [
-            ['label' => 'Total Bills', 'value' => $query->count(), 'color' => '#007bff', 'icon' => 'zmdi-receipt'],
-            ['label' => 'Total Amount (KES)', 'value' => number_format($query->sum('amount'), 2), 'color' => '#6f42c1', 'icon' => 'zmdi-money'],
-            ['label' => 'Paid Bills', 'value' => $query->where('status', 'paid')->count(), 'color' => '#28a745', 'icon' => 'zmdi-check-circle'],
-            ['label' => 'Unpaid Bills', 'value' => $query->where('status', 'unpaid')->count(), 'color' => '#ffc107', 'icon' => 'zmdi-time'],
-        ];
-
-        $rows = $query->latest()->limit(20)->get();
-        $table = $rows->map(function ($b) {
-            return [
-                'Patient' => $b->patient->fname . ' ' . $b->patient->lname,
-                'Amount' => number_format($b->amount, 2),
-                'Payment Method' => $b->payment_method ?? '-',
-                'Status' => ucfirst($b->status),
-                'Date' => $b->created_at->format('Y-m-d'),
-            ];
-        })->toArray();
-
-        return response()->json(['cards' => $cards, 'table' => $table, 'fields' => ['payment_method', 'status']]);
-    }
-
-    private function billingDetailed($query)
-    {
-        $rows = $query->latest()->limit(100)->get();
-        $table = $rows->map(function ($b) {
-            return [
-                'ID' => $b->id,
-                'Patient' => $b->patient->fname . ' ' . $b->patient->lname,
-                'Billable Type' => class_basename($b->billable_type),
-                'Billable ID' => $b->billable_id,
-                'Amount' => number_format($b->amount, 2),
-                'Payment Method' => $b->payment_method ?? '-',
-                'Status' => ucfirst($b->status),
-                'Created' => $b->created_at->format('Y-m-d H:i'),
-            ];
-        })->toArray();
-
-        $cards = [
-            ['label' => 'Detailed Bills', 'value' => $query->count(), 'color' => '#17a2b8', 'icon' => 'zmdi-assignment'],
-            ['label' => 'Total Amount', 'value' => number_format($query->sum('amount'), 2), 'color' => '#6610f2', 'icon' => 'zmdi-balance-wallet'],
-        ];
-
-        return response()->json(['cards' => $cards, 'table' => $table, 'fields' => ['payment_method', 'status']]);
-    }
-
-    private function billingParameterised(?string $field)
-    {
-        if (!$field) {
-            return response()->json(['fields' => ['payment_method', 'status']]);
-        }
-
-        $groups = Billing::select($field, DB::raw('COUNT(*) as total'), DB::raw('SUM(amount) as total_amount'))
-            ->groupBy($field)->get();
-
-        $cards = $groups->map(function ($g) use ($field) {
-            return [
-                'label' => ucfirst($g->{$field} ?? '—'),
-                'value' => $g->total . ' (KES ' . number_format($g->total_amount, 2) . ')',
-                'color' => $g->{$field} === 'paid' ? '#28a745' : '#ffc107',
-                'icon' => 'zmdi-chart',
-            ];
-        })->toArray();
-
-        $table = $groups->map(function ($g) use ($field) {
-            return [
-                ucfirst($field) => $g->{$field} ?? '—',
-                'Count' => $g->total,
-                'Total (KES)' => number_format($g->total_amount, 2)
-            ];
-        })->toArray();
-
-        return response()->json(['cards' => $cards, 'table' => $table, 'fields' => [$field]]);
-    }
-
-    // ------------------------------
-    //  OTHER MODELS
-    // ------------------------------
-
-    private function patientReport(Request $request)
-    {
-        $query = Patient::query();
-        $this->applyDateRange($query, 'created_at', $request->from_date, $request->to_date);
-
-        $cards = [['label' => 'Total Patients', 'value' => $query->count(), 'color' => '#17a2b8', 'icon' => 'zmdi-accounts']];
-        $table = $query->latest()->limit(50)->get(['id', 'fname', 'lname', 'email', 'phone_number'])
-            ->map(fn($p) => [
-                'ID' => $p->id,
-                'Name' => $p->fname . ' ' . $p->lname,
-                'Email' => $p->email ?? '-',
-                'Phone' => $p->phone_number ?? '-',
-            ])->toArray();
-
-        return response()->json(['cards' => $cards, 'table' => $table, 'fields' => []]);
-    }
-
-    private function appointmentReport(Request $request)
-    {
-        $query = Appointment::with('patient', 'doctor');
-        $this->applyDateRange($query, 'date', $request->from_date, $request->to_date);
-
-        $cards = [['label' => 'Appointments', 'value' => $query->count(), 'color' => '#007bff', 'icon' => 'zmdi-calendar']];
-        $table = $query->latest()->limit(50)->get()
-            ->map(fn($a) => [
-                'ID' => $a->id,
-                'Date' => $a->date,
-                'Patient' => $a->patient->fname . ' ' . $a->patient->lname,
-                'Doctor' => $a->doctor->fname . ' ' . $a->doctor->lname,
-                'Status' => $a->status,
-            ])->toArray();
-
-        return response()->json(['cards' => $cards, 'table' => $table, 'fields' => []]);
-    }
-
-    private function labTestReport(Request $request)
-    {
-        $query = LabTest::with('patient', 'doctor');
-        $this->applyDateRange($query, 'created_at', $request->from_date, $request->to_date);
-
-        $cards = [['label' => 'Lab Tests', 'value' => $query->count(), 'color' => '#6f42c1', 'icon' => 'zmdi-flask']];
-        $table = $query->latest()->limit(50)->get()
-            ->map(fn($l) => [
-                'ID' => $l->id,
-                'Patient' => $l->patient->fname . ' ' . $l->patient->lname,
-                'Test' => $l->test_name,
-                'Status' => ucfirst($l->status),
-            ])->toArray();
-
-        return response()->json(['cards' => $cards, 'table' => $table, 'fields' => []]);
-    }
-
-    // ------------------------------
-    //  HELPER
-    // ------------------------------
-    private function applyDateRange($query, string $column, ?string $from, ?string $to): void
-    {
-        if ($from && $to) {
-            $query->whereBetween($column, [$from, $to]);
-        } elseif ($from) {
-            $query->whereDate($column, '>=', $from);
-        } elseif ($to) {
-            $query->whereDate($column, '<=', $to);
-        }
-    }
 
     public function generate(Request $request)
     {
@@ -252,14 +33,14 @@ class ReportController extends Controller
             'appointments' => [
                 'model' => Appointment::class,
                 'relations' => ['patient', 'doctor', 'service'],
-                'columns' => ['date', 'patient.name', 'doctor.name', 'service.name', 'status', 'created_at'],
+                'columns' => ['date', 'patient.fname', 'patient.lname', 'doctor.name', 'service.name', 'status', 'created_at'],
                 'title' => 'Appointments Report',
                 'date_field' => 'date',
             ],
             'billings' => [
                 'model' => Billing::class,
                 'relations' => ['patient'],
-                'columns' => ['patient.name', 'amount', 'payment_method', 'status', 'created_at'],
+                'columns' => ['patient.fname', 'patient.lname', 'amount', 'payment_method', 'status', 'created_at'],
                 'title' => 'Billing Report',
                 'date_field' => 'created_at',
             ],
@@ -279,8 +60,8 @@ class ReportController extends Controller
             ],
             'lab_tests' => [
                 'model' => LabTest::class,
-                'relations' => ['patient', 'doctor', 'labTechnician'],
-                'columns' => ['patient.name', 'doctor.name', 'test_name', 'status', 'results', 'created_at'],
+                'relations' => ['patient', 'doctor', 'lab_technician'],
+                'columns' => ['patient.fname', 'patient.lname', 'doctor.name', 'test_name', 'status', 'results', 'created_at'],
                 'title' => 'Lab Tests Report',
                 'date_field' => 'created_at',
             ],
@@ -294,7 +75,7 @@ class ReportController extends Controller
             'medical_records' => [
                 'model' => Medical::class,
                 'relations' => ['patient', 'doctor', 'appointment'],
-                'columns' => ['patient.name', 'doctor.name', 'appointment.date', 'created_at'],
+                'columns' => ['patient.fname', 'patient.lname', 'doctor.name', 'appointment.date', 'created_at'],
                 'title' => 'Medical Records Report',
                 'date_field' => 'created_at',
             ],
@@ -308,7 +89,7 @@ class ReportController extends Controller
             'patients' => [
                 'model' => Patient::class,
                 'relations' => ['appointments'],
-                'columns' => ['fname', 'lname', 'email', 'phone number', 'gender', 'country', 'created_at'],
+                'columns' => ['fname', 'lname', 'email', 'phone_number', 'gender', 'country', 'created_at'],
                 'title' => 'Patients Report',
                 'date_field' => 'created_at',
             ],
@@ -343,7 +124,7 @@ class ReportController extends Controller
             'triages' => [
                 'model' => \App\Models\Triage::class,
                 'relations' => ['patient', 'nurse'],
-                'columns' => ['patient.name', 'nurse.name', 'temperature', 'blood_pressure', 'weight', 'created_at'],
+                'columns' => ['patient.fname', 'patient.lname', 'nurse.fname', 'nurse.lname', 'temperature', 'blood_pressure', 'weight', 'created_at'],
                 'title' => 'Triages Report',
                 'date_field' => 'created_at',
             ],

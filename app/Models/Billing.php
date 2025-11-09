@@ -34,4 +34,9 @@ class Billing extends Model
         return $this->belongsTo(Patient::class);
     }
 
+    public function hospitalService()
+    {
+        return $this->belongsTo(HospitalService::class, 'hospital_service_id');
+    }
+
 }

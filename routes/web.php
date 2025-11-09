@@ -12,6 +12,7 @@ use App\Http\Controllers\Backend\PharmacistController;
 use App\Http\Controllers\backend\PharmacyOrderController;
 use App\Http\Controllers\backend\PharmacyOrderItemController;
 use App\Http\Controllers\Backend\ReportController;
+use App\Http\Controllers\Backend\ReportsController;
 use App\Http\Controllers\backend\TriageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontendController;
@@ -85,10 +86,15 @@ Route::middleware(['auth', 'role.records'])->controller(HomeController::class)->
 // Report
 Route::controller(ReportController::class)->prefix('admin')->group(function () {
     Route::get('/reports/generate', 'generate')->name('reports.generate');
-    Route::get('/dashboard/reports','dashboard')->name('dashboard.reports');
-    Route::get('/dashboard/reports/filter','filterData')->name('reports.filterData');
 });
 
+// Reports
+Route::controller(ReportsController::class)->prefix('admin')->group(function () {
+    Route::get('/dashboard/reports', 'index')->name('dashboard.reports');
+    Route::get('/dashboard/reports/filter', 'filterData')->name('reports.filterData');
+    Route::get('/dashboard/reports/get-fields', 'getFields')->name('reports.getFields');
+    Route::get('/dashboard/reports/field-values', 'getFieldValues')->name('reports.fieldValues');
+});
 
 //FAQs
 Route::controller(FaqController::class)->prefix('admin')->group(function () {
@@ -194,7 +200,7 @@ Route::middleware(['auth', 'role.records'])->controller(LabTestController::class
     Route::get('/lab-tests/{id}', 'show')->name('lab_test.show');
     Route::delete('/lab-tests/{id}', 'destroy')->name('lab_tests.destroy');
     Route::get('/lab-tests-report', 'report')->name('lab_tests.report');
-    Route::post('labs/create-for-appointment/{appointment}','createForAppointment')->name('labs.createForAppointment');
+    Route::post('labs/create-for-appointment/{appointment}', 'createForAppointment')->name('labs.createForAppointment');
     Route::get('/lab-tests/appointment/{appointment_id}', 'showByAppointment')->name('lab_tests.show');
 });
 
@@ -310,7 +316,7 @@ Route::middleware(['auth', 'role.records'])->controller(PharmacyOrderController:
     Route::get('/pharmacy_orders-report', 'report')->name('pharmacy_orders.report');
     Route::post('/pharmacy-orders/{id}/ajax-update', 'ajaxUpdate')
         ->name('pharmacy_orders.ajax_update');
-    Route::get('/appointments/{id}/details','getAppointmentDetails')->name('appointments.details');
+    Route::get('/appointments/{id}/details', 'getAppointmentDetails')->name('appointments.details');
 
 
 });

@@ -109,7 +109,7 @@ class MedicalController extends Controller
     public function report()
     {
         // Start query — don't call get() yet
-        $query = Medical::with(['patient', 'doctor']);
+        $query = Medical::with(['patient', 'doctor', 'appointment']);
 
         // Apply filters
         if (request()->from_date) {
