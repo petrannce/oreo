@@ -14,7 +14,7 @@
             {{-- 🏥 Hospital Header --}}
             <div class="text-center">
                 @if($hospital && $hospital->logo)
-                    <img src="{{ asset('storage/' . $hospital->logo) }}" alt="Logo" style="max-width:60px; margin-bottom:5px;">
+                    <img src="{{ asset(path: 'hospitals/logos/'.$hospital->logo) }}" alt="Logo" style="max-width:60px; margin-bottom:5px;">
                 @endif
                 <h5 style="margin:0;">{{ $hospital->name ?? 'Hospital Name' }}</h5>
                 <small>{{ $hospital->address ?? '' }}</small><br>

@@ -19,7 +19,7 @@
                     <div class="row mb-4 border-bottom pb-3 align-items-center">
                         <div class="col-md-2">
                             @if($hospital && $hospital->logo)
-                                <img src="{{ asset('storage/' . $hospital->logo) }}" alt="Hospital Logo"
+                                <img src="{{ asset(path: 'hospitals/logos/'.$hospital->logo) }}" alt="Hospital Logo"
                                     style="width:100%; max-width:100px;">
                             @endif
                         </div>

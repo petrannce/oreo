@@ -16,7 +16,7 @@
 
     <div style="text-align:center;">
         @if($hospital && $hospital->logo)
-            <img src="{{ public_path('storage/'.$hospital->logo) }}" style="max-width:60px; margin-bottom:5px;">
+            <img src="{{ asset(path: 'hospitals/logos/'.$hospital->logo) }}" style="max-width:60px; margin-bottom:5px;">
         @endif
         <h3>{{ $hospital->name ?? 'Hospital Name' }}</h3>
         <p>{{ $hospital->address ?? '' }}<br>

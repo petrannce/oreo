@@ -40,17 +40,33 @@ class HospitalDetailsController extends Controller
 
             $hospital_detail = new HospitalDetail();
 
-            
+
             if ($request->hasFile('logo')) {
-                $logoPath = $request->file('logo')->store('uploads/hospitals/logos', 'public');
-                $hospital_detail->logo = $logoPath;
+                $logo = $request->file('logo');
+
+                $logoPath = public_path('hospitals/logos');
+                if (!file_exists($logoPath)) {
+                    mkdir($logoPath, 0777, true);
+                }
+
+                $logo_name = time() . '_' . preg_replace('/\s+/', '_', $logo->getClientOriginalName());
+                $logo->move($logoPath, $logo_name);
+                $hospital_detail->logo = 'hospitals/logos/' . $logo_name;
             }
 
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('uploads/hospitals/images', 'public');
-                $hospital_detail->image = $imagePath;
+                $image = $request->file('image');
+
+                $imagePath = public_path('hospitals/images');
+                if (!file_exists($imagePath)) {
+                    mkdir($imagePath, 0777, true);
+                }
+
+                $image_name = time() . '_' . preg_replace('/\s+/', '_', $image->getClientOriginalName());
+                $image->move($imagePath, $image_name);
+                $hospital_detail->image = 'hospitals/images/' . $image_name;
             }
-            
+
             $hospital_detail->name = $request->name;
             $hospital_detail->address = $request->address;
             $hospital_detail->phone_number = $request->phone_number;
@@ -101,21 +117,17 @@ class HospitalDetailsController extends Controller
             $hospital_detail->website = $request->website;
 
             // ✅ Handle Logo Upload
-            if ($request->hasFile('logo')) {
-                if ($hospital_detail->logo && file_exists(public_path('storage/' . $hospital_detail->logo))) {
-                    unlink(public_path('storage/' . $hospital_detail->logo)); // delete old file
-                }
-                $path = $request->file('logo')->store('hospitals/logos', 'public');
-                $hospital_detail->logo = $path;
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $image_name = time() . '.' . $image->getClientOriginalName();
+                $image->move(public_path('hospitals/logos'), $image_name);
             }
 
             // ✅ Handle Main Image Upload
             if ($request->hasFile('image')) {
-                if ($hospital_detail->image && file_exists(public_path('storage/' . $hospital_detail->image))) {
-                    unlink(public_path('storage/' . $hospital_detail->image)); // delete old file
-                }
-                $path = $request->file('image')->store('hospitals/images', 'public');
-                $hospital_detail->image = $path;
+                $image = $request->file('image');
+                $image_name = time() . '.' . $image->getClientOriginalName();
+                $image->move(public_path('hospitals/images'), $image_name);
             }
 
             $hospital_detail->save();
@@ -136,6 +148,6 @@ class HospitalDetailsController extends Controller
     public function destroy($id)
     {
         DB::table('hospital_details')->where('id', $id)->delete();
-        return redirect()->route('hospital_details.index')->with('success', 'Hospital details deleted successfully');
+        return redirect()->route('hospital_details')->with('success', 'Hospital details deleted successfully');
     }
 }
