@@ -500,19 +500,23 @@
                         </ul>
                     </li>
 
-                    <li><a href="javascript:void(0);" class="menu-toggle"><i
-                                class="zmdi zmdi-city-alt"></i><span>Hospital
-                                Details</span> </a>
-                        <ul class="ml-menu">
-                            <li class="{{ Request::route()->getName() == 'hospital_details' ? 'active' : 'inactive' }}">
-                                <a href="{{route('hospital_details')}}">Hospital Details</a>
-                            </li>
-                            <li
-                                class="{{ Request::route()->getName() == 'hospital_details.create' ? 'active' : 'inactive' }}">
-                                <a href="{{route('hospital_details.create')}}">Add Hospital Detail</a>
-                            </li>
-                        </ul>
-                    </li>
+                    <li>
+    <a href="javascript:void(0);" class="menu-toggle">
+        <i class="zmdi zmdi-city-alt"></i><span>Hospital Details</span>
+    </a>
+    <ul class="ml-menu">
+        @if(isset($hospital_detail) && $hospital_detail->id)
+            <li class="{{ Request::route()->getName() == 'hospital_details.edit' ? 'active' : '' }}">
+                <a href="{{ route('hospital_details.edit', [$hospital_detail->id]) }}">Hospital Details</a>
+            </li>
+        @else
+            <li class="inactive">
+                <a href="{{ route('hospital_details') }}">Hospital Details</a>
+            </li>
+        @endif
+    </ul>
+</li>
+
 
                     <li class="{{ Request::route()->getName() == 'users' ? 'active' : 'inactive' }}">
                         <a href="{{route('users')}}"><i class="zmdi zmdi-accounts"></i><span>Users</span>

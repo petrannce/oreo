@@ -87,54 +87,71 @@ class HospitalDetailsController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit($id = null)
     {
-        $hospital_detail = HospitalDetail::findOrFail($id);
+        $hospital_detail = $id ? HospitalDetail::find($id) : new HospitalDetail;
         return view('backend.hospital_details.edit', compact('hospital_detail'));
     }
 
+
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'website' => 'nullable|url|max:255',
-            'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-        ]);
-
         DB::beginTransaction();
 
         try {
             $hospital_detail = HospitalDetail::findOrFail($id);
+            $inline = $request->input('inline'); // check which part is being updated
 
-            $hospital_detail->name = $request->name;
-            $hospital_detail->address = $request->address;
-            $hospital_detail->phone_number = $request->phone_number;
-            $hospital_detail->email = $request->email;
-            $hospital_detail->website = $request->website;
+            // ✅ Handle Logo only
+            if ($inline === 'logo' && $request->hasFile('logo')) {
+                $logo = $request->file('logo');
+                $logo_name = time() . '_' . preg_replace('/\s+/', '_', $logo->getClientOriginalName());
+                $logo->move(public_path('hospitals/logos'), $logo_name);
+                $hospital_detail->logo = 'hospitals/logos/' . $logo_name;
+                $hospital_detail->save();
 
-            // ✅ Handle Logo Upload
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $image_name = time() . '.' . $image->getClientOriginalName();
-                $image->move(public_path('hospitals/logos'), $image_name);
+                DB::commit();
+                return redirect()->route('hospital_details')
+                    ->with('success', 'Hospital logo updated successfully.');
             }
 
-            // ✅ Handle Main Image Upload
-            if ($request->hasFile('image')) {
+            // ✅ Handle Banner/Image only
+            if ($inline === 'image' && $request->hasFile('image')) {
                 $image = $request->file('image');
-                $image_name = time() . '.' . $image->getClientOriginalName();
+                $image_name = time() . '_' . preg_replace('/\s+/', '_', $image->getClientOriginalName());
                 $image->move(public_path('hospitals/images'), $image_name);
+                $hospital_detail->image = 'hospitals/images/' . $image_name;
+                $hospital_detail->save();
+
+                DB::commit();
+                return redirect()->route('hospital_details')
+                    ->with('success', 'Hospital banner updated successfully.');
             }
 
-            $hospital_detail->save();
+            // ✅ Handle full hospital details update
+            if ($inline === null) {
+                $request->validate([
+                    'name' => 'required|string|max:255',
+                    'address' => 'required|string|max:255',
+                    'phone_number' => 'required|string|max:20',
+                    'email' => 'required|email|max:255',
+                    'website' => 'nullable|url|max:255',
+                ]);
 
-            DB::commit();
-            return redirect()->route('hospital_details')
-                ->with('success', 'Hospital details updated successfully.');
+                $hospital_detail->name = $request->name;
+                $hospital_detail->address = $request->address;
+                $hospital_detail->phone_number = $request->phone_number;
+                $hospital_detail->email = $request->email;
+                $hospital_detail->website = $request->website;
+                $hospital_detail->save();
+
+                DB::commit();
+                return redirect()->route('hospital_details')
+                    ->with('success', 'Hospital details updated successfully.');
+            }
+
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Nothing to update.');
 
         } catch (\Exception $e) {
             DB::rollBack();
